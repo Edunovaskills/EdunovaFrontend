@@ -1,0 +1,5 @@
+.gitignore
+.prettierignore
+build
+dist
+package-lock.json
