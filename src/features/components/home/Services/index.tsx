@@ -11,7 +11,7 @@ const TopInfo = () => {
     <Stack alignItems={'center'} gap={'10px'}>
       <Typography variant={'h4.700'}>Our Courses</Typography>
       <Typography variant={'body1'} textAlign={'center'} maxWidth={'80%'}>
-      Travel through your education with ease and comfort at Academix, where our courses provide top-notch lessons and skilled instructors for a safe, enriching academic journey—ideal for daily learning, skill enhancement, or intellectual growth.
+      Travel through your education with ease and comfort at Edunova, where our courses provide top-notch lessons and skilled instructors for a safe, enriching academic journey—ideal for daily learning, skill enhancement, or intellectual growth.
       </Typography>
     </Stack>
   )

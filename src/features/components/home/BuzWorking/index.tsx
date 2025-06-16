@@ -17,7 +17,7 @@ export const BuzWorking = () => {
         <Typography variant="h5.700">
           How{' '}
           <Typography variant="h5.700" color="primary.main">
-            Academix{' '}
+            Edunova{' '}
           </Typography>
           Works?
         </Typography>

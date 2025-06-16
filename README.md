@@ -1,6 +1,6 @@
-# Academix
+# Edunova
 
-This is single page application frontend module for Academix.
+This is single page application frontend module for Edunova.
 
 ## About
 

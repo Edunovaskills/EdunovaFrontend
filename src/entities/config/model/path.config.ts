@@ -4,19 +4,20 @@ export const appPaths = {
   cabServices: '/services/cab',
   ticketBookingServices: '/services/ticket-booking',
   groceriesDelivery: '/services/grocery-delivery',
+  bikeServices: '/services/bike',
   helpAndSupport: '/helpAndSupport',
   about: '/about',
-  bikeServices: '/services/bike',
   'contact-us': '/contact-us',
   career: '/career',
   download: '/download',
   'privacy-policy': '/privacy-policy',
   'terms-of-services': '/terms-of-services',
   admin: '/admin',
+  userLogin: '/user/login',
+  userSignup: '/user/signup',
 } as const
 
 export type AppPaths = typeof appPaths
-
 export type AppPathsName = keyof AppPaths
 
 // ------------------ External App Paths ----------------
@@ -29,8 +30,7 @@ type ExternalPath = Record<
   }
 >
 
-export const marketingWebsiteBaseUrl = import.meta.env
-  .VITE_MARKETING_WEBSITE_URL
+export const marketingWebsiteBaseUrl = import.meta.env.VITE_MARKETING_WEBSITE_URL
 
 export const extPaths = {
   marketingWebsite: {
@@ -38,6 +38,8 @@ export const extPaths = {
     route: {
       login: '/login',
       pricing: '/pricing',
+      // userLogin: '/user/login',  // Removed duplicate
+      // userSignup: '/user/signup', // Removed duplicate
     },
   },
 } satisfies ExternalPath

@@ -48,12 +48,12 @@ export const Footer = () => {
 
   return (
     <StackStyled issmall={smallscreen}>
-      <TopViewWrapperStyled>
+      {/* <TopViewWrapperStyled>
         <div style={{display:'flex',gap:'0.75rem',width:'75px',height:'20px',transform:'scale(1.5)'}}>
-               <img src={publicImages.academixLog} alt="brand-logo" style={{width:'100%', height:'100%', transform:'scale(1.9)'}} />
+               <img src={publicImages.EdunovaLog} alt="brand-logo" style={{width:'100%', height:'100%', transform:'scale(1.9)'}} />
                <img src={publicImages.acdemixLogoText} alt="brand-logo" style={{width:'100%', height:'100%', transform:'scale(1)'}} />
                </div>
-      </TopViewWrapperStyled>
+      </TopViewWrapperStyled> */}
 
       <Stack gap={'20px'}>
         <Stack>
@@ -132,7 +132,7 @@ export const Footer = () => {
         {/* divider */}
         <DividerStyled />
         <Typography variant="caption1" color="neutral.white">
-          &copy; 2024 Academix. All Rights Reserved.
+          &copy; 2024 Edunova. All Rights Reserved.
         </Typography>
       </Stack>
     </StackStyled>

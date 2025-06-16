@@ -32,13 +32,13 @@ const TopInfoSection = ({
       <Typography variant="h5.700">
         Why Choose{' '}
         <Typography variant="h5.700" color="primary.main">
-        Academix{' '}
+        Edunova{' '}
         </Typography>
         ?
       </Typography>
 
       <Typography variant="body2">
-      Discover reliable, safe, and efficient education tailored to your goals at Academix, guiding you seamlessly on your academic journey.
+      Discover reliable, safe, and efficient education tailored to your goals at Edunova, guiding you seamlessly on your academic journey.
       </Typography>
     </>
   )
