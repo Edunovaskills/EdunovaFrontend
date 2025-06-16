@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   IconButton,
-  Menu,
   MenuItem,
   Typography,
   Drawer,
@@ -16,7 +15,7 @@ import {
   Stack,
 } from '@mui/material'
 import { AppPathsName, appPaths } from 'entities/config'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { publicImages } from 'shared/config'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
@@ -71,7 +70,9 @@ export const Navbar = () => {
     return menuItem.find((item) => {
       // Handle string comparison properly
       const pathSegment = location.pathname.split('/')[1] || '/'
-      return pathSegment === item.value || (pathSegment === '' && item.value === '/')
+      return (
+        pathSegment === item.value || (pathSegment === '' && item.value === '/')
+      )
     })
   }, [location])
 
@@ -98,7 +99,9 @@ export const Navbar = () => {
   const { smallScreen: smallscreen } = useScreenSize()
 
   // Check if current page is login or signup
-  const isAuthPage = location.pathname === appPaths.userLogin || location.pathname === appPaths.userSignup
+  const isAuthPage =
+    location.pathname === appPaths.userLogin ||
+    location.pathname === appPaths.userSignup
 
   const renderSubMenu = (subMenu?: MenuItem[]) =>
     subMenu?.map((subItem) => {
@@ -127,57 +130,68 @@ export const Navbar = () => {
   return (
     <NavbarWrapperStyled smallScreen={smallscreen}>
       <StartViewWrapperStyled>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.3rem',
-          transform: 'scale(1.5)',
-          marginLeft: '0rem'
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.3rem',
+            transform: 'scale(1.5)',
+            marginLeft: '0rem',
+          }}
+        >
           {/* Logo Image */}
-          <img
-            src={publicImages.EdunovaLog}
-            alt="brand-logo"
-            style={{
-              width: 'auto',
-              height: '40px',
-              objectFit: 'contain',
-              display: 'block',
-              opacity: 1,
-              visibility: 'visible'
-            }}
-            onError={(e) => {
-              console.error('Logo failed to load:', publicImages.EdunovaLog)
-              // Fallback handling if needed
-            }}
-          />
+          <Link
+            to={appPaths['/']}
+            style={{ textDecoration: 'none', display: 'flex' }}
+          >
+            <img
+              src={publicImages.EdunovaLog}
+              alt="brand-logo"
+              style={{
+                width: 'auto',
+                height: '40px',
+                objectFit: 'contain',
+                display: 'block',
+                opacity: 1,
+                visibility: 'visible',
+              }}
+              onError={(e) => {
+                console.error('Logo failed to load:', publicImages.EdunovaLog)
+                // Fallback handling if needed
+              }}
+            />
 
-          {/* Text next to Logo */}
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{
-              fontFamily: '"Georgia", "Times New Roman", serif',
-              fontWeight: 'bold',
-              fontSize: '23px',
-              color: '#000',
-              marginTop: '10px',
-              display: 'block',
-              width: '100%'
-            }}>
-              Edunova
-            </span>
-            <span style={{
-              fontFamily: '"Georgia", "Times New Roman", serif',
-              fontWeight: 'bold',
-              fontSize: '3.5px',
-              color: '#000',
-              marginTop: '-8px',
-              marginLeft: '2.1px',
-              display: 'block',
-              width: '100%'
-            }}>
-              UPGRADE YOUR SKILLS, UPGRADE YOUR FUTURE
-            </span>
-          </div>
+            {/* Text next to Logo */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span
+                style={{
+                  fontFamily: '"Georgia", "Times New Roman", serif',
+                  fontWeight: 'bold',
+                  fontSize: '23px',
+                  color: '#000',
+                  marginTop: '10px',
+                  display: 'block',
+                  width: '100%',
+                }}
+              >
+                Edunova
+              </span>
+              <span
+                style={{
+                  fontFamily: '"Georgia", "Times New Roman", serif',
+                  fontWeight: 'bold',
+                  fontSize: '3.5px',
+                  color: '#000',
+                  marginTop: '-8px',
+                  marginLeft: '2.1px',
+                  display: 'block',
+                  width: '100%',
+                }}
+              >
+                UPGRADE YOUR SKILLS, UPGRADE YOUR FUTURE
+              </span>
+            </div>
+          </Link>
         </div>
       </StartViewWrapperStyled>
 
@@ -193,7 +207,11 @@ export const Navbar = () => {
               <React.Fragment key={value}>
                 <NavLink
                   to={appPaths[value] || value}
-                  style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
+                  style={{
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
                 >
                   <Typography
                     variant="body1.700"
@@ -271,11 +289,21 @@ export const Navbar = () => {
           <IconButton onClick={toggleDrawer(true)}>
             <MenuIcon sx={{ color: 'neutral.black' }} fontSize="large" />
           </IconButton>
-          <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+          <Drawer
+            anchor="right"
+            open={drawerOpen}
+            onClose={toggleDrawer(false)}
+          >
             <Stack sx={{ justifyContent: 'space-between', height: '100%' }}>
               <Box sx={{ width: 250, padding: 2 }}>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                  <Typography variant="h6" color="primary">Edunova</Typography>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Typography variant="h6" color="primary">
+                    Edunova
+                  </Typography>
                   <IconButton onClick={toggleDrawer(false)}>
                     <CloseIcon />
                   </IconButton>
@@ -285,7 +313,8 @@ export const Navbar = () => {
                 <List>
                   {menuItem.map(({ label, value, subMenu }) => {
                     const isSelected =
-                      (location.pathname.split('/')[1].length === 0 && value === '/') ||
+                      (location.pathname.split('/')[1].length === 0 &&
+                        value === '/') ||
                       currentMenuItem?.value === value
                     return (
                       <React.Fragment key={value}>
@@ -294,12 +323,16 @@ export const Navbar = () => {
                             component={NavLink}
                             to={appPaths[value] || value}
                             style={{ textDecoration: 'none' }}
-                            sx={{ '&:hover': { backgroundColor: 'state.hover' } }}
+                            sx={{
+                              '&:hover': { backgroundColor: 'state.hover' },
+                            }}
                             onClick={() => setDrawerOpen(false)}
                           >
                             <Typography
                               variant="body1"
-                              color={isSelected ? 'primary.main' : 'neutral.black'}
+                              color={
+                                isSelected ? 'primary.main' : 'neutral.black'
+                              }
                             >
                               {label}
                             </Typography>
@@ -320,7 +353,9 @@ export const Navbar = () => {
                               <Typography
                                 component={NavLink}
                                 to={appPaths[value] || value}
-                                color={isSelected ? 'primary.main' : 'neutral.black'}
+                                color={
+                                  isSelected ? 'primary.main' : 'neutral.black'
+                                }
                                 style={{ textDecoration: 'none' }}
                               >
                                 {label}
@@ -337,7 +372,14 @@ export const Navbar = () => {
                 </List>
               </Box>
 
-              <div style={{ padding: '16px', display: 'flex', gap: '8px', flexDirection: 'column' }}>
+              <div
+                style={{
+                  padding: '16px',
+                  display: 'flex',
+                  gap: '8px',
+                  flexDirection: 'column',
+                }}
+              >
                 <Button
                   variant="contained"
                   fullWidth

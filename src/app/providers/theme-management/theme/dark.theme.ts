@@ -87,4 +87,5 @@ export const darkThemePalette: PaletteOptions = {
     disable: neutral[300]!,
   },
   ...colors,
+  sectionBackground: '',
 }

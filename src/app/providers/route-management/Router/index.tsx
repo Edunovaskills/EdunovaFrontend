@@ -1,16 +1,7 @@
-// src/app/providers/route-management/Router/index.tsx
-import {
-  AboutUsLayout,
-  CareerLayout,
-  HelpSupportLayout,
-  HomeLayout,
-  ServiceLayout,
-} from 'app/layout'
 import { MainLayout } from 'app/layout/MainLayout/MainLayout'
 import { appPaths } from 'entities/config'
 import { AboutUsPage } from 'pages/components/about-us/AboutUs'
 import { CabServicesPage } from 'pages/components/cab-services/CabServices'
-// import { CareerPage } from 'pages/components/carrer'
 import { HelpSupportPage } from 'pages/components/help-support/HelpSupport'
 import { HomePage } from 'pages/components/home/Home'
 import { ServicesPage } from 'pages/components/services/Services'
@@ -18,11 +9,18 @@ import { TicketBookingServicesPage } from 'pages/components/ticket-booking-servi
 import { AdminPage } from 'pages/components/admin/Admin'
 import { LoginPage } from 'pages/components/user/Login'
 import { SignupPage } from 'pages/components/user/Signup'
-import { Outlet, Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
+import {
+  Outlet,
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from 'react-router-dom'
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
-    <Route element={<MainLayout />}> {/* Wrap all routes that need the MainLayout */}
+    <Route element={<MainLayout />}>
+      {' '}
+      {/* Wrap all routes that need the MainLayout */}
       <Route element={<Outlet />}>
         {/* Routes that use MainLayout */}
         <Route path={appPaths['/']} element={<HomePage />} />
@@ -30,7 +28,10 @@ const Router = createBrowserRouter(
         <Route path={appPaths.helpAndSupport} element={<HelpSupportPage />} />
         <Route path={appPaths.services} element={<ServicesPage />} />
         <Route path={appPaths.cabServices} element={<CabServicesPage />} />
-        <Route path={appPaths.ticketBookingServices} element={<TicketBookingServicesPage />} />
+        <Route
+          path={appPaths.ticketBookingServices}
+          element={<TicketBookingServicesPage />}
+        />
         <Route path={appPaths.userLogin} element={<LoginPage />} />
         <Route path={appPaths.userSignup} element={<SignupPage />} />
 

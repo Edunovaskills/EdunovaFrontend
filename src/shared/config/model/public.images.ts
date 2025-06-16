@@ -36,9 +36,9 @@ export const publicImages = {
   taxyPickUp: 'assets/images/taxyPickUp.svg',
   waitForCab: 'assets/images/waitForCab.svg',
   link: 'assets/logo/link.svg',
-  EdunovaLog:'assets/logo/logo.svg',
-  acdemixLogoText:'assets/logo/EdunovaLogoText.png',
-  EdunovaHeroSectionBg:'assets/images/heroSectionEdunovaBg.jpg',
-  uiImages:'assets/images/uiCousers.jpg'
+  EdunovaLog:'/assets/logo/logo.svg',
+  acdemixLogoText:'/assets/logo/EdunovaLogoText.png',
+  EdunovaHeroSectionBg:'/assets/images/heroSectionEdunovaBg.jpg',
+  uiImages:'/assets/images/uiCousers.jpg'
 
 }

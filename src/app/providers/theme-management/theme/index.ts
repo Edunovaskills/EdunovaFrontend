@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { createTheme, PaletteOptions } from '@mui/material/styles'
 
-import { ThemeMode } from 'shared/state'
-
 import { components } from './component'
 import { darkThemePalette } from './dark.theme'
 import { lightThemePalette } from './light.theme'
@@ -108,7 +106,7 @@ declare module '@mui/material/styles' {
   // }
 }
 
-const themeOptions: Record<ThemeMode, PaletteOptions> = {
+const themeOptions: Record<'light' | 'dark', PaletteOptions> = {
   light: lightThemePalette,
   dark: darkThemePalette,
 }
@@ -118,7 +116,7 @@ const themeOptions: Record<ThemeMode, PaletteOptions> = {
  * Create new theme option or add new font as per the requirement.
  */
 // eslint-disable-next-line import/no-mutable-exports
-const getTheme = (mode: ThemeMode) =>
+const getTheme = (mode: 'light' | 'dark') =>
   createTheme({
     // Uncomment the following code to add custom breakpoints
     // breakpoints: {

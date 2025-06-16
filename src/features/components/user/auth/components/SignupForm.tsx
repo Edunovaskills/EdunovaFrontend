@@ -7,14 +7,13 @@ import {
   SubmitButton,
   ErrorText,
 } from './AuthForm.styles'
-import { useSignup } from '../hooks/useSignup' // We'll modify this hook or create a new one
+import { useSignup } from 'features/hooks' // We'll modify this hook or create a new one
 import { Link } from 'react-router-dom'
-import { Typography, Button } from '@mui/material' // Import Button from MUI
-import GoogleIcon from '@mui/icons-material/Google'; // Import a Google icon
+import { Typography } from '@mui/material' // Import Button from MUI
+import GoogleIcon from '@mui/icons-material/Google' // Import a Google icon
 import { appPaths } from 'entities/config'
-import { auth, googleProvider } from '../../../../../firebaseConfig'; // Adjust path as needed
-import { signInWithPopup } from 'firebase/auth';
-
+import { auth, googleProvider } from '../../../../../firebaseConfig' // Adjust path as needed
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 
 export const SignupForm = () => {
   const { signup, loading, error } = useSignup() // This hook handles email/password signup
@@ -23,9 +22,8 @@ export const SignupForm = () => {
     email: '',
     password: '',
   })
-  const [googleLoading, setGoogleLoading] = useState(false);
-  const [googleError, setGoogleError] = useState(null);
-
+  const [googleLoading, setGoogleLoading] = useState(false)
+  const [googleError, setGoogleError] = useState(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -42,39 +40,32 @@ export const SignupForm = () => {
   }
 
   const handleGoogleSignup = async () => {
-    setGoogleLoading(true);
-    setGoogleError(null);
-    console.log("Google Signup started"); // Add this line
+    setGoogleLoading(true)
+    setGoogleError(null)
+    console.log('Google Signup started') // Add this line
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
+      const result = await signInWithPopup(auth, googleProvider)
+      // FIXME: Check this form where you need import this @Ashish
+      const credential = GoogleAuthProvider.credentialFromResult(result)
+      const token = credential?.accessToken
+      const user = result.user
 
-      // Here, you might want to send the user information (e.g., user.uid, user.email, user.displayName)
-      // to your backend if you need to store it or link it with existing user data.
-      // For now, let's just alert success.
-      alert('Signed in with Google successfully!');
-
-      // Optionally, redirect to a dashboard or home page
-      // navigate(appPaths.dashboard); // Assuming you have `useNavigate` from 'react-router-dom'
+      alert('Signed in with Google successfully!')
     } catch (error: any) {
       // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
+      const errorCode = error.code
+      const errorMessage = error.message
       // The email of the user's account used.
-      const email = error.customData?.email;
+      const email = error.customData?.email
       // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      setGoogleError(errorMessage || 'Failed to sign in with Google.');
-      console.error("Google Sign-in Error:", error);
+      const credential = GoogleAuthProvider.credentialFromError(error)
+      setGoogleError(errorMessage || 'Failed to sign in with Google.')
+      console.error('Google Sign-in Error:', error)
     } finally {
-      setGoogleLoading(false);
-      console.log("Google Signup finished"); // Add this line
+      setGoogleLoading(false)
+      console.log('Google Signup finished') // Add this line
     }
-  };
+  }
 
   return (
     <FormContainer>
@@ -120,7 +111,11 @@ export const SignupForm = () => {
           </SubmitButton>
         </form>
 
-        <Typography variant="body2" align="center" sx={{ marginTop: 2, marginBottom: 2 }}>
+        <Typography
+          variant="body2"
+          align="center"
+          sx={{ marginTop: 2, marginBottom: 2 }}
+        >
           OR
         </Typography>
 
@@ -135,12 +130,15 @@ export const SignupForm = () => {
           {googleLoading ? 'Signing in with Google...' : 'Sign up with Google'}
         </SubmitButton>
 
-
         <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
           Already have an account?{' '}
           <Link
             to={appPaths.userLogin}
-            style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 500 }}
+            style={{
+              color: '#2563eb',
+              textDecoration: 'none',
+              fontWeight: 500,
+            }}
           >
             Login
           </Link>
