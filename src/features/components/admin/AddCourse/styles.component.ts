@@ -1,557 +1,616 @@
 // src/features/components/admin/AddCourse/styles.component.ts
 
-import { CSSProperties } from 'react';
+import React from 'react';
 
-// Define a type for your style objects to leverage TypeScript's type checking
-// This helps ensure you're using valid CSS properties, while still allowing the '&' syntax
-type StyleObject = CSSProperties & {
-  '&[data-theme="dark"]'?: CSSProperties;
-  '&:hover'?: CSSProperties;
-  '&:focus'?: CSSProperties;
-  '&:disabled'?: CSSProperties;
-  [key: string]: any; // Allow for other keys like media queries, or nested pseudo-classes for structure
+// Define common CSS properties for reuse and consistency
+const commonInputStyles: React.CSSProperties = {
+  width: '100%',
+  padding: '0.75rem',
+  border: '1px solid #cbd5e1', // slate-300
+  borderRadius: '0.5rem', // rounded-lg
+  fontSize: '1rem',
+  transition: 'all 0.2s ease-in-out',
+  fontFamily: '"Inter", sans-serif',
 };
 
-export const addCourseStyles: { [key: string]: StyleObject } = {
+const commonButtonStyles: React.CSSProperties = {
+  padding: '0.75rem 1.25rem',
+  borderRadius: '0.5rem', // rounded-lg
+  cursor: 'pointer',
+  fontSize: '1rem',
+  fontWeight: 600, // semibold
+  transition: 'all 0.2s ease-in-out',
+  border: '1px solid transparent',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '0.5rem',
+  fontFamily: '"Inter", sans-serif',
+};
+
+export const addCourseStyles = {
   container: {
-    padding: '2rem',
     maxWidth: '1200px',
-    margin: '0 auto',
-    backgroundColor: '#f8fafc', // slate-50
-    borderRadius: '12px',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
+    margin: '2rem auto',
+    padding: '1.5rem',
+    backgroundColor: '#ffffff', // white
+    borderRadius: '1rem', // rounded-2xl
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08)', // shadow-xl
+    fontFamily: '"Inter", sans-serif',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2.5rem', // gap-10
+    color: '#334155', // slate-700 for text
+
     '&[data-theme="dark"]': {
-      backgroundColor: '#1e293b', // slate-900
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+      backgroundColor: '#1e293b', // slate-800
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+      color: '#e2e8f0', // slate-200
+    },
+
+    '@media (max-width: 768px)': {
+      margin: '1rem',
+      padding: '1rem',
+      gap: '2rem',
     },
   },
+
   title: {
-    fontSize: '2rem',
-    fontWeight: '700',
-    marginBottom: '1.5rem',
-    color: '#1e293b', // slate-900
+    fontSize: '1.875rem', // text-3xl
+    fontWeight: 700, // bold
     textAlign: 'center',
+    color: '#1e293b', // slate-900
+
     '&[data-theme="dark"]': {
       color: '#f8fafc', // slate-50
     },
+
+    '@media (max-width: 768px)': {
+      fontSize: '1.5rem', // text-2xl
+    },
   },
+
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '1rem',
-    padding: '1.5rem',
-    backgroundColor: '#ffffff', // white
-    borderRadius: '10px',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)',
-    marginBottom: '2rem',
-    '&[data-theme="dark"]': {
-      backgroundColor: '#334155', // slate-700
-      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
-    },
+    gap: '1.5rem', // gap-6
   },
+
   row: {
     display: 'flex',
-    gap: '1rem',
+    gap: '1.5rem', // gap-6
+
     '@media (max-width: 768px)': {
       flexDirection: 'column',
+      gap: '1rem', // gap-4
     },
   },
+
   field: {
-    flex: '1',
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: '1rem', // Added margin-bottom for consistent spacing
+    gap: '0.5rem', // gap-2
   },
+
   label: {
-    marginBottom: '0.5rem',
-    fontWeight: '600',
-    color: '#334155', // slate-700
+    fontSize: '0.9375rem', // ~15px
+    fontWeight: 500, // medium
+    color: '#475569', // slate-600
+
     '&[data-theme="dark"]': {
       color: '#cbd5e1', // slate-300
     },
   },
+
   input: {
-    padding: '0.75rem',
-    border: '1px solid #cbd5e1', // slate-300
-    borderRadius: '8px',
-    fontSize: '1rem',
+    ...commonInputStyles,
     backgroundColor: '#f8fafc', // slate-50
     color: '#1e293b', // slate-900
-    transition: 'border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    '&:focus': { // Will not work as inline style
-      outline: 'none',
-      borderColor: '#4f46e5', // indigo-600
-      boxShadow: '0 0 0 3px rgba(79, 70, 229, 0.2)',
-    },
+
     '&[data-theme="dark"]': {
       backgroundColor: '#334155', // slate-700
       borderColor: '#475569', // slate-600
-      color: '#f1f5f9', // slate-50
-      '&:focus': { // Will not work as inline style
-        borderColor: '#818cf8', // indigo-400
-        boxShadow: '0 0 0 3px rgba(129, 140, 248, 0.2)',
-      },
-    },
-  },
-  textarea: {
-    padding: '0.75rem',
-    border: '1px solid #cbd5e1', // slate-300
-    borderRadius: '8px',
-    fontSize: '1rem',
-    backgroundColor: '#f8fafc', // slate-50
-    color: '#1e293b', // slate-900
-    resize: 'vertical',
-    transition: 'border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    '&:focus': { // Will not work as inline style
-      outline: 'none',
-      borderColor: '#4f46e5', // indigo-600
-      boxShadow: '0 0 0 3px rgba(79, 70, 229, 0.2)',
-    },
-    '&[data-theme="dark"]': {
-      backgroundColor: '#334155', // slate-700
-      borderColor: '#475569', // slate-600
-      color: '#f1f5f9', // slate-50
-      '&:focus': { // Will not work as inline style
-        borderColor: '#818cf8', // indigo-400
-        boxShadow: '0 0 0 3px rgba(129, 140, 248, 0.2)',
-      },
-    },
-  },
-  select: {
-    padding: '0.75rem',
-    border: '1px solid #cbd5e1', // slate-300
-    borderRadius: '8px',
-    fontSize: '1rem',
-    backgroundColor: '#f8fafc', // slate-50
-    color: '#1e293b', // slate-900
-    cursor: 'pointer',
-    transition: 'border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    '&:focus': { // Will not work as inline style
-      outline: 'none',
-      borderColor: '#4f46e5', // indigo-600
-      boxShadow: '0 0 0 3px rgba(79, 70, 229, 0.2)',
-    },
-    '&[data-theme="dark"]': {
-      backgroundColor: '#334155', // slate-700
-      borderColor: '#475569', // slate-600
-      color: '#f1f5f9', // slate-50
-      '&:focus': { // Will not work as inline style
-        borderColor: '#818cf8', // indigo-400
-        boxShadow: '0 0 0 3px rgba(129, 140, 248, 0.2)',
-      },
-    },
-  },
-  submitButton: {
-    padding: '0.8rem 1.5rem',
-    backgroundColor: '#4f46e5', // indigo-600
-    color: '#ffffff',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '1.1rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease-in-out, opacity 0.2s ease-in-out',
-    '&:hover': { // Will not work as inline style
-      backgroundColor: '#4338ca', // indigo-700
-    },
-    '&:disabled': { // Will not work as inline style
-      opacity: 0.6,
-      cursor: 'not-allowed',
-    },
-    '&[data-theme="dark"]': {
-      backgroundColor: '#6366f1', // indigo-500
-      '&:hover': { // Will not work as inline style
-        backgroundColor: '#4f46e5', // indigo-600
-      },
+      color: '#f8fafc', // slate-50
     },
   },
 
-  // Image Upload Styles - Crucial for fixing the issue
-  imagePreviewContainer: {
-    position: 'relative', // Absolutely essential for positioning the overlay
-    width: '100%',
-    maxWidth: '400px', // Max width for the container
-    height: '200px', // Fixed height for consistent preview size
-    overflow: 'hidden', // Hide parts of image that exceed container
-    borderRadius: '8px',
-    backgroundColor: '#e2e8f0', // slate-200, provides a background if image isn't full size
-    display: 'flex', // Use flex to center the image within the container
-    justifyContent: 'center',
-    alignItems: 'center',
-    border: '1px dashed #94a3b8', // slate-400 for a dashed border
-    cursor: 'pointer',
-    transition: 'border-color 0.2s ease-in-out',
+  textarea: {
+    ...commonInputStyles,
+    minHeight: '80px',
+    resize: 'vertical',
+    backgroundColor: '#f8fafc', // slate-50
+    color: '#1e293b', // slate-900
+
     '&[data-theme="dark"]': {
-      backgroundColor: '#475569', // slate-600
-      borderColor: '#64748b', // slate-500
+      backgroundColor: '#334155', // slate-700
+      borderColor: '#475569', // slate-600
+      color: '#f8fafc', // slate-50
     },
-    '&:hover': { // Will not work as inline style
-      borderColor: '#4f46e5', // indigo-600 on hover
-    }
   },
+
+  select: {
+    ...commonInputStyles,
+    appearance: 'none', // Remove default arrow
+    paddingRight: '2.5rem', // Make space for custom arrow
+    backgroundColor: '#f8fafc', // slate-50
+    color: '#1e293b', // slate-900
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'%3E%3C/path%3E%3C/svg%3E")`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right 0.75rem center',
+    backgroundSize: '1.25em',
+
+    '&[data-theme="dark"]': {
+      backgroundColor: '#334155', // slate-700
+      borderColor: '#475569', // slate-600
+      color: '#f8fafc', // slate-50
+      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23e2e8f0'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'%3E%3C/path%3E%3C/svg%3E")`, // White arrow for dark mode
+    },
+  },
+
+  submitButton: {
+    ...commonButtonStyles,
+    backgroundColor: '#4f46e5', // indigo-600
+    color: '#ffffff', // white
+    marginTop: '1rem',
+
+    '&[data-theme="dark"]': {
+      backgroundColor: '#6366f1', // indigo-500
+      color: '#ffffff',
+    },
+  },
+
+  imagePreviewContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '200px',
+    borderRadius: '0.5rem',
+    overflow: 'hidden',
+    border: '2px dashed #cbd5e1', // slate-300
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'border-color 0.2s ease-in-out',
+    backgroundColor: '#f8fafc', // slate-50
+
+    '&[data-theme="dark"]': {
+      borderColor: '#475569', // slate-600
+      backgroundColor: '#334155', // slate-700
+    },
+  },
+
   imagePreview: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover', // This is key to making the image fill the container without distortion
-    borderRadius: '8px', // Match container's border radius
-    display: 'block', // Ensures no extra space below the image
+    objectFit: 'cover',
   },
+
   imageOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Semi-transparent dark overlay
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '8px',
-    // opacity: 0, // Opacity is controlled by React state
-    pointerEvents: 'none', // Allow clicks to pass through by default
+    justifyContent: 'center',
+    opacity: 0,
     transition: 'opacity 0.3s ease-in-out',
   },
+
   removeButton: {
+    ...commonButtonStyles,
     backgroundColor: '#dc2626', // red-600
     color: '#ffffff',
-    border: 'none',
-    borderRadius: '5px',
-    padding: '8px 15px',
-    cursor: 'pointer',
-    fontSize: '0.9rem',
-    fontWeight: '600',
+    padding: '0.5rem 1rem',
+    fontSize: '0.875rem', // text-sm
+  },
+
+  courseListSection: {
     display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-    // opacity: 1, // Opacity is effectively controlled by imageOverlay's opacity
-    pointerEvents: 'auto', // Make the button clickable when visible
-    '&:hover': { // Will not work as inline style
-      backgroundColor: '#b91c1c', // red-700
+    flexDirection: 'column',
+    gap: '1.5rem',
+    marginTop: '2.5rem',
+  },
+
+  viewToggleContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '0.75rem',
+    marginBottom: '1rem',
+  },
+
+  viewToggleButton: {
+    ...commonButtonStyles,
+    backgroundColor: '#f1f5f9', // slate-100
+    color: '#475569', // slate-600
+    border: '1px solid #cbd5e1', // slate-300
+    padding: '0.5rem 1rem',
+    fontSize: '0.875rem',
+
+    '&[data-theme="dark"]': {
+      backgroundColor: '#334155', // slate-700
+      color: '#cbd5e1', // slate-300
+      borderColor: '#475569', // slate-600
     },
   },
 
-  // Course List Section Styles
-  courseListSection: {
-    paddingTop: '2rem',
-  },
-  viewToggleContainer: {
-    display: 'flex',
-    gap: '10px',
-    marginBottom: '1.5rem',
-    justifyContent: 'center',
-    '@media (max-width: 480px)': {
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-  },
-  viewToggleButton: {
-    padding: '10px 15px',
-    border: '1px solid #cbd5e1', // slate-300
-    borderRadius: '8px',
-    backgroundColor: '#f1f5f9', // slate-100
-    color: '#334155', // slate-700
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    transition: 'all 0.2s ease-in-out',
-    '&:hover': { // Will not work as inline style
-      backgroundColor: '#e2e8f0', // slate-200
-      borderColor: '#94a3b8', // slate-400
-    },
-    '&[data-theme="dark"]': {
-      backgroundColor: '#475569', // slate-600
-      borderColor: '#64748b', // slate-500
-      color: '#f1f5f9', // slate-50
-      '&:hover': { // Will not work as inline style
-        backgroundColor: '#64748b', // slate-500
-      },
-    },
-  },
   viewToggleButtonActive: {
-    padding: '10px 15px',
-    border: '1px solid #4f46e5', // indigo-600
-    borderRadius: '8px',
-    backgroundColor: '#4f46e5', // indigo-600
-    color: '#ffffff',
-    cursor: 'default',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
+    ...commonButtonStyles,
+    backgroundColor: '#e0e7ff', // indigo-100
+    color: '#4f46e5', // indigo-600
+    border: '1px solid #a5b4fc', // indigo-300
+    padding: '0.5rem 1rem',
+    fontSize: '0.875rem',
+
     '&[data-theme="dark"]': {
-      backgroundColor: '#6366f1', // indigo-500
+      backgroundColor: '#4338ca', // indigo-700
+      color: '#ffffff',
       borderColor: '#6366f1', // indigo-500
     },
   },
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse' as 'collapse',
-    marginBottom: '1rem',
-  },
-  th: {
-    padding: '12px 15px',
-    textAlign: 'left',
-    backgroundColor: '#e2e8f0', // slate-200
-    color: '#1e293b', // slate-900
-    borderBottom: '2px solid #cbd5e1', // slate-300
+
+  loading: {
+    textAlign: 'center',
+    fontSize: '1.25rem',
+    color: '#475569', // slate-600
+
     '&[data-theme="dark"]': {
-      backgroundColor: '#475569', // slate-600
-      color: '#f8fafc', // slate-50
-      borderBottom: '2px solid #64748b', // slate-500
-    },
-  },
-  tr: {
-    transition: 'background-color 0.2s ease-in-out',
-    '&:nth-of-type(even)': {
-      backgroundColor: '#f1f5f9', // slate-100
-    },
-    '&:hover': { // Will not work as inline style
-      backgroundColor: '#e2e8f0', // slate-200
-    },
-    '&[data-theme="dark"]': {
-      '&:nth-of-type(even)': {
-        backgroundColor: '#334155', // slate-700
-      },
-      '&:hover': { // Will not work as inline style
-        backgroundColor: '#475569', // slate-600
-      },
-    },
-  },
-  td: {
-    padding: '12px 15px',
-    borderBottom: '1px solid #e2e8f0', // slate-200
-    color: '#334155', // slate-700
-    '&[data-theme="dark"]': {
-      borderBottom: '1px solid #475569', // slate-600
       color: '#cbd5e1', // slate-300
     },
   },
-  gridContainer: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: '20px',
-    marginBottom: '1rem',
-  },
-  courseCard: {
-    backgroundColor: '#ffffff', // white
-    borderRadius: '10px',
-    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
-    overflow: 'hidden',
-    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    display: 'flex', // Make it a flex container
-    flexDirection: 'column', // Stack children vertically
-    '&:hover': { // Will not work as inline style
-      transform: 'translateY(-5px)',
-      boxShadow: '0 8px 25px rgba(0, 0, 0, 0.12)',
-    },
-    '&[data-theme="dark"]': {
-      backgroundColor: '#334155', // slate-700
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-      '&:hover': { // Will not work as inline style
-        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)',
-      },
-    },
-  },
-  cardImageWrapper: {
-    width: '100%',
-    height: '180px',
-    overflow: 'hidden',
-  },
-  cardImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
-  cardContent: {
-    padding: '15px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-    flexGrow: '1', // Allow content to grow and take available space
-  },
-  cardTitle: {
-    fontSize: '1.25rem',
-    fontWeight: '700',
-    color: '#1e293b', // slate-900
-    marginBottom: '5px',
-    '&[data-theme="dark"]': {
-      color: '#f8fafc', // slate-50
-    },
-  },
-  cardDetail: {
-    fontSize: '0.9rem',
-    color: '#475569', // slate-600
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-    '& svg': {
-      width: '16px',
-      height: '16px',
-      stroke: '#64748b', // slate-500
-    },
+
+  empty: {
+    textAlign: 'center',
+    fontSize: '1.125rem',
+    color: '#64748b', // slate-500
+    padding: '2rem 0',
+    border: '1px dashed #cbd5e1',
+    borderRadius: '0.75rem',
+
     '&[data-theme="dark"]': {
       color: '#94a3b8', // slate-400
-      '& svg': {
-        stroke: '#aabccf', // slightly lighter for dark theme
+      borderColor: '#475569', // slate-600
+    },
+  },
+
+  table: {
+    width: '100%',
+    borderCollapse: 'separate',
+    borderSpacing: '0 0.5rem', // Adds space between rows
+    textAlign: 'left',
+    color: '#334155', // slate-700
+
+    '&[data-theme="dark"]': {
+      color: '#e2e8f0', // slate-200
+    },
+
+    '@media (max-width: 768px)': {
+      display: 'block',
+      overflowX: 'auto',
+      whiteSpace: 'nowrap',
+      WebkitOverflowScrolling: 'touch', // Enable smooth scrolling on iOS
+      '& thead': { display: 'none' }, // Hide table header on small screens
+      '& tbody': { display: 'block', width: '100%' },
+      '& tr': {
+        display: 'block',
+        marginBottom: '1rem',
+        border: '1px solid #e2e8f0',
+        borderRadius: '0.75rem',
+        padding: '1rem',
+        '&[data-theme="dark"]': {
+          borderColor: '#475569',
+        },
       },
-    },
-  },
-  instructorAvatar: {
-    width: '24px',
-    height: '24px',
-    borderRadius: '50%',
-    objectFit: 'cover',
-    marginRight: '5px',
-  },
-  cardDescription: {
-    fontSize: '0.85rem',
-    color: '#64748b', // slate-500
-    flexGrow: '1', // Allow description to grow but respect max-height
-    maxHeight: '4.2em', // Approximately 3 lines of text
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    lineHeight: '1.4em',
-    '&[data-theme="dark"]': {
-      color: '#cbd5e1', // slate-300
-    },
-  },
-  cardFooter: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 'auto', // Pushes the footer to the bottom
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#1e293b', // slate-900
-    '&[data-theme="dark"]': {
-      color: '#f8fafc', // slate-50
-    },
-  },
-  cardLink: {
-    color: '#4f46e5', // indigo-600
-    textDecoration: 'none',
-    fontWeight: '600',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '3px',
-    transition: 'color 0.2s ease-in-out',
-    '&:hover': { // Will not work as inline style
-      color: '#4338ca', // indigo-700
-    },
-    '& svg': {
-      width: '14px',
-      height: '14px',
-      stroke: '#4f46e5', // indigo-600
-      transition: 'stroke 0.2s ease-in-out',
-    },
-    '&:hover svg': { // Will not work as inline style
-      stroke: '#4338ca', // indigo-700
-    },
-    '&[data-theme="dark"]': {
-      color: '#6366f1', // indigo-500
-      '& svg': {
-        stroke: '#6366f1', // indigo-500
-      },
-      '&:hover': { // Will not work as inline style
-        color: '#818cf8', // indigo-400
-        '& svg': {
-          stroke: '#818cf8', // indigo-400
+      '& td': {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '0.5rem 0',
+        borderBottom: '1px solid #e2e8f0',
+        '&:last-child': { borderBottom: 'none' },
+        '&[data-theme="dark"]': {
+          borderColor: '#475569',
+        },
+        '&::before': { // For mobile, show column header
+          content: 'attr(data-label)',
+          fontWeight: 'bold',
+          color: '#64748b',
+          marginRight: '1rem',
+          '&[data-theme="dark"]': {
+            color: '#94a3b8',
+          },
         },
       },
     },
   },
 
-  // Pagination Styles
+  th: {
+    padding: '1rem 0.75rem',
+    backgroundColor: '#f1f5f9', // slate-100
+    fontWeight: 600,
+    fontSize: '0.875rem', // text-sm
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em', // tracking-wider
+    borderRadius: '0.5rem 0.5rem 0 0', // Rounded corners for table header
+
+    '&[data-theme="dark"]': {
+      backgroundColor: '#334155', // slate-700
+      color: '#cbd5e1', // slate-300
+    },
+  },
+
+  td: {
+    padding: '1rem 0.75rem',
+    backgroundColor: '#ffffff', // white
+    fontSize: '0.9375rem',
+
+    '&[data-theme="dark"]': {
+      backgroundColor: '#1e293b', // slate-800
+      color: '#e2e8f0', // slate-200
+    },
+
+    // Apply specific border-radius to the first and last child of the first and last row
+    '&:first-of-type': {
+      borderTopLeftRadius: '0.5rem',
+      borderBottomLeftRadius: '0.5rem',
+    },
+    '&:last-of-type': {
+      borderTopRightRadius: '0.5rem',
+      borderBottomRightRadius: '0.5rem',
+    },
+  },
+
+  tr: {
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)', // subtle shadow for rows
+    borderRadius: '0.5rem',
+    marginBottom: '0.5rem',
+    overflow: 'hidden', // Ensures inner content respects border-radius
+
+    '&[data-theme="dark"]': {
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+    },
+
+    // First and last row special handling for overall table border-radius effect
+    '&:first-of-type > td:first-of-type': { borderTopLeftRadius: '0.5rem' },
+    '&:first-of-type > td:last-of-type': { borderTopRightRadius: '0.5rem' },
+    '&:last-of-type > td:first-of-type': { borderBottomLeftRadius: '0.5rem' },
+    '&:last-of-type > td:last-of-type': { borderBottomRightRadius: '0.5rem' },
+  },
+
+  gridContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+    gap: '1.5rem', // gap-6
+    padding: '0.5rem',
+
+    '@media (max-width: 768px)': {
+      gridTemplateColumns: '1fr', // Single column on small screens
+      gap: '1.25rem',
+      padding: '0',
+    },
+  },
+
+  courseCard: {
+    backgroundColor: '#ffffff', // white
+    borderRadius: '1rem', // rounded-xl
+    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.08)', // shadow-lg
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+    border: '1px solid #e2e8f0', // slate-200
+
+    '&[data-theme="dark"]': {
+      backgroundColor: '#1e293b', // slate-800
+      boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
+      borderColor: '#334155', // slate-700
+    },
+  },
+
+  cardImageWrapper: {
+    width: '100%',
+    height: '180px',
+    overflow: 'hidden',
+    borderBottom: '1px solid #e2e8f0',
+
+    '&[data-theme="dark"]': {
+      borderColor: '#334155',
+    },
+  },
+
+  cardImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+
+  cardContent: {
+    padding: '1rem 1.25rem',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+    flexGrow: 1,
+  },
+
+  cardTitle: {
+    fontSize: '1.25rem', // text-xl
+    fontWeight: 700, // bold
+    color: '#1e293b', // slate-900
+
+    '&[data-theme="dark"]': {
+      color: '#f8fafc', // slate-50
+    },
+  },
+
+  cardDetail: {
+    fontSize: '0.9375rem',
+    color: '#475569', // slate-600
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+
+    '&[data-theme="dark"]': {
+      color: '#cbd5e1', // slate-300
+    },
+
+    '& svg': {
+      width: '1rem',
+      height: '1rem',
+      strokeWidth: '2px',
+      color: '#64748b',
+
+      '&[data-theme="dark"]': {
+        color: '#94a3b8',
+      },
+    },
+  },
+
+  instructorAvatar: {
+    width: '24px',
+    height: '24px',
+    borderRadius: '50%',
+    objectFit: 'cover',
+    border: '1px solid #cbd5e1', // Light border
+    '&[data-theme="dark"]': {
+      borderColor: '#475569', // Darker border in dark mode
+    },
+  },
+
+  cardDescription: {
+    fontSize: '0.875rem', // text-sm
+    color: '#64748b', // slate-500
+    lineHeight: '1.5',
+    marginBottom: '0.5rem',
+    flexGrow: 1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitLineClamp: 3, // Limit to 3 lines
+    WebkitBoxOrient: 'vertical',
+
+    '&[data-theme="dark"]': {
+      color: '#94a3b8', // slate-400
+    },
+  },
+
+  cardFooter: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 'auto', // Push to bottom
+    paddingTop: '1rem',
+    borderTop: '1px solid #e2e8f0', // slate-200
+    fontSize: '1rem',
+    fontWeight: 600,
+    color: '#1e293b', // slate-900
+
+    '&[data-theme="dark"]': {
+      borderColor: '#334155', // slate-700
+      color: '#f8fafc', // slate-50
+    },
+  },
+
+  cardLink: {
+    color: '#4f46e5', // indigo-600
+    textDecoration: 'none',
+    fontWeight: 500,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.25rem',
+    transition: 'color 0.2s ease-in-out',
+
+    '&[data-theme="dark"]': {
+      color: '#6366f1', // indigo-500
+    },
+
+    '& svg': {
+      transition: 'stroke 0.2s ease-in-out',
+      stroke: '#4f46e5',
+
+      '&[data-theme="dark"]': {
+        stroke: '#6366f1',
+      },
+    },
+  },
+
   pagination: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: '10px',
-    marginTop: '20px',
-    padding: '10px',
+    gap: '0.5rem',
+    marginTop: '2rem',
+    padding: '0.5rem',
+    borderRadius: '0.75rem',
     backgroundColor: '#f1f5f9', // slate-100
-    borderRadius: '8px',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
+
     '&[data-theme="dark"]': {
       backgroundColor: '#334155', // slate-700
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+    },
+
+    '@media (max-width: 768px)': {
+      flexWrap: 'wrap',
+      gap: '0.75rem',
     },
   },
+
   paginationButton: {
-    padding: '8px 15px',
-    border: '1px solid #cbd5e1', // slate-300
-    borderRadius: '6px',
+    ...commonButtonStyles,
     backgroundColor: '#ffffff', // white
-    color: '#334155', // slate-700
-    cursor: 'pointer',
-    transition: 'all 0.2s ease-in-out',
-    '&:hover': { // Will not work as inline style
-      backgroundColor: '#e2e8f0', // slate-200
-      borderColor: '#94a3b8', // slate-400
-    },
-    '&:disabled': { // Will not work as inline style
-      opacity: 0.5,
-      cursor: 'not-allowed',
-      backgroundColor: '#f1f5f9', // slate-100
-    },
-    '&[data-theme="dark"]': {
-      backgroundColor: '#475569', // slate-600
-      borderColor: '#64748b', // slate-500
-      color: '#f1f5f9', // slate-50
-      '&:hover': { // Will not work as inline style
-        backgroundColor: '#64748b', // slate-500
-      },
-      '&:disabled': { // Will not work as inline style
-        backgroundColor: '#3b5470', // darker slate for disabled
-      },
-    },
-  },
-  pageNumber: {
-    padding: '8px 12px',
-    border: '1px solid #cbd5e1', // slate-300
-    borderRadius: '6px',
     color: '#475569', // slate-600
-    cursor: 'pointer',
-    transition: 'all 0.2s ease-in-out',
-    '&:hover': { // Will not work as inline style
-      backgroundColor: '#e2e8f0', // slate-200
-      borderColor: '#94a3b8', // slate-400
-    },
+    border: '1px solid #cbd5e1', // slate-300
+    padding: '0.6rem 1rem',
+    fontSize: '0.875rem', // text-sm
+
     '&[data-theme="dark"]': {
-      borderColor: '#64748b', // slate-500
-      color: '#94a3b8', // slate-400
-      '&:hover': { // Will not work as inline style
-        backgroundColor: '#64748b', // slate-500
-      },
+      backgroundColor: '#1e293b', // slate-800
+      color: '#cbd5e1', // slate-300
+      borderColor: '#475569', // slate-600
     },
   },
+
+  pageNumber: {
+    ...commonButtonStyles,
+    backgroundColor: '#ffffff', // white
+    color: '#475569', // slate-600
+    border: '1px solid #cbd5e1', // slate-300
+    minWidth: '2.5rem', // fixed width for circles
+    height: '2.5rem', // fixed height for circles
+    borderRadius: '50%', // circle shape
+    padding: 0,
+    fontSize: '0.875rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    '&[data-theme="dark"]': {
+      backgroundColor: '#1e293b', // slate-800
+      color: '#cbd5e1', // slate-300
+      borderColor: '#475569', // slate-600
+    },
+  },
+
   pageNumberActive: {
-    padding: '8px 12px',
-    border: '1px solid #4f46e5', // indigo-600
-    borderRadius: '6px',
+    ...commonButtonStyles,
     backgroundColor: '#4f46e5', // indigo-600
-    color: '#ffffff',
-    fontWeight: '600',
-    cursor: 'default',
+    color: '#ffffff', // white
+    border: '1px solid #4f46e5',
+    minWidth: '2.5rem',
+    height: '2.5rem',
+    borderRadius: '50%',
+    padding: 0,
+    fontSize: '0.875rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
     '&[data-theme="dark"]': {
       backgroundColor: '#6366f1', // indigo-500
-      borderColor: '#6366f1', // indigo-500
-    },
-  },
-  loading: {
-    textAlign: 'center',
-    padding: '20px',
-    fontSize: '1.1rem',
-    color: '#475569', // slate-600
-    '&[data-theme="dark"]': {
-      color: '#94a3b8', // slate-400
-    },
-  },
-  empty: {
-    textAlign: 'center',
-    padding: '20px',
-    fontSize: '1.1rem',
-    color: '#475569', // slate-600
-    '&[data-theme="dark"]': {
-      color: '#94a3b8', // slate-400
+      color: '#ffffff',
+      borderColor: '#6366f1',
     },
   },
 };

@@ -15,6 +15,7 @@ export const appPaths = {
   admin: '/admin',
   userLogin: '/user/login',
   userSignup: '/user/signup',
+  userProfile: '/user/profile', // Added user profile path
 } as const
 
 export type AppPaths = typeof appPaths

@@ -4,13 +4,14 @@ import {
   HeroSection,
   WhyChooseUs,
 } from 'entities/component'
-import { Services } from './Services'
+import { Services } from './course'
 import { BuzWorking } from './BuzWorking'
 import { HomeWrapperStyled } from './styles.component'
 import { OurPeopleSection } from './OurPeople'
 import { ReferAndEarn } from './ReferAndEarn'
 import { whyChooseUseCardData } from 'features/model'
 import { useScreenSize } from 'shared/hooks'
+import  EventsShowcase from '../events/EventsShowcase/EventsShowcase'
 
 export const Home = () => {
 
@@ -27,6 +28,7 @@ export const Home = () => {
       <HomeWrapperStyled>
         <BuzWorking />
         <Services />
+        <EventsShowcase />
         <WhyChooseUs data={whyChooseUseCardData} />
       </HomeWrapperStyled>
       {/* <DownloadSection /> */}

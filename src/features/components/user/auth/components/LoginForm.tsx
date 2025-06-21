@@ -1,83 +1,92 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'; // Import useEffect
 import {
   FormContainer,
   FormCard,
   FormTitle,
   StyledTextField,
   SubmitButton,
-  ErrorText,
-} from './AuthForm.styles'
-import { useLogin } from 'features/hooks' // This hook handles email/password login
-import { Link } from 'react-router-dom'
-import { Typography, Button, TextField } from '@mui/material' // Import Button from MUI
-import GoogleIcon from '@mui/icons-material/Google' // Import a Google icon
-import { appPaths } from 'entities/config'
-import { auth, googleProvider } from '../../../../../firebaseConfig' // Adjust path as needed for your Firebase setup
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth' // Import GoogleAuthProvider
+  ErrorText, // You might choose to remove this if Snackbar is your only error display
+} from './AuthForm.styles';
+import { Link, useNavigate } from 'react-router-dom';
+import { Typography, TextField, Snackbar, Alert } from '@mui/material'; // Import Snackbar and Alert
+import { appPaths } from 'entities/config';
+import { useAuth } from '../../../../../app/providers/auth-management/AuthContext'; // Adjust the path based on your AuthContext location
 
 export const LoginForm = () => {
-  const { login, loading, error } = useLogin() // This hook handles email/password login
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [googleLoading, setGoogleLoading] = useState(false)
-  const [googleError, setGoogleError] = useState<string | null>(null)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null) // To show success messages
+  // Destructure `clearError` if your AuthContext provides a method to clear its error state
+  const { login, loading, error, clearError } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  // States for the Snackbar notification
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error' | 'info' | 'warning'>('info'); // Type for severity
+
+  const navigate = useNavigate();
+
+  // useEffect to watch for changes in the `error` state from AuthContext
+  // and display them in the Snackbar
+  useEffect(() => {
+    if (error) {
+      setSnackbarMessage(error);
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+      // Optional: If your AuthContext has a `clearError` method, you might call it here
+      // after a short delay or when the snackbar closes, to reset the context's error state.
+      // For example: setTimeout(() => clearError(), 5000);
+    }
+  }, [error]); // Dependency array: run this effect when `error` from useAuth changes
+
+  const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+    // Optional: Call clearError() here if you want to reset the context's error
+    // when the user manually closes the snackbar.
+    // if (clearError) clearError();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSuccessMessage(null) // Clear previous messages
+    e.preventDefault();
+    setOpenSnackbar(false); // Close any existing snackbar before a new submission
+    setSnackbarMessage(''); // Clear previous snackbar message
+    setSnackbarSeverity('info'); // Reset severity to default
+
+    // Optional: Clear error from AuthContext immediately before a new login attempt
+    if (clearError) clearError();
+
     try {
-      await login({ email, password })
-      setSuccessMessage('Logged in successfully!')
-      console.log('Traditional login successful!')
-    } catch (err) {
-      console.error('Traditional login failed:', err)
-    }
-  }
+      const userResponse = await login({ email, password });
 
-  const handleGoogleLogin = async () => {
-    setGoogleLoading(true)
-    setGoogleError(null)
-    setSuccessMessage(null) // Clear previous messages
-    try {
-      const result = await signInWithPopup(auth, googleProvider)
-      console.log('Signed in with Google successfully! User:', result.user)
+      // On successful login, show success message in Snackbar
+      // We expect the backend to send a `message` field in the response now
+      setSnackbarMessage(userResponse?.message || 'Logged in successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
 
-      setSuccessMessage('Signed in with Google successfully!')
-    } catch (error) {
-      if (error instanceof Error) {
-        const firebaseError = error as any
-        const errorCode = firebaseError.code
-        const errorMessage = firebaseError.message
-        const email = firebaseError.customData?.email
-        const credential = GoogleAuthProvider.credentialFromError(firebaseError)
-
-        console.error('Google Sign-in Error Code:', errorCode)
-        console.error('Google Sign-in Error Message:', errorMessage)
-        console.error('Google Sign-in Email (if available):', email)
-        console.error('Google Sign-in Credential (if available):', credential)
-
-        setGoogleError(errorMessage || 'Failed to sign in with Google.')
+      // Navigate based on user role
+      const role = userResponse?.data?.user?.role; // Access user.role from the response data
+      if (role === 'admin') {
+        navigate(appPaths.admin);
       } else {
-        setGoogleError('An unknown error occurred during Google sign-in.')
-        console.error('Unknown Google Sign-in Error:', error)
+        navigate(appPaths['/']);
       }
-    } finally {
-      setGoogleLoading(false)
+    } catch (err) {
+      // The `error` state from `useAuth` is updated by the AuthContext's `login` function
+      // and the `useEffect` above will automatically trigger the Snackbar display.
+      console.error('Login submission failed:', err); // Log for debugging purposes
     }
-  }
+  };
 
   return (
     <FormContainer>
       <FormCard elevation={3}>
         <FormTitle>Login to Edunova</FormTitle>
-        {error && <ErrorText>{error}</ErrorText>}
-        {googleError && <ErrorText>{googleError}</ErrorText>}
-        {successMessage && (
-          <Typography color="success" align="center" sx={{ mb: 2 }}>
-            {successMessage}
-          </Typography>
-        )}
+        {/* The direct ErrorText can be removed if Snackbar is your primary notification method */}
+        {/* {error && <ErrorText>{error}</ErrorText>} */}
+        {/* Removed the successMessage Typography as it's now handled by Snackbar */}
 
         <form onSubmit={handleSubmit}>
           <StyledTextField
@@ -86,6 +95,7 @@ export const LoginForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            margin="normal" // Added for consistent spacing
           />
           <TextField
             label="Password"
@@ -94,53 +104,18 @@ export const LoginForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            margin="normal" // Added for consistent spacing
           />
           <SubmitButton
             variant="contained"
             fullWidth
             type="submit"
             disabled={loading}
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, mt: 2 }} // Added margin-top for spacing
           >
             {loading ? 'Logging in...' : 'Login'}
           </SubmitButton>
         </form>
-
-        <Typography
-          variant="body2"
-          align="center"
-          sx={{ marginTop: 2, marginBottom: 2 }}
-        >
-          OR
-        </Typography>
-
-        {/* Google Login Button using Material-UI Button */}
-        <Button
-          variant="outlined"
-          color="primary"
-          fullWidth
-          onClick={handleGoogleLogin}
-          disabled={googleLoading}
-          startIcon={<GoogleIcon />}
-          sx={{
-            py: 1.5, // Padding vertical
-            borderRadius: '8px', // Rounded corners
-            borderColor: '#db4437', // Google red border
-            color: '#db4437', // Google red text
-            '&:hover': {
-              backgroundColor: 'rgba(219, 68, 55, 0.04)', // Light red hover
-              borderColor: '#db4437',
-            },
-            '&:disabled': {
-              borderColor: 'rgba(0, 0, 0, 0.26)',
-              color: 'rgba(0, 0, 0, 0.26)',
-            },
-            fontWeight: 600,
-            fontSize: '1rem',
-          }}
-        >
-          {googleLoading ? 'Signing in with Google...' : 'Login with Google'}
-        </Button>
 
         <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
           New user?{' '}
@@ -156,6 +131,22 @@ export const LoginForm = () => {
           </Link>
         </Typography>
       </FormCard>
+
+      {/* Snackbar component for notifications */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000} // How long the snackbar stays open (in milliseconds)
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Position of the snackbar
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity} // 'success' or 'error'
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </FormContainer>
-  )
-}
+  );
+};

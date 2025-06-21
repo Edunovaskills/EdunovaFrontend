@@ -7,23 +7,19 @@ import {
   SubmitButton,
   ErrorText,
 } from './AuthForm.styles'
-import { useSignup } from 'features/hooks' // We'll modify this hook or create a new one
-import { Link } from 'react-router-dom'
-import { Typography } from '@mui/material' // Import Button from MUI
-import GoogleIcon from '@mui/icons-material/Google' // Import a Google icon
+import { Link, useNavigate } from 'react-router-dom' // Import useNavigate
+import { Typography } from '@mui/material'
 import { appPaths } from 'entities/config'
-import { auth, googleProvider } from '../../../../../firebaseConfig' // Adjust path as needed
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { useAuth } from '../../../../../app/providers/auth-management/AuthContext'; // Adjust the path based on your AuthContext location
 
 export const SignupForm = () => {
-  const { signup, loading, error } = useSignup() // This hook handles email/password signup
+  const { signup, loading, error } = useAuth(); // Use signup, loading, error from AuthContext
   const [form, setForm] = useState({
     name: '',
     email: '',
     password: '',
   })
-  const [googleLoading, setGoogleLoading] = useState(false)
-  const [googleError, setGoogleError] = useState(null)
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -32,38 +28,12 @@ export const SignupForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await signup(form)
-      alert('Signup successful!')
+      await signup(form) // Use signup from AuthContext
+      alert('Signup successful! Please log in with your new account.'); // Inform user
+      navigate(appPaths.userLogin); // Redirect to login page after successful signup
     } catch (err) {
-      // Error is already handled by useSignup hook, but you can add more here if needed
-    }
-  }
-
-  const handleGoogleSignup = async () => {
-    setGoogleLoading(true)
-    setGoogleError(null)
-    console.log('Google Signup started') // Add this line
-    try {
-      const result = await signInWithPopup(auth, googleProvider)
-      // FIXME: Check this form where you need import this @Ashish
-      const credential = GoogleAuthProvider.credentialFromResult(result)
-      const token = credential?.accessToken
-      const user = result.user
-
-      alert('Signed in with Google successfully!')
-    } catch (error: any) {
-      // Handle Errors here.
-      const errorCode = error.code
-      const errorMessage = error.message
-      // The email of the user's account used.
-      const email = error.customData?.email
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error)
-      setGoogleError(errorMessage || 'Failed to sign in with Google.')
-      console.error('Google Sign-in Error:', error)
-    } finally {
-      setGoogleLoading(false)
-      console.log('Google Signup finished') // Add this line
+      console.error('Signup failed:', err);
+      // Error is now handled by the AuthContext, so `error` state will be updated there.
     }
   }
 
@@ -72,7 +42,7 @@ export const SignupForm = () => {
       <FormCard elevation={3}>
         <FormTitle>Create an Account</FormTitle>
         {error && <ErrorText>{error}</ErrorText>}
-        {googleError && <ErrorText>{googleError}</ErrorText>}
+
         <form onSubmit={handleSubmit}>
           <StyledTextField
             label="Name"
@@ -110,25 +80,6 @@ export const SignupForm = () => {
             {loading ? 'Signing up...' : 'Signup'}
           </SubmitButton>
         </form>
-
-        <Typography
-          variant="body2"
-          align="center"
-          sx={{ marginTop: 2, marginBottom: 2 }}
-        >
-          OR
-        </Typography>
-
-        <SubmitButton
-          variant="outlined"
-          color="primary"
-          fullWidth
-          onClick={handleGoogleSignup}
-          disabled={googleLoading}
-          startIcon={<GoogleIcon />}
-        >
-          {googleLoading ? 'Signing in with Google...' : 'Sign up with Google'}
-        </SubmitButton>
 
         <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
           Already have an account?{' '}

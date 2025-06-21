@@ -7,8 +7,13 @@ import { HomePage } from 'pages/components/home/Home'
 import { ServicesPage } from 'pages/components/services/Services'
 import { TicketBookingServicesPage } from 'pages/components/ticket-booking-services/TicketBookingServices'
 import { AdminPage } from 'pages/components/admin/Admin'
-import { LoginPage } from 'pages/components/user/Login'
-import { SignupPage } from 'pages/components/user/Signup'
+import { LoginPage } from 'pages/components/user/Login' // Keep this import
+import { SignupPage } from 'pages/components/user/Signup' // Keep this import
+
+// Import UserProfile and PrivateRoute
+import { UserProfilepage } from '../../../../pages/components/user/UserProfile' // Corrected path to UserProfile
+import PrivateRoute from '../PrivateRoute' // Corrected path to PrivateRoute (assuming it's in the same directory)
+
 import {
   Outlet,
   Route,
@@ -32,11 +37,29 @@ const Router = createBrowserRouter(
           path={appPaths.ticketBookingServices}
           element={<TicketBookingServicesPage />}
         />
+        {/* Keep using LoginPage and SignupPage as you specified */}
         <Route path={appPaths.userLogin} element={<LoginPage />} />
         <Route path={appPaths.userSignup} element={<SignupPage />} />
 
-        {/* Admin route without MainLayout */}
-        <Route path={appPaths.admin} element={<AdminPage />} />
+        {/* New: Protected User Profile Route */}
+        <Route
+          path={appPaths.userProfile}
+          element={
+            <PrivateRoute>
+              <UserProfilepage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Admin route - now protected by PrivateRoute with role check */}
+        <Route
+          path={appPaths.admin}
+          element={
+            <PrivateRoute roles={['admin']}> {/* Assumes 'admin' is the role for administrators */}
+              <AdminPage />
+            </PrivateRoute>
+          }
+        />
 
         {/* Catch-all route for 404 */}
         <Route path="*" element={<h1>Page not found</h1>} />

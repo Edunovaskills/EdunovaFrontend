@@ -1,33 +1,51 @@
 // src/features/components/admin/AddCourse/api/course.api.ts
 
 import { fetchClient } from '../../../../../pages/components/services/fetchClient';
-import { Course, mockCourses } from '../mock/mockCourses';
 
-interface CoursesApiResponse {
-  courses: Course[]; // This explicitly states it should be an array
-  nextCursor: string | null;
-  hasMore: boolean;
+// Define the Course interface to match your backend Mongoose schema
+export interface Course {
+  id: string; // MongoDB's _id
+  title: string;
+  description: string;
+  price: number;
+  image: string; // This will be the Cloudinary URL
+  createdAt?: string; // Optional: if you display creation date
+  updatedAt?: string; // Optional: if you display update date
+  isActive?: boolean; // Optional: for soft delete status
 }
 
-// --- API Implementation (Backend) ---
+// Define the API response interface for fetching courses
+interface CoursesApiResponse {
+  data: {
+    courses: Course[];
+  };
+  currentPage: number;
+  totalPages: number;
+  total: number;
+}
+
+/**
+ * Fetches courses from the backend with offset-based pagination.
+ * @param limit The maximum number of courses to return per page.
+ * @param page The current page number to fetch.
+ * @returns A promise that resolves to CoursesApiResponse.
+ */
 const fetchCoursesFromBackend = async (
   limit: number,
-  cursor: string | null
+  page: number
 ): Promise<CoursesApiResponse> => {
   const queryParams = new URLSearchParams();
   queryParams.append('limit', String(limit));
-  if (cursor) {
-    queryParams.append('cursor', cursor);
-  }
+  queryParams.append('page', String(page));
 
   try {
-    const data = await fetchClient<CoursesApiResponse>(`/courses?${queryParams.toString()}`, {
+    const data = await fetchClient<CoursesApiResponse>(`/api/admin/courses?${queryParams.toString()}`, {
       method: 'GET',
     });
     // SAFEGURD: Ensure data.courses is always an array
-    if (!Array.isArray(data.courses)) {
+    if (!Array.isArray(data.data.courses)) { // Adjusted for the nested 'data' object
         console.warn('Backend response for courses was not an array. Defaulting to empty array.', data);
-        data.courses = [];
+        data.data.courses = [];
     }
     return data;
   } catch (error) {
@@ -36,83 +54,83 @@ const fetchCoursesFromBackend = async (
   }
 };
 
-const createCourseOnBackend = async (course: Omit<Course, 'id'>, image?: File | null): Promise<Course> => {
-  const formData = new FormData();
-  for (const key in course) {
-    formData.append(key, String(course[key as keyof typeof course]));
-  }
-  if (image) {
-    formData.append('thumbnail', image);
-  }
-
+/**
+ * Creates a new course on the backend.
+ * This now takes FormData directly to handle file uploads.
+ * @param formData FormData containing course data and the image file.
+ * @returns A promise that resolves to the created Course object.
+ */
+const createCourseOnBackend = async (formData: FormData): Promise<Course> => {
   try {
-    const createdCourse = await fetchClient<Course>('/courses', {
+    // fetchClient will automatically set 'Content-Type': 'multipart/form-data' when sending FormData
+    const response = await fetchClient<{ success: boolean, data: { course: Course } }>(`/api/admin/courses`, {
       method: 'POST',
-      body: formData,
+      body: formData, // Send FormData directly
     });
-    return createdCourse;
+    if (!response.success) {
+      throw new Error('Failed to create course: ' + JSON.stringify(response));
+    }
+    return response.data.course;
   } catch (error) {
     console.error('Error creating course on backend:', error);
     throw new Error(`Failed to create course on backend: ${error instanceof Error ? error.message : String(error)}`);
   }
 };
 
-// --- Mock Implementation (Fallback) ---
-const fetchCoursesFromMock = async (
-  limit: number,
-  cursor: string | null
-): Promise<CoursesApiResponse> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const sortedCourses = [...mockCourses].sort((a, b) => a.id.localeCompare(b.id));
+/**
+ * Updates an existing course on the backend.
+ * This now takes FormData directly to handle file uploads, or Partial<Course> for non-file updates.
+ * @param id The ID of the course to update.
+ * @param formData FormData containing course data (including optional new image) or Partial<Course> object.
+ * @returns A promise that resolves to the updated Course object.
+ */
+const updateCourseOnBackend = async (id: string, formData: FormData | Partial<Course>): Promise<Course> => {
+  try {
+    const options: RequestInit = {
+      method: 'PUT',
+    };
 
-      let startIndex = 0;
-      if (cursor) {
-        const cursorIndex = sortedCourses.findIndex((c) => c.id === cursor);
-        if (cursorIndex !== -1) {
-          startIndex = cursorIndex + 1;
-        } else {
-          console.warn(`Mock API: Cursor '${cursor}' not found. Starting from beginning.`);
-          startIndex = 0;
-        }
-      }
-
-      const endIndex = startIndex + limit;
-      const coursesSlice = sortedCourses.slice(startIndex, endIndex);
-
-      const lastItemInSlice = coursesSlice[coursesSlice.length - 1];
-      const nextCursor = (coursesSlice.length > 0 && endIndex < sortedCourses.length)
-        ? lastItemInSlice.id
-        : null;
-
-      const hasMore = endIndex < sortedCourses.length;
-
-      resolve({
-        courses: coursesSlice, // This is already an array from .slice()
-        nextCursor,
-        hasMore,
-      });
-    }, 500);
-  });
-};
-
-const createCourseOnMock = async (courseData: Omit<Course, 'id'>, image?: File | null): Promise<Course> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newCourse: Course = {
-        ...courseData,
-        id: `mock-${mockCourses.length + 1}-${Date.now()}`,
+    if (formData instanceof FormData) {
+      options.body = formData; // Send FormData if file is included
+    } else {
+      options.headers = {
+        'Content-Type': 'application/json', // Send JSON if no file is included
       };
-      mockCourses.push(newCourse);
-      console.log('Mock: Course created:', newCourse);
-      resolve(newCourse);
-    }, 500);
-  });
+      options.body = JSON.stringify(formData);
+    }
+
+    const response = await fetchClient<{ success: boolean, data: { course: Course } }>(`/api/admin/courses/${id}`, options);
+    if (!response.success) {
+      throw new Error('Failed to update course: ' + JSON.stringify(response));
+    }
+    return response.data.course;
+  } catch (error) {
+    console.error(`Error updating course with ID ${id} on backend:`, error);
+    throw new Error(`Failed to update course: ${error instanceof Error ? error.message : String(error)}`);
+  }
 };
 
-const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true';
+/**
+ * Deletes a course from the backend (soft delete, setting isActive to false).
+ * @param id The ID of the course to delete.
+ * @returns A promise that resolves when the course is successfully deleted.
+ */
+const deleteCourseOnBackend = async (id: string): Promise<void> => {
+  try {
+    await fetchClient<void>(`/api/admin/courses/${id}`, {
+      method: 'DELETE',
+    });
+    console.log(`Course with ID ${id} deleted successfully from backend.`);
+  } catch (error) {
+    console.error(`Error deleting course with ID ${id} on backend:`, error);
+    throw new Error(`Failed to delete course: ${error instanceof Error ? error.message : String(error)}`);
+  }
+};
+
 
 export const courseApi = {
-  fetchCourses: USE_MOCK_API ? fetchCoursesFromMock : fetchCoursesFromBackend,
-  createCourse: USE_MOCK_API ? createCourseOnMock : createCourseOnBackend,
+  fetchCourses: fetchCoursesFromBackend,
+  createCourse: createCourseOnBackend,
+  updateCourse: updateCourseOnBackend,
+  deleteCourse: deleteCourseOnBackend,
 };
