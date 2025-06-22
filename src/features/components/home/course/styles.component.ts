@@ -62,6 +62,8 @@ export const DescriptionContainer = styled(Typography)(({ theme }) => ({
     ? `calc(${theme.typography.body2.lineHeight} * 3)`
     : '4.5em',
   position: 'relative',
+  whiteSpace: 'pre-wrap',
+  wordWrap: 'break-word',
 }))
 
 export const ModalContentBox = styled(Box)(({ theme }) => ({

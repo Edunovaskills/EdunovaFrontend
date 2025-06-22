@@ -12,3 +12,8 @@ export {
   useAllEventsQuery,
   AllEventsQueryKey,
 } from './events/get-all-events.query'
+
+export {
+  useEventByIdQuery,
+  EventByIdQueryKey,
+} from './events/get-event-by-id.query'

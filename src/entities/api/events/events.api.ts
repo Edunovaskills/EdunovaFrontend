@@ -1,5 +1,5 @@
 import { getClient, type IClient } from 'shared/data-providers/model/fetcher'
-import { EventResponse } from 'entities/model'
+import { EventResponse, type EventDetail } from 'entities/model'
 
 export class EventsApi {
   client: IClient
@@ -9,6 +9,11 @@ export class EventsApi {
 
   async getAllEvents() {
     const response = await this.client.get<EventResponse>('')
+    return response
+  }
+
+  async getEventById(eventId: string) {
+    const response = await this.client.get<EventDetail>(`${eventId}`)
     return response
   }
 }

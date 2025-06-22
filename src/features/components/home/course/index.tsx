@@ -113,9 +113,6 @@ const ServicesShowcase: React.FC = () => {
     )
   }
 
-  const longDescForTEst =
-    'jabsdkajsbdkjabsdjjabsdkbasdjbajsdbakjsbdaksdbkasbdkajsbdkasbdkabsdasbdaksdbaksbdkasbdkasbdkasbdasblabdlabdlabdlabdlablabdlabdlasbdlabdlabals'
-
   return (
     <>
       <Carousel
@@ -161,9 +158,9 @@ const ServicesShowcase: React.FC = () => {
                     {course.title}
                   </Typography>
                   <DescriptionContainer variant="body2">
-                    {longDescForTEst.length > 100 ? (
+                    {course.description.length > 100 ? (
                       <>
-                        {`${longDescForTEst.substring(0, 100)}...`}
+                        {`${course.description.substring(0, 100)}...`}
                         <Typography
                           component="span"
                           variant="body2"

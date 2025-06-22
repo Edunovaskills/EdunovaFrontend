@@ -27,7 +27,7 @@ const mainMenuItems: MenuItem[] = [
 ]
 const secondaryMenuITems: MenuItem[] = [
   { label: 'Download App', value: 'download' },
-  { label: 'Help & Support', value: 'helpAndSupport' },
+  { label: 'Help & Support', value: 'events' },
   { label: 'Privacy Policy', value: 'privacy-policy' },
   { label: 'Terms of Services', value: 'terms-of-services' },
 ]
@@ -44,7 +44,7 @@ export const Footer = () => {
     )
   }, [location, menuItem])
 
-  const { smallScreen:smallscreen } = useScreenSize()
+  const { smallScreen: smallscreen } = useScreenSize()
 
   return (
     <StackStyled issmall={smallscreen}>

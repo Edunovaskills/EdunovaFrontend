@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 
 import {
   I18nProvider,
@@ -7,6 +7,7 @@ import {
   ThemeProvider,
 } from './providers'
 import { SnackBarProvider } from 'entities/state'
+import { LoadingComponent } from 'shared/components'
 
 // Import the new AuthProvider
 
@@ -16,7 +17,13 @@ const App = () => {
       <ThemeProvider>
         <QueryProvider>
           <SnackBarProvider>
-            <RouterProvider />
+            <Suspense
+              fallback={
+                <LoadingComponent loading={true} message="Loading..." />
+              }
+            >
+              <RouterProvider />
+            </Suspense>
           </SnackBarProvider>
         </QueryProvider>
       </ThemeProvider>

@@ -7,10 +7,16 @@ import {
   Box,
   useTheme,
   useMediaQuery,
-  CircularProgress,
 } from '@mui/material'
 import { Carousel } from 'entities/component'
 import { SwiperSlide } from 'swiper/react'
+import { useNavigate } from 'react-router-dom'
+import { appPaths } from 'entities/config'
+import {
+  getAppPath,
+  useAppNavigate,
+} from 'entities/state/app-route/app.route.state'
+import { LoadingComponent } from 'shared/components'
 
 import {
   CardStyled,
@@ -27,6 +33,7 @@ const PLACEHOLDER_EVENT_IMAGE_URL =
 const EventsShowcase = () => {
   const { data, isLoading, isError } = useAllEventsQuery()
   const theme = useTheme()
+  const { appNavigate } = useAppNavigate()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
   const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'))
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'))
@@ -42,6 +49,17 @@ const EventsShowcase = () => {
       return 3.5
     }
     return 3
+  }
+
+  const handleEventClick = (eventId: string) => {
+    appNavigate('eventDetail', { eventId })
+  }
+
+  const handleEnrollClick = (e: React.MouseEvent, paymentUrl: string) => {
+    e.stopPropagation() // Prevent card click when clicking enroll button
+    if (paymentUrl) {
+      window.open(paymentUrl, '_blank')
+    }
   }
 
   return (
@@ -71,138 +89,133 @@ const EventsShowcase = () => {
           enhancement, or intellectual growth.
         </Typography>
       </Stack>
-      {isLoading ? (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '300px',
-            width: '100%',
-          }}
-        >
-          <CircularProgress color="primary" size={60} />
-          <Typography
-            variant="h6"
-            sx={{ ml: 2, color: theme.palette.text.secondary }}
+
+      <LoadingComponent
+        loading={isLoading}
+        message="Loading exciting events..."
+        minHeight="300px"
+      >
+        {isError ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: '300px',
+              width: '100%',
+            }}
           >
-            Loading exciting events...
-          </Typography>
-        </Box>
-      ) : isError ? (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '300px',
-            width: '100%',
-          }}
-        >
-          <Typography variant="h6" color="error" textAlign="center">
-            Oops! Please try again later.
-          </Typography>
-        </Box>
-      ) : (data?.data?.events.length ?? 0) > 0 ? (
-        <Carousel
-          slidesPerView={getSlidesPerView()}
-          spaceBetween={isSmallScreen ? 15 : isMediumScreen ? 25 : 40}
-          centeredSlides={isSmallScreen}
-          loop={(data?.data?.events.length ?? 0) > getSlidesPerView()}
-          autoplay={{
-            delay: 4000,
-            disableOnInteraction: false,
-          }}
-          pagination={{
-            clickable: true,
-            dynamicBullets: true,
-          }}
-          navigation={!isSmallScreen}
-          freeMode={true}
-          grabCursor={true}
-        >
-          {data?.data?.events.map((event) => (
-            <SwiperSlide key={event._id}>
-              <CardStyled>
-                <ImgWrapperStyled>
-                  <img
-                    src={event.image || PLACEHOLDER_EVENT_IMAGE_URL}
-                    alt={event.title || 'Event Image'}
-                    onError={(
-                      e: React.SyntheticEvent<HTMLImageElement, Event>
-                    ) => {
-                      // Fallback if image fails to load
-                      const target = e.target as HTMLImageElement
-                      target.src = PLACEHOLDER_EVENT_IMAGE_URL
-                    }}
-                  />
-                </ImgWrapperStyled>
-                <Divider
-                  sx={{ mt: 2, mb: 1.5, borderColor: theme.palette.divider }}
-                />{' '}
-                <CardContent
-                  component={Stack}
-                  spacing={1}
-                  sx={{ flexGrow: 1, p: 1.5, pt: 0, pb: 1 }} // Adjust padding within content area
+            <Typography variant="h6" color="error" textAlign="center">
+              Oops! Please try again later.
+            </Typography>
+          </Box>
+        ) : (data?.data?.events.length ?? 0) > 0 ? (
+          <Carousel
+            slidesPerView={getSlidesPerView()}
+            spaceBetween={isSmallScreen ? 15 : isMediumScreen ? 25 : 40}
+            centeredSlides={isSmallScreen}
+            loop={(data?.data?.events.length ?? 0) > getSlidesPerView()}
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: false,
+            }}
+            pagination={{
+              clickable: true,
+              dynamicBullets: true,
+            }}
+            navigation={!isSmallScreen}
+            freeMode={true}
+            grabCursor={true}
+          >
+            {data?.data?.events.map((event) => (
+              <SwiperSlide key={event._id}>
+                <CardStyled
+                  onClick={() => handleEventClick(event._id)}
+                  sx={{ cursor: 'pointer' }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: theme.typography.fontWeightBold,
-                      maxHeight: '3.2em',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      lineHeight: '1.6em',
-                      color: theme.palette.text.primary,
-                    }}
+                  <ImgWrapperStyled>
+                    <img
+                      src={event.image || PLACEHOLDER_EVENT_IMAGE_URL}
+                      alt={event.title || 'Event Image'}
+                      onError={(
+                        e: React.SyntheticEvent<HTMLImageElement, Event>
+                      ) => {
+                        // Fallback if image fails to load
+                        const target = e.target as HTMLImageElement
+                        target.src = PLACEHOLDER_EVENT_IMAGE_URL
+                      }}
+                    />
+                  </ImgWrapperStyled>
+                  <Divider
+                    sx={{ mt: 2, mb: 1.5, borderColor: theme.palette.divider }}
+                  />{' '}
+                  <CardContent
+                    component={Stack}
+                    spacing={1}
+                    sx={{ flexGrow: 1, p: 1.5, pt: 0, pb: 1 }} // Adjust padding within content area
                   >
-                    {event.title}
-                  </Typography>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: theme.typography.fontWeightBold,
+                        maxHeight: '3.2em',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        lineHeight: '1.6em',
+                        color: theme.palette.text.primary,
+                      }}
+                    >
+                      {event.title}
+                    </Typography>
 
-                  <DescriptionContainer variant="body2">
-                    {event.description}
-                  </DescriptionContainer>
+                    <DescriptionContainer variant="body2">
+                      {event.description}
+                    </DescriptionContainer>
 
-                  <Box sx={{ flexGrow: 1 }} />
+                    <Box sx={{ flexGrow: 1 }} />
 
-                  <Typography
-                    variant="body2.400"
-                    color="primary.main"
-                    sx={{ fontWeight: theme.typography.fontWeightBold, mt: 1 }}
-                  >
-                    Price: {event.price === 0 ? 'Free' : `₹${event.price}`}
-                  </Typography>
+                    <Typography
+                      variant="body2.400"
+                      color="primary.main"
+                      sx={{
+                        fontWeight: theme.typography.fontWeightBold,
+                        mt: 1,
+                      }}
+                    >
+                      Price: {event.price === 0 ? 'Free' : `₹${event.price}`}
+                    </Typography>
 
-                  <EnrollButtonStyled
-                    variant="contained"
-                    onClick={() => window.open(event.paymentUrl, '_blank')}
-                    disabled={!event.paymentUrl}
-                  >
-                    Enroll Now
-                  </EnrollButtonStyled>
-                </CardContent>
-              </CardStyled>
-            </SwiperSlide>
-          ))}
-        </Carousel>
-      ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '300px',
-            width: '100%',
-          }}
-        >
-          <Typography variant="h6" color="text.secondary" textAlign="center">
-            No events are available at the moment. Please check back later!
-          </Typography>
-        </Box>
-      )}
+                    <EnrollButtonStyled
+                      variant="contained"
+                      onClick={(e) => handleEnrollClick(e, event.paymentUrl)}
+                      disabled={!event.paymentUrl}
+                    >
+                      Enroll Now
+                    </EnrollButtonStyled>
+                  </CardContent>
+                </CardStyled>
+              </SwiperSlide>
+            ))}
+          </Carousel>
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: '300px',
+              width: '100%',
+            }}
+          >
+            <Typography variant="h6" color="text.secondary" textAlign="center">
+              No events are available at the moment. Please check back later!
+            </Typography>
+          </Box>
+        )}
+      </LoadingComponent>
     </Box>
   )
 }

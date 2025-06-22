@@ -17,3 +17,7 @@ export type EventResponse = ApiContract<{
   events: Event[]
 }> &
   PaginatedResponse
+
+export type EventDetail = ApiContract<{
+  event: Event
+}>

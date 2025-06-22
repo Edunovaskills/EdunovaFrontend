@@ -1,13 +1,5 @@
 export const appPathParams = {
-  chatId: 'chat-id',
-  conversationId: 'conversation-id',
-  viewId: 'view-id',
-  policyId: 'policy-id',
-  teamId: 'team-id',
-  workspaceId: 'workspace-id',
-  groupId: 'group-id',
-  anomalyId: 'anomaly-id',
-  stepId: 'step-id',
+  eventId: 'event-id',
 } as const
 export type AppRouteStateValue = {
   anyState: boolean // REMARKS: Update this for state key
@@ -28,7 +20,8 @@ export const appPaths = {
   ticketBookingServices: '/services/ticket-booking',
   groceriesDelivery: '/services/grocery-delivery',
   bikeServices: '/services/bike',
-  helpAndSupport: '/helpAndSupport',
+  events: '/events',
+  eventDetail: `/events/:${appPathParams.eventId}`,
   about: '/about',
   'contact-us': '/contact-us',
   career: '/career',
@@ -42,8 +35,16 @@ export const appPaths = {
   verifyEmail: '/verify-email',
 } as const
 
+export const appSearchParams = {
+  example: 'example-params',
+  code: 'code',
+  id: 'id',
+} as const
 export type AppPaths = typeof appPaths
 export type AppPathsName = keyof AppPaths
+
+export type AppSearchParams = typeof appSearchParams
+export type AppSearchParamsName = keyof AppSearchParams
 
 // ------------------ External App Paths ----------------
 
@@ -64,8 +65,6 @@ export const extPaths = {
     route: {
       login: '/login',
       pricing: '/pricing',
-      // userLogin: '/user/login',  // Removed duplicate
-      // userSignup: '/user/signup', // Removed duplicate
     },
   },
 } satisfies ExternalPath

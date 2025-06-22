@@ -9,6 +9,7 @@ import { TicketBookingServicesPage } from 'pages/components/ticket-booking-servi
 import { AdminPage } from 'pages/components/admin/Admin'
 import { LoginPage } from 'pages/components/user/Login' // Keep this import
 import { SignupPage } from 'pages/components/user/Signup' // Keep this import
+import { EventDetailsPage } from 'pages/components'
 
 // Import UserProfile and PrivateRoute
 
@@ -32,7 +33,8 @@ const Router = createBrowserRouter(
           {/* Routes that use MainLayout */}
           <Route path={appPaths['/']} element={<HomePage />} />
           <Route path={appPaths.about} element={<AboutUsPage />} />
-          <Route path={appPaths.helpAndSupport} element={<HelpSupportPage />} />
+          <Route path={appPaths.events} element={<HelpSupportPage />} />
+          <Route path={appPaths.eventDetail} element={<EventDetailsPage />} />
           <Route path={appPaths.services} element={<ServicesPage />} />
           <Route path={appPaths.cabServices} element={<CabServicesPage />} />
           <Route

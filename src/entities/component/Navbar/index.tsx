@@ -48,7 +48,7 @@ const menuItems: MenuItem[] = [
   { label: 'Home', value: '/' },
   { label: 'About', value: 'about' },
   { label: 'Courses', value: 'services' },
-  { label: 'Events', value: 'helpAndSupport' },
+  { label: 'Events', value: 'events' },
 ]
 
 const smoothScroll = (element: string) => {

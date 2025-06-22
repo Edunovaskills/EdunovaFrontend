@@ -1,14 +1,25 @@
 import {
   appPathParams,
   appPaths,
+  appSearchParams,
+  type AppPathParams,
   type AppPathParamsName,
   type AppPathsName,
   type AppRouteStateValue,
+  type AppSearchParamsName,
 } from 'entities/config'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { NavigateOptions } from 'react-router-dom'
-import { useLocation, useNavigate } from 'react-router-dom'
-import type { PartialRecord } from 'shared/typescript'
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
+import type {
+  AtLeastOneRequiredProperty,
+  PartialRecord,
+} from 'shared/typescript'
 
 export const getAppPath = (
   path: AppPathsName,
@@ -64,4 +75,73 @@ export const useAppNavigate = () => {
   )
 
   return { appNavigate }
+}
+
+type UseAppRouteParams<
+  TParamName extends AppPathParamsName,
+  TSearchParamName extends AppSearchParamsName,
+> = AtLeastOneRequiredProperty<{
+  params: TParamName | TParamName[]
+  searchParams: TSearchParamName | TSearchParamName[]
+}>
+
+/**
+ * Hook to get the app route params from the URL
+ */
+export const useAppRouteParams = <
+  TParamName extends AppPathParamsName,
+  TSearchParamName extends AppSearchParamsName,
+>({
+  params,
+  searchParams,
+}: UseAppRouteParams<TParamName, TSearchParamName>) => {
+  const pathParamsObj = useParams<AppPathParams[AppPathParamsName]>()
+
+  const paramsValue = useMemo(() => {
+    let paramArray: TParamName[] = []
+    if (Array.isArray(params)) {
+      paramArray = params
+    } else if (params) {
+      paramArray = [params]
+    }
+
+    const paramsValue = paramArray.reduce(
+      (acc, param) => ({
+        ...acc,
+        [param]: pathParamsObj[appPathParams[param]],
+      }),
+      {} as Record<TParamName, string | undefined>
+    )
+
+    return paramsValue
+  }, [params, pathParamsObj])
+
+  const [searchParamsObj] = useSearchParams()
+
+  const searchParamsValue = useMemo(() => {
+    let searchParamArray: TSearchParamName[] = []
+    if (Array.isArray(searchParams)) {
+      searchParamArray = searchParams
+    } else if (searchParams) {
+      searchParamArray = [searchParams]
+    }
+
+    const paramsValue = searchParamArray.reduce(
+      (acc, param) => ({
+        ...acc,
+        [param]: searchParamsObj.get(appSearchParams[param]),
+      }),
+      {} as Record<TSearchParamName, string | undefined>
+    )
+
+    return paramsValue
+  }, [searchParams, searchParamsObj])
+
+  // TODO: Implement search params
+  // const getParam = (param: string) => searchParams.get(param)
+
+  return {
+    ...paramsValue,
+    ...searchParamsValue,
+  }
 }
