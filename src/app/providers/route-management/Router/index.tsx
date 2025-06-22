@@ -20,6 +20,7 @@ import {
 } from 'react-router-dom'
 import { VerifyEmailPage } from 'pages/components/verfiy-form/verify'
 import { RouteGuard } from '../RouteGuard'
+import { AdminRouteGuard } from '../AdminRouteGuard'
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,10 +56,9 @@ const Router = createBrowserRouter(
           <Route
             path={appPaths.admin}
             element={
-              // <PrivateRoute roles={['admin']}>
-              // Assumes 'admin' is the role for administrators
-              <AdminPage />
-              // </PrivateRoute>
+              <AdminRouteGuard>
+                <AdminPage />
+              </AdminRouteGuard>
             }
           />
 

@@ -5,7 +5,14 @@ export const ACCESS_TOKEN = 'x-access-token'
 export const REFRESH_TOKEN = 'x-access-refresh-token'
 export const USER_ID_TOKEN = 'x-user-id'
 
-const loginTokens = [ACCESS_TOKEN, REFRESH_TOKEN, USER_ID_TOKEN] as const
+export const ROLE_TOKEN = 'x-user-role'
+
+const loginTokens = [
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  USER_ID_TOKEN,
+  ROLE_TOKEN,
+] as const
 
 // FIXME: Add as per your API endpoint or get them while creating instance
 export const loginEndpoint = 'api/v1/auth/login'
@@ -31,3 +38,4 @@ export const userSessionInactive = () => {
 export const getUserId = () => Cookies.get(USER_ID_TOKEN) ?? ''
 export const getAccessToken = () => Cookies.get(ACCESS_TOKEN) ?? ''
 export const getRefreshToken = () => Cookies.get(REFRESH_TOKEN) ?? ''
+export const getRole = () => Cookies.get(ROLE_TOKEN) ?? ''

@@ -1,5 +1,5 @@
 // src/components/ServicesShowcase/Services.tsx
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   Box,
   CardContent,
@@ -11,12 +11,12 @@ import {
 } from '@mui/material'
 import { BuzInfoSection, Carousel } from 'entities/component'
 import { SwiperSlide } from 'swiper/react'
-import { getCourses, ICourse } from '../../../../entities/api/course.api'
 import {
   CardStyled,
   ImgWrapperStyled,
   DescriptionContainer,
 } from './styles.component'
+import { useGetAllCoursesQuery } from 'entities/query'
 
 const TopInfo: React.FC = () => {
   const theme = useTheme()
@@ -57,28 +57,10 @@ const decodeHTMLEntities = (text: string = '') => {
 }
 
 const ServicesShowcase: React.FC = () => {
-  const [courses, setCourses] = useState<ICourse[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
+  const { data, isLoading, error } = useGetAllCoursesQuery()
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
   const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'))
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await getCourses()
-        setCourses(data.data.courses)
-      } catch (err: any) {
-        setError(err.message || 'An unknown error occurred')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchCourses()
-  }, [])
 
   const getSlidesPerView = () => {
     if (isSmallScreen) return 1.2
@@ -86,7 +68,7 @@ const ServicesShowcase: React.FC = () => {
     return 3.5
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Box
         display="flex"
@@ -107,7 +89,9 @@ const ServicesShowcase: React.FC = () => {
         alignItems="center"
         height={200}
       >
-        <Typography color="error">Error loading courses: {error}</Typography>
+        <Typography color="error">
+          Error loading courses: {error.message}
+        </Typography>
       </Box>
     )
   }
@@ -117,13 +101,13 @@ const ServicesShowcase: React.FC = () => {
       slidesPerView={getSlidesPerView()}
       spaceBetween={isSmallScreen ? 15 : 30}
       centeredSlides={isSmallScreen}
-      loop={courses.length > getSlidesPerView()}
+      loop={(data?.data?.courses?.length ?? 0) > getSlidesPerView()}
       autoplay={{ delay: 5000, disableOnInteraction: false }}
       pagination={{ clickable: true }}
       navigation={!isSmallScreen}
       freeMode
     >
-      {courses.map((course) => {
+      {data?.data?.courses.map((course) => {
         const decodedImage = decodeHTMLEntities(course.image || '')
         return (
           <SwiperSlide key={course._id}>

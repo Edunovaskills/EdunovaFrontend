@@ -3,3 +3,9 @@ export type ApiContract<T extends object> = {
   message: string
   data?: T
 }
+
+export type PaginatedResponse = {
+  total: 0
+  currentPage: 1
+  totalPages: 0
+}

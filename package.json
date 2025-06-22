@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "vite buinld",
+    "build": "vite build",
     "serve": "vite preview"
   },
   "dependencies": {

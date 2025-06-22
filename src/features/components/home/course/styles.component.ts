@@ -1,5 +1,5 @@
 // src/components/ServicesShowcase/styles.component.ts
-import { Card, styled, Typography } from '@mui/material';
+import { Card, styled, Typography } from '@mui/material'
 
 export const CardStyled = styled(Card)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -32,11 +32,12 @@ export const CardStyled = styled(Card)(({ theme }) => ({
     width: '95%',
     aspectRatio: '3 / 4',
   },
-}));
+}))
 
 export const ImgWrapperStyled = styled('div')(({ theme }) => ({
   width: '100%',
   paddingTop: '60%',
+  height: '60%',
   position: 'relative',
   marginInline: 'auto',
   borderRadius: theme.shape.borderRadius,
@@ -52,7 +53,7 @@ export const ImgWrapperStyled = styled('div')(({ theme }) => ({
     objectFit: 'cover',
     display: 'block',
   },
-}));
+}))
 
 export const DescriptionContainer = styled(Typography)(({ theme }) => ({
   overflow: 'hidden',
@@ -63,4 +64,4 @@ export const DescriptionContainer = styled(Typography)(({ theme }) => ({
   minHeight: theme.typography.body2.lineHeight
     ? `calc(${theme.typography.body2.lineHeight} * 3)`
     : '4.5em',
-}));
+}))

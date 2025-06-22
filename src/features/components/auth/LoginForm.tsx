@@ -37,6 +37,7 @@ export const LoginForm = () => {
     handleSubmit,
     formState: { errors, isValid },
     setError,
+    clearErrors,
   } = form
 
   const onSubmit = (data: LoginSchema) => {
@@ -44,6 +45,7 @@ export const LoginForm = () => {
       onError: (error: any) => {
         const message =
           error?.response?.data?.error || 'An unexpected error occurred.'
+        setError('email', { type: 'custom' })
         setError('password', {
           type: 'custom',
           message,
@@ -54,6 +56,13 @@ export const LoginForm = () => {
 
   const [toggleEye, setToggleEye] = useState(false)
 
+  // Clear custom password error when user starts typing
+  const handleFieldChange = () => {
+    if (errors.password?.type === 'custom') {
+      clearErrors(['email', 'password'])
+    }
+  }
+
   return (
     <FormContainer>
       <FormCard elevation={3}>
@@ -63,7 +72,9 @@ export const LoginForm = () => {
             placeholder="Email"
             fullWidth
             margin="normal"
-            {...register('email')}
+            {...register('email', {
+              onChange: () => handleFieldChange(),
+            })}
             error={!!errors.email}
             helperText={errors.email?.message}
           />
@@ -73,7 +84,9 @@ export const LoginForm = () => {
             fullWidth
             margin="normal"
             type={toggleEye ? 'text' : 'password'}
-            {...register('password')}
+            {...register('password', {
+              onChange: () => handleFieldChange(),
+            })}
             error={!!errors.password}
             helperText={errors.password?.message}
             InputProps={{

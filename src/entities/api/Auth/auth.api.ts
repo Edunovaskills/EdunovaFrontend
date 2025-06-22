@@ -1,4 +1,4 @@
-import type { UserResponse } from 'entities/model'
+import type { LoginResponse, UserResponse } from 'entities/model'
 import type {
   LoginSchema,
   SignUpSchema,
@@ -18,7 +18,10 @@ export class AuthApi {
   }
 
   async login(loginPayload: LoginSchema) {
-    const response = await this.client.post('login', loginPayload)
+    const response = await this.client.post<LoginResponse>(
+      'login',
+      loginPayload
+    )
     return response
   }
 

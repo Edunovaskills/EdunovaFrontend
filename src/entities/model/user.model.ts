@@ -1,11 +1,12 @@
 import type { ApiContract } from './api-contract.model'
 
+export type UserRole = 'admin' | 'user'
 export type User = {
   user: {
     _id: string
     name: string
     email: string
-    role: string
+    role: UserRole
     isActive: boolean
     isVerified: boolean
     createdAt: string

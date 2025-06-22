@@ -12,12 +12,16 @@ export const useLoginMutation = () => {
       const response = await authApi.login(loginPayload)
       return response.data
     },
-    onSuccess: () => {
+    onSuccess: (data, _) => {
       show({
         title: 'Login Successfully',
         color: 'Success',
       })
-      appNavigate('/')
+      if (data.data?.user.role === 'admin') {
+        appNavigate('admin')
+      } else {
+        appNavigate('/')
+      }
     },
   })
 }
