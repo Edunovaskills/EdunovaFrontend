@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { signupAPI } from '../components/user/auth/api/authAPI'
+import { signupAPI } from '../components/auth/api/authAPI'
 import { SignupData } from '../../shared/types/user'
 
 export const useSignup = () => {

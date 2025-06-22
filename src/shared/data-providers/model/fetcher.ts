@@ -6,6 +6,8 @@ import axiosInstance, { AxiosInstanceTypes } from './axios'
 
 type ParamConfig = Omit<AxiosRequestConfig, 'url' | 'method' | 'data'>
 
+// CBase Url
+
 type ClientOptions = {
   axiosInstanceType: AxiosInstanceTypes
   type: SuggestionString<'api'>

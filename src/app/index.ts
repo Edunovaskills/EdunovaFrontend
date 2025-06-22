@@ -1,1 +1,1 @@
-export { homeApi } from './api/home.api'
+export { homeApi } from '../entities/api/home.api'

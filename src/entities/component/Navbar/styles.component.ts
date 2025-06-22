@@ -1,4 +1,5 @@
-import { styled } from '@mui/material';
+import { styled } from '@mui/material'
+import { STYLES_SIZE_CONSTANTS } from 'shared/utils'
 
 // Styled component for the main Navbar container
 export const NavbarWrapperStyled = styled('div')<{ smallScreen: boolean }>(
@@ -16,15 +17,16 @@ export const NavbarWrapperStyled = styled('div')<{ smallScreen: boolean }>(
     position: 'sticky', // Make navbar sticky at the top
     top: 0,
     zIndex: 1100, // Ensure it stays above other content
+    height: STYLES_SIZE_CONSTANTS.headerHeight,
   })
-);
+)
 
 // Styled component for the start section (logo and brand text)
 export const StartViewWrapperStyled = styled('div')({
   display: 'flex',
   alignItems: 'center',
   gap: '14px',
-});
+})
 
 // Styled component for the main menu items wrapper (desktop)
 export const MenuItemsWrapperStyled = styled('div')({
@@ -32,7 +34,7 @@ export const MenuItemsWrapperStyled = styled('div')({
   justifyContent: 'space-between',
   alignItems: 'center',
   gap: '30px', // Reduced gap for better fit on wider screens
-});
+})
 
 // Note: The `.active-nav-link` CSS class for active links
 // should ideally be handled in a global stylesheet or integrated into your Material-UI theme.

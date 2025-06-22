@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getUserProfile } from '../components/user/auth/api/authAPI'
+import { getUserProfile } from '../components/auth/api/authAPI'
 
 interface UserProfile {
   id: string

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { LoginForm } from '../../user/auth/components/LoginForm'
+import { LoginForm } from '../../auth/components/LoginForm'
 import { adminStyles } from '../AdminStyles'
 import { useLogin } from 'features/hooks'
 

@@ -1,2 +1,5 @@
 export { appPaths, extPaths } from './model/path.config'
 export type { AppPaths, AppPathsName, ExtAppRoutes } from './model/path.config'
+export { appPathParams } from './model/path.config'
+export type { AppPathParams, AppPathParamsName } from './model/path.config'
+export type { AppRouteStateValue } from './model/path.config'

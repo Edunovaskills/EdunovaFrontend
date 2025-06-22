@@ -11,9 +11,7 @@ import { getTimezoneOffset } from 'shared/utils'
 
 import {
   ACCESS_TOKEN,
-  COMPANY_ID_TOKEN,
   REFRESH_TOKEN,
-  ACCEPT_LANGUAGE_TOKEN,
   USER_ID_TOKEN,
   acceptInviteEndpoint,
   getRefreshToken,
@@ -22,8 +20,6 @@ import {
   signUpEndpoint,
   userSessionActive,
   userSessionInactive,
-  TEAM_ID_TOKEN,
-  WORKSPACE_ID_TOKEN,
 } from './token'
 
 type FailedQueue = Omit<PromiseWithResolvers<unknown>, 'promise'>[]
@@ -53,14 +49,7 @@ const failedAdditionalQueue: FailedQueue = []
 
 function handleRequest(req: InternalAxiosRequestConfig) {
   // if(req)
-  ;[
-    ACCESS_TOKEN,
-    USER_ID_TOKEN,
-    ACCEPT_LANGUAGE_TOKEN,
-    COMPANY_ID_TOKEN,
-    TEAM_ID_TOKEN,
-    WORKSPACE_ID_TOKEN,
-  ].forEach((token) => {
+  ;[ACCESS_TOKEN, USER_ID_TOKEN].forEach((token) => {
     const tokenValue = Cookies.get(token)
     const offset = getTimezoneOffset()
 

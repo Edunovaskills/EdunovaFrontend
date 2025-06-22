@@ -44,7 +44,7 @@ export const lightThemePalette: PaletteOptions = {
   },
 
   error: {
-    main: red[200]!,
+    main: red[600]!,
     ...red,
   },
 

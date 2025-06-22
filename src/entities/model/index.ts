@@ -1,3 +1,6 @@
 export { sitePromisesData } from './hero-section/hero-section.model'
 export type { SitePromise } from './hero-section/hero-section.model'
-export {testimonials} from "./home/Testimonial/testimonial.model"
+export { testimonials } from './home/Testimonial/testimonial.model'
+export type { UserResponse } from './user.model'
+export type { ApiContract } from './api-contract.model'
+export type { LoginResponse } from './user.model'

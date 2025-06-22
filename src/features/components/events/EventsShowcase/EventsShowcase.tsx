@@ -1,15 +1,30 @@
 // src/components/EventsShowcase/EventsShowcase.tsx
-import React, { useEffect, useState } from 'react';
-import { CardContent, Divider, Stack, Typography, Box, useTheme, useMediaQuery, CircularProgress } from '@mui/material';
-import { Carousel } from 'entities/component'; // Assuming this is your Swiper wrapper
-import { SwiperSlide } from 'swiper/react';
-import { getEvents, IEvent } from '../../../../app/api/event.api'; // Import the API function and interface
+import React, { useEffect, useState } from 'react'
+import {
+  CardContent,
+  Divider,
+  Stack,
+  Typography,
+  Box,
+  useTheme,
+  useMediaQuery,
+  CircularProgress,
+} from '@mui/material'
+import { Carousel } from 'entities/component' // Assuming this is your Swiper wrapper
+import { SwiperSlide } from 'swiper/react'
+import { getEvents, IEvent } from '../../../../entities/api/event.api' // Import the API function and interface
 
 // Import the styled components
-import { CardStyled, ImgWrapperStyled, DescriptionContainer, EnrollButtonStyled } from './styles.component';
+import {
+  CardStyled,
+  ImgWrapperStyled,
+  DescriptionContainer,
+  EnrollButtonStyled,
+} from './styles.component'
 
 // Placeholder image URL for events
-const PLACEHOLDER_EVENT_IMAGE_URL = 'https://placehold.co/400x300/F0F0F0/333333?text=Edunova+Event';
+const PLACEHOLDER_EVENT_IMAGE_URL =
+  'https://placehold.co/400x300/F0F0F0/333333?text=Edunova+Event'
 
 interface EventsShowcaseProps {
   // You might add props here if you want to pass filters (e.g., category, search) from a parent
@@ -17,51 +32,62 @@ interface EventsShowcaseProps {
   // searchQuery?: string;
 }
 
-const EventsShowcase: React.FC<EventsShowcaseProps> = (/* { category, searchQuery } */) => {
-  const [events, setEvents] = useState<IEvent[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+const EventsShowcase: React.FC<
+  EventsShowcaseProps
+> = (/* { category, searchQuery } */) => {
+  const [events, setEvents] = useState<IEvent[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'))
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'))
 
-  useEffect(() => {
-    const fetchEventsData = async () => {
-      try {
-        setLoading(true); // Set loading to true at the start of fetch
-        setError(null); // Clear any previous errors
+  useEffect(
+    () => {
+      const fetchEventsData = async () => {
+        try {
+          setLoading(true) // Set loading to true at the start of fetch
+          setError(null) // Clear any previous errors
 
-        // Call the API function, passing any relevant filters
-        // No 'upcoming' filter needed as per requirement for 'all events'
-        const data = await getEvents(/* 1, 10, searchQuery */); // You can pass page, limit, search here
-        setEvents(data.data.events);
-      } catch (err: any) {
-        setError(err.message || 'An unknown error occurred while loading events.');
-      } finally {
-        setLoading(false); // Always set loading to false when done
+          // Call the API function, passing any relevant filters
+          // No 'upcoming' filter needed as per requirement for 'all events'
+          const data = await getEvents(/* 1, 10, searchQuery */) // You can pass page, limit, search here
+          setEvents(data.data.events)
+        } catch (err: any) {
+          setError(
+            err.message || 'An unknown error occurred while loading events.'
+          )
+        } finally {
+          setLoading(false) // Always set loading to false when done
+        }
       }
-    };
 
-    fetchEventsData();
-  }, [/* category, searchQuery */]); // Re-run effect if filters change
+      fetchEventsData()
+    },
+    [
+      /* category, searchQuery */
+    ]
+  ) // Re-run effect if filters change
 
   // Determine slides per view based on screen size
   const getSlidesPerView = () => {
     if (isSmallScreen) {
-      return 1.1; // Show 1.1 cards to suggest more content, with a slight overlap
+      return 1.1 // Show 1.1 cards to suggest more content, with a slight overlap
     }
     if (isMediumScreen) {
-      return 2.2; // Show 2.2 cards on medium screens
+      return 2.2 // Show 2.2 cards on medium screens
     }
     if (isLargeScreen) {
-      return 3.5; // Default for larger screens
+      return 3.5 // Default for larger screens
     }
-    return 3; // Fallback for other sizes
-  };
+    return 3 // Fallback for other sizes
+  }
 
   return (
-    <Box sx={{ width: '100%', py: 4, px: 2 }}> {/* Add vertical and horizontal padding to the section */}
+    <Box sx={{ width: '100%', py: 4, px: 2 }}>
+      {' '}
+      {/* Add vertical and horizontal padding to the section */}
       {/* Heading and Description Section */}
       <Stack
         alignItems="center"
@@ -77,23 +103,46 @@ const EventsShowcase: React.FC<EventsShowcaseProps> = (/* { category, searchQuer
           Edunova Events
         </Typography>
         <Typography
-                variant={'body1'}
-                textAlign={'center'}
-                maxWidth={isSmallScreen ? '100%' : '80%'} // Allow full width on small screens
-                sx={{ fontSize: isSmallScreen ? '0.9rem' : '1rem' }} // Slightly smaller font on small screens
-              >
-                Travel through your education with ease and comfort at Edunova, where our courses provide top-notch lessons and skilled instructors for a safe, enriching academic journey—ideal for daily learning, skill enhancement, or intellectual growth.
-              </Typography>
+          variant={'body1'}
+          textAlign={'center'}
+          maxWidth={isSmallScreen ? '100%' : '80%'} // Allow full width on small screens
+          sx={{ fontSize: isSmallScreen ? '0.9rem' : '1rem' }} // Slightly smaller font on small screens
+        >
+          Travel through your education with ease and comfort at Edunova, where
+          our courses provide top-notch lessons and skilled instructors for a
+          safe, enriching academic journey—ideal for daily learning, skill
+          enhancement, or intellectual growth.
+        </Typography>
       </Stack>
-
       {/* Loading, Error, or No Events State */}
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px', width: '100%' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '300px',
+            width: '100%',
+          }}
+        >
           <CircularProgress color="primary" size={60} />
-          <Typography variant="h6" sx={{ ml: 2, color: theme.palette.text.secondary }}>Loading exciting events...</Typography>
+          <Typography
+            variant="h6"
+            sx={{ ml: 2, color: theme.palette.text.secondary }}
+          >
+            Loading exciting events...
+          </Typography>
         </Box>
       ) : error ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px', width: '100%' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '300px',
+            width: '100%',
+          }}
+        >
           <Typography variant="h6" color="error" textAlign="center">
             Oops! {error} Please try again later.
           </Typography>
@@ -124,14 +173,19 @@ const EventsShowcase: React.FC<EventsShowcaseProps> = (/* { category, searchQuer
                   <img
                     src={event.image || PLACEHOLDER_EVENT_IMAGE_URL}
                     alt={event.title || 'Event Image'}
-                    onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                    onError={(
+                      e: React.SyntheticEvent<HTMLImageElement, Event>
+                    ) => {
                       // Fallback if image fails to load
-                      const target = e.target as HTMLImageElement;
-                      target.src = PLACEHOLDER_EVENT_IMAGE_URL;
+                      const target = e.target as HTMLImageElement
+                      target.src = PLACEHOLDER_EVENT_IMAGE_URL
                     }}
                   />
                 </ImgWrapperStyled>
-                <Divider sx={{ mt: 2, mb: 1.5, borderColor: theme.palette.divider }} /> {/* Subtle divider */}
+                <Divider
+                  sx={{ mt: 2, mb: 1.5, borderColor: theme.palette.divider }}
+                />{' '}
+                {/* Subtle divider */}
                 <CardContent
                   component={Stack}
                   spacing={1} // Reduced spacing in card content
@@ -159,12 +213,12 @@ const EventsShowcase: React.FC<EventsShowcaseProps> = (/* { category, searchQuer
                   </DescriptionContainer>
 
                   <Typography
-  variant="subtitle1" // Use subtitle1 for price for emphasis
-  color="primary.main" // Highlight price with primary color
-  sx={{ fontWeight: theme.typography.fontWeightBold, mt: 1 }} // Bold and some top margin
->
-  Price: {event.price === 0 ? 'Free' : `₹${event.price}`}
-</Typography>
+                    variant="subtitle1" // Use subtitle1 for price for emphasis
+                    color="primary.main" // Highlight price with primary color
+                    sx={{ fontWeight: theme.typography.fontWeightBold, mt: 1 }} // Bold and some top margin
+                  >
+                    Price: {event.price === 0 ? 'Free' : `₹${event.price}`}
+                  </Typography>
 
                   <EnrollButtonStyled
                     variant="contained"
@@ -180,14 +234,22 @@ const EventsShowcase: React.FC<EventsShowcaseProps> = (/* { category, searchQuer
         </Carousel>
       ) : (
         /* No Events Found State */
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px', width: '100%' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '300px',
+            width: '100%',
+          }}
+        >
           <Typography variant="h6" color="text.secondary" textAlign="center">
             No events are available at the moment. Please check back later!
           </Typography>
         </Box>
       )}
     </Box>
-  );
-};
+  )
+}
 
-export default EventsShowcase; // Export as default for easier import
+export default EventsShowcase // Export as default for easier import

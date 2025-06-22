@@ -6,21 +6,18 @@ import {
   RouterProvider,
   ThemeProvider,
 } from './providers'
+import { SnackBarProvider } from 'entities/state'
 
 // Import the new AuthProvider
-import { AuthProvider } from './providers/auth-management/AuthContext'; // Adjust path if AuthContext.tsx is somewhere else
 
 const App = () => {
   return (
     <I18nProvider>
       <ThemeProvider>
         <QueryProvider>
-          <AuthProvider> {/* Add AuthProvider here, wrapping RouterProvider */}
-            {/* TODO: Add Suspense fallback if there is any latency occur in future */}
-            {/* <Suspense> */}
+          <SnackBarProvider>
             <RouterProvider />
-            {/* </Suspense> */}
-          </AuthProvider>
+          </SnackBarProvider>
         </QueryProvider>
       </ThemeProvider>
     </I18nProvider>

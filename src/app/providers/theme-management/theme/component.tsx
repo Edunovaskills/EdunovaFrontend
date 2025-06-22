@@ -6,6 +6,7 @@ import {
   buttonClasses,
   CircularProgress,
   circularProgressClasses,
+  formHelperTextClasses,
   formLabelClasses,
   inputBaseClasses,
   outlinedInputClasses,
@@ -309,17 +310,16 @@ export const components: ThemeOptions['components'] = {
       variant: 'contained',
       disableElevation: true,
       disableRipple: true,
-      startIcon: <CircularProgress id="loader" size={20} />,
     },
 
     styleOverrides: {
       outlined: ({ theme }) => ({
-        color: theme.palette.neutral.white,
+        color: theme.palette.neutral.black,
         borderColor: theme.palette.secondary.main,
         '&:hover': {
           borderColor: theme.palette.secondary.main,
-          color: theme.palette.primary.main,
-          backgroundColor: 'transparent',
+          color: theme.palette.neutral.black,
+          backgroundColor: theme.palette.state.hover,
         },
         '&:active': {
           color: theme.palette.primary.main,
@@ -345,6 +345,14 @@ export const components: ThemeOptions['components'] = {
       contained: ({ theme }) => ({
         [`& .${circularProgressClasses.root}`]: {
           color: theme.palette.inverted.text,
+        },
+      }),
+      containedError: ({ theme }) => ({
+        color: theme.palette.neutral.white,
+        backgroundColor: theme.palette.error.main,
+        '&:hover': {
+          backgroundColor: `${theme.palette.error.main}99`,
+          color: theme.palette.neutral.white,
         },
       }),
 
@@ -376,13 +384,7 @@ export const components: ThemeOptions['components'] = {
           },
 
           [`& .${buttonClasses.startIcon}`]: {
-            display:
-              ownerState.startIcon &&
-              React.isValidElement(ownerState.startIcon) &&
-              ownerState.startIcon.props.id === 'loader' &&
-              !ownerState.loading
-                ? 'none'
-                : 'inherit',
+            display: 'inherit',
           },
           [`&:hover`]: {
             backgroundColor:
@@ -401,7 +403,7 @@ export const components: ThemeOptions['components'] = {
           [`&.${buttonBaseClasses.disabled}`]: {
             backgroundColor:
               ownerState.color && ownerState.color !== 'inherit'
-                ? theme.palette[ownerState.color].light
+                ? theme.palette.primary.main + '80'
                 : undefined,
             color: theme.palette.neutral.white,
 
@@ -460,6 +462,12 @@ export const components: ThemeOptions['components'] = {
           transform: 'scale(0.75)',
           transformOrigin: 'none',
         },
+        [`& .${formHelperTextClasses.root}`]: {
+          position: 'absolute',
+          bottom: '-2em',
+          left: '-10px !important',
+          whiteSpace: 'nowrap',
+        },
       },
     },
   },
@@ -505,89 +513,7 @@ export const components: ThemeOptions['components'] = {
       //   backgroundColor: theme.palette.state.hover,
       // },
 
-      // [`& .${inputBaseClasses.input}::placeholder`]: {
-      //   color: theme.palette.text.secondary,
-      // },
-
-      // [`&.${inputBaseClasses.disabled} .${inputBaseClasses.input}`]: {
-      //   cursor: 'not-allowed',
-      // },
-
-      //   [`&.${inputBaseClasses.focused} .${inputBaseClasses.input}`]: {
-      //     color: theme.palette.neutral.white,
-      //   },
-
-      //   // outline
-
-      //   [`& .${outlinedInputClasses.notchedOutline}`]: {
-      //     borderColor:
-      //       ownerState.color !== 'secondary'
-      //         ? theme.palette[ownerState.color || 'secondary'].main
-      //         : theme.palette.border.main,
-      //     '& legend': {
-      //       width: 0,
-      //     },
-      //   },
-
-      //   [`&.${inputBaseClasses.root}:hover .${outlinedInputClasses.notchedOutline}`]:
-      //     {
-      //       borderColor:
-      //         ownerState.color === 'primary'
-      //           ? theme.palette.border.main
-      //           : 'inherit',
-      //     },
-
-      //   [`&.${inputBaseClasses.focused} .${outlinedInputClasses.notchedOutline}`]:
-      //     {
-      //       borderColor: `${theme.palette[ownerState.color || 'primary'].main}`,
-      //     },
-
-      //   [`&.${inputBaseClasses.focused}:hover .${outlinedInputClasses.notchedOutline}`]:
-      //     {
-      //       borderColor: `${theme.palette[ownerState.color || 'secondary'].main}`,
-      //     },
-
-      //   // disabled
-      //   [`&.${inputBaseClasses.disabled}`]: {
-      //     color: theme.palette.text.disabled,
-      //     background: `${(theme.palette.secondary as CustomColorPartial)[100]} !important`,
-      //   },
-      //   [`&.${inputBaseClasses.disabled} .${outlinedInputClasses.notchedOutline}`]:
-      //     {
-      //       borderColor: theme.palette.border.main,
-      //     },
-      //   [`&.${inputBaseClasses.disabled}:hover .${outlinedInputClasses.notchedOutline}`]:
-      //     {
-      //       borderColor: theme.palette.border.main,
-      //     },
-      // }),
-    },
-  },
-
-  MuiFormHelperText: {
-    styleOverrides: {
-      root: {
-        margin: '4px 0px',
-      },
-    },
-  },
-  MuiTab: {
-    styleOverrides: {
-      root: ({ theme, ownerState: { labelSize } }) => ({
-        ...(labelSize === 'medium' && {
-          fontSize: theme.typography.caption1,
-        }),
-        ...(labelSize === 'small' && {
-          fontSize: theme.typography.caption2,
-        }),
-        ...(labelSize === 'large' && {
-          fontSize: theme.typography.h6,
-        }),
-        color: theme.palette.text.secondary,
-        padding: '0rem 1.5rem',
-        variants: [],
-        textTransform: 'capitalize',
-      }),
+      // [`
     },
   },
 }

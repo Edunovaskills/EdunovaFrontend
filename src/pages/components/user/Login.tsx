@@ -1,4 +1,4 @@
-import { LoginForm } from '../../../features/components/user/auth/components/LoginForm';
+import { LoginForm } from 'features/components'
 
 // pages/user/Login.tsx
 export const LoginPage = () => {
@@ -6,6 +6,5 @@ export const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center">
       <LoginForm />
     </div>
-  );
-};
-
+  )
+}

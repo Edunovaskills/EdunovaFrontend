@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react'
 import {
   Box,
   Button,
@@ -9,95 +9,93 @@ import {
   List,
   ListItem,
   Stack,
-} from '@mui/material';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import PersonIcon from '@mui/icons-material/Person'; // Import for profile icon
-// Removed: ExitToAppIcon // Not needed here anymore
-import { publicImages } from 'shared/config';
+} from '@mui/material'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import MenuIcon from '@mui/icons-material/Menu'
+import CloseIcon from '@mui/icons-material/Close'
+import { publicImages } from 'shared/config'
 import {
   MenuItemsWrapperStyled,
   NavbarWrapperStyled,
   StartViewWrapperStyled,
-} from './styles.component';
+} from './styles.component'
 
-// --- Mocking External Dependencies for compilation ---
-import { appPaths } from 'entities/config'
+import { appPaths, type AppPathsName } from 'entities/config'
+import { getUserId } from 'shared/data-providers'
+import { UserProfile } from './UserProfile'
 
 const useScreenSize = () => {
-  const [smallScreen, setSmallScreen] = useState(window.innerWidth < 960);
+  const [smallScreen, setSmallScreen] = useState(window.innerWidth < 960)
 
   useEffect(() => {
     const handleResize = () => {
-      setSmallScreen(window.innerWidth < 960);
-    };
+      setSmallScreen(window.innerWidth < 960)
+    }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
-  return { smallScreen };
-};
-// --- End Mocking ---
+  return { smallScreen }
+}
 
-// Import useAuth hook
-import { useAuth } from '../../../app/providers/auth-management/AuthContext';
-
-// Define the type for menu items
 type MenuItem = {
-  label: string;
-  value: AppPathsName | string; // Assuming AppPathsName is defined elsewhere
-};
+  label: string
+  value: AppPathsName | string // Assuming AppPathsName is defined elsewhere
+}
 
-// Define the main menu items for the navigation bar
 const menuItems: MenuItem[] = [
   { label: 'Home', value: '/' },
   { label: 'About', value: 'about' },
   { label: 'Courses', value: 'services' },
   { label: 'Events', value: 'helpAndSupport' },
-];
+]
 
 const smoothScroll = (element: string) => {
   setTimeout(() => {
-    const targetElement = document.getElementById(element);
+    const targetElement = document.getElementById(element)
     if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
+      targetElement.scrollIntoView({ behavior: 'smooth' })
     }
-  }, 0);
-};
+  }, 0)
+}
 
 export const Navbar = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   // Use the authentication context
-  const { isAuthenticated /* Removed: logout */ } = useAuth(); // Logout is no longer called here
 
   const currentMenuItem = useMemo(() => {
     return menuItems.find((item) => {
-      const pathSegment = location.pathname.split('/')[1] || '/';
+      const pathSegment = location.pathname.split('/')[1] || '/'
       return (
         pathSegment === item.value || (pathSegment === '' && item.value === '/')
-      );
-    });
-  }, [location]);
+      )
+    })
+  }, [location])
 
   const toggleDrawer = (open: boolean) => () => {
-    setDrawerOpen(open);
-  };
+    setDrawerOpen(open)
+  }
 
   // Removed: handleLogout function as it's no longer needed in Navbar
 
-  const { smallScreen } = useScreenSize();
+  const { smallScreen } = useScreenSize()
+
+  const user = !!getUserId() && getUserId() !== 'undefined'
 
   return (
     <NavbarWrapperStyled smallScreen={smallScreen}>
       <StartViewWrapperStyled>
         <Link
           to={appPaths['/']}
-          style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
+          style={{
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+          }}
         >
           <img
             src={publicImages.EdunovaLog}
@@ -109,8 +107,9 @@ export const Navbar = () => {
               marginRight: '8px',
             }}
             onError={(e) => {
-              console.error('Logo failed to load:', publicImages.EdunovaLog);
-              e.currentTarget.src = 'https://placehold.co/48x48/eeeeee/000000?text=Error';
+              console.error('Logo failed to load:', publicImages.EdunovaLog)
+              e.currentTarget.src =
+                'https://placehold.co/48x48/eeeeee/000000?text=Error'
             }}
           />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -126,7 +125,7 @@ export const Navbar = () => {
               Edunova
             </Typography>
             <Typography
-              variant="caption"
+              variant="caption1"
               sx={{
                 fontFamily: '"Georgia", "Times New Roman", serif',
                 fontWeight: 'bold',
@@ -146,12 +145,12 @@ export const Navbar = () => {
           {menuItems.map(({ label, value }) => {
             const isSelected =
               (location.pathname.split('/')[1].length === 0 && value === '/') ||
-              currentMenuItem?.value === value;
+              currentMenuItem?.value === value
 
             return (
               <NavLink
                 key={value}
-                to={appPaths[value] || value}
+                to={appPaths[value as AppPathsName] || value}
                 style={{
                   textDecoration: 'none',
                   display: 'flex',
@@ -160,7 +159,9 @@ export const Navbar = () => {
                   borderRadius: '8px',
                   transition: 'background-color 0.3s ease',
                 }}
-                className={({ isActive }) => (isActive ? 'active-nav-link' : '')}
+                className={({ isActive }) =>
+                  isActive ? 'active-nav-link' : ''
+                }
               >
                 <Typography
                   variant="body1"
@@ -176,37 +177,15 @@ export const Navbar = () => {
                   {label}
                 </Typography>
               </NavLink>
-            );
+            )
           })}
         </MenuItemsWrapperStyled>
       )}
 
       {!smallScreen && (
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-          {isAuthenticated ? (
-            <>
-              <Button
-                variant="outlined"
-                sx={{
-                  borderColor: '#2563eb',
-                  color: '#2563eb',
-                  '&:hover': {
-                    borderColor: '#1d4ed8',
-                    backgroundColor: 'rgba(37, 99, 235, 0.08)',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                  },
-                  borderRadius: '12px',
-                  textTransform: 'none',
-                  fontWeight: 600,
-                  padding: '10px 20px',
-                }}
-                onClick={() => navigate(appPaths.userProfile)} // Assuming appPaths.userProfile exists
-                startIcon={<PersonIcon />}
-              >
-                Profile
-              </Button>
-              {/* Removed Logout Button */}
-            </>
+          {user ? (
+            <UserProfile />
           ) : (
             <>
               <Button
@@ -252,7 +231,7 @@ export const Navbar = () => {
       )}
 
       {smallScreen && (
-        <>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <IconButton onClick={toggleDrawer(true)} sx={{ marginLeft: 'auto' }}>
             <MenuIcon sx={{ color: 'neutral.black' }} fontSize="large" />
           </IconButton>
@@ -264,7 +243,13 @@ export const Navbar = () => {
               sx: { width: 280, borderRadius: '8px 0 0 8px' },
             }}
           >
-            <Stack sx={{ justifyContent: 'space-between', height: '100%', padding: '16px' }}>
+            <Stack
+              sx={{
+                justifyContent: 'space-between',
+                height: '100%',
+                padding: '16px',
+              }}
+            >
               <Box>
                 <Box
                   display="flex"
@@ -272,7 +257,11 @@ export const Navbar = () => {
                   alignItems="center"
                   marginBottom="16px"
                 >
-                  <Typography variant="h6" color="primary.main" fontWeight={700}>
+                  <Typography
+                    variant="h6"
+                    color="primary.main"
+                    fontWeight={700}
+                  >
                     Edunova
                   </Typography>
                   <IconButton onClick={toggleDrawer(false)}>
@@ -284,24 +273,30 @@ export const Navbar = () => {
                 <List>
                   {menuItems.map(({ label, value }) => {
                     const isSelected =
-                      (location.pathname.split('/')[1].length === 0 && value === '/') ||
-                      currentMenuItem?.value === value;
+                      (location.pathname.split('/')[1].length === 0 &&
+                        value === '/') ||
+                      currentMenuItem?.value === value
                     return (
                       <ListItem
                         key={value}
                         component={NavLink}
-                        to={appPaths[value] || value}
+                        to={appPaths[value as AppPathsName] || value}
                         style={{ textDecoration: 'none' }}
                         sx={{
                           borderRadius: '8px',
                           marginBottom: '8px',
                           '&:hover': { backgroundColor: 'action.hover' },
-                          backgroundColor: isSelected ? 'action.selected' : 'transparent',
+                          backgroundColor: isSelected
+                            ? 'action.selected'
+                            : 'transparent',
                         }}
                         onClick={() => {
-                          setDrawerOpen(false);
-                          if (value === '/' && location.hash.includes('comingSoon')) {
-                            smoothScroll('comingSoon');
+                          setDrawerOpen(false)
+                          if (
+                            value === '/' &&
+                            location.hash.includes('comingSoon')
+                          ) {
+                            smoothScroll('comingSoon')
                           }
                         }}
                       >
@@ -315,7 +310,7 @@ export const Navbar = () => {
                           {label}
                         </Typography>
                       </ListItem>
-                    );
+                    )
                   })}
                 </List>
               </Box>
@@ -328,33 +323,8 @@ export const Navbar = () => {
                   flexDirection: 'column',
                 }}
               >
-                {isAuthenticated ? (
-                  <>
-                    <Button
-                      variant="outlined"
-                      fullWidth
-                      sx={{
-                        borderColor: '#2563eb',
-                        color: '#2563eb',
-                        '&:hover': {
-                          borderColor: '#1d4ed8',
-                          backgroundColor: 'rgba(37, 99, 235, 0.04)',
-                        },
-                        borderRadius: '12px',
-                        textTransform: 'none',
-                        fontWeight: 600,
-                        padding: '10px 20px',
-                      }}
-                      onClick={() => {
-                        navigate(appPaths.userProfile);
-                        setDrawerOpen(false);
-                      }}
-                      startIcon={<PersonIcon />}
-                    >
-                      Profile
-                    </Button>
-                    {/* Removed Logout Button from Drawer */}
-                  </>
+                {user ? (
+                  <UserProfile />
                 ) : (
                   <>
                     <Button
@@ -372,8 +342,8 @@ export const Navbar = () => {
                         padding: '10px 20px',
                       }}
                       onClick={() => {
-                        navigate(appPaths.userLogin);
-                        setDrawerOpen(false);
+                        navigate(appPaths.userLogin)
+                        setDrawerOpen(false)
                       }}
                     >
                       Login
@@ -394,8 +364,8 @@ export const Navbar = () => {
                         padding: '10px 20px',
                       }}
                       onClick={() => {
-                        navigate(appPaths.userSignup);
-                        setDrawerOpen(false);
+                        navigate(appPaths.userSignup)
+                        setDrawerOpen(false)
                       }}
                     >
                       Signup
@@ -405,8 +375,8 @@ export const Navbar = () => {
               </div>
             </Stack>
           </Drawer>
-        </>
+        </div>
       )}
     </NavbarWrapperStyled>
-  );
-};
+  )
+}
