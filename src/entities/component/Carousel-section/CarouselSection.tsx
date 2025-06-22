@@ -4,7 +4,7 @@ import { Box, Card, CardContent, Typography } from '@mui/material'
 
 import { publicImages } from 'shared/config'
 import ReactStars from 'react-stars'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper, SwiperProps, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, A11y } from 'swiper/modules'
 import { useScreenSize } from 'shared/hooks'
 
@@ -14,16 +14,11 @@ import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 import 'swiper/css/effect-fade'
 
+type CarouselProps = PropsWithChildren<SwiperProps>
 
-
-
-
-type CarouselProps = PropsWithChildren
-
-export const Carousel = ({children}:CarouselProps) => {
+export const Carousel = ({ children, ...rest }: CarouselProps) => {
   const { palette } = useTheme()
-  const { smallScreen, screen } = useScreenSize()
-  console.log(smallScreen, screen, 'this')
+  const { screen } = useScreenSize()
 
   return (
     <Box
@@ -51,6 +46,7 @@ export const Carousel = ({children}:CarouselProps) => {
         modules={[Navigation, Pagination, A11y]}
         navigation
         pagination={{ clickable: true }}
+        {...rest}
       >
         {children}
       </Swiper>

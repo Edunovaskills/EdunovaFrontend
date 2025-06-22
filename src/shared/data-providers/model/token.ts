@@ -38,4 +38,4 @@ export const userSessionInactive = () => {
 export const getUserId = () => Cookies.get(USER_ID_TOKEN) ?? ''
 export const getAccessToken = () => Cookies.get(ACCESS_TOKEN) ?? ''
 export const getRefreshToken = () => Cookies.get(REFRESH_TOKEN) ?? ''
-export const getRole = () => Cookies.get(ROLE_TOKEN) ?? ''
+export const getUserRole = () => Cookies.get(ROLE_TOKEN) ?? ''

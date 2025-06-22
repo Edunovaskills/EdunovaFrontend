@@ -1,4 +1,4 @@
-import type { CourseResponse } from 'entities/model'
+import type { CourseDetails, CourseResponse } from 'entities/model'
 import { getClient, type IClient } from 'shared/data-providers/model/fetcher'
 
 export class CoursesApi {
@@ -9,6 +9,11 @@ export class CoursesApi {
 
   async getCourses() {
     const response = await this.client.get<CourseResponse>('')
+    return response
+  }
+
+  async getCourseById(coursesId: string) {
+    const response = await this.client.get<CourseDetails>(`${coursesId}`)
     return response
   }
 }

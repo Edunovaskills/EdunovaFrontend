@@ -1,17 +1,19 @@
 import { ApiContract, type PaginatedResponse } from './api-contract.model'
 
-export type Course = {
+export type Event = {
   _id: string
   title: string
   description: string
   price: number
+  paymentUrl: string
   image: string
-  isActive: boolean
+  createdBy: string
+  isActive: true
   createdAt: string
   updatedAt: string
   __v: number
 }
-
-export type CourseDetails = ApiContract<{ course: Course }>
-export type CourseResponse = ApiContract<{ courses: Course[] }> &
+export type EventResponse = ApiContract<{
+  events: Event[]
+}> &
   PaginatedResponse

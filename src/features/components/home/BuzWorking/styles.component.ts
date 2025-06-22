@@ -20,8 +20,6 @@ export const StackStyled = styled(Stack)<{ smallscreen: boolean }>(
     alignItems: 'center',
     gap: smallscreen ? '66px' : 'none',
     marginTop: smallscreen ? '2rem' : 'none',
-    maxHeight:'164px',
-    minHeight:'164px'
   })
 )
 
@@ -29,7 +27,4 @@ export const WrapperStackStyled = styled(Stack)({
   gap: '12px',
   maxWidth: '250px',
   alignItems: 'center',
-   maxHeight:'164px',
-    minHeight:'164px'
-  
 })

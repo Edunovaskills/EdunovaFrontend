@@ -4,4 +4,5 @@ export {
   getUserId,
   userSessionActive,
   userSessionInactive,
+  getUserRole,
 } from './model/token'

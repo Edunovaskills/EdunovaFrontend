@@ -1,5 +1,5 @@
 // src/components/ServicesShowcase/styles.component.ts
-import { Card, styled, Typography } from '@mui/material'
+import { Card, styled, Typography, Box, IconButton } from '@mui/material'
 
 export const CardStyled = styled(Card)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -13,6 +13,7 @@ export const CardStyled = styled(Card)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
   transition: 'all 0.3s ease',
+  cursor: 'pointer',
 
   '&:hover': {
     boxShadow: theme.shadows[6],
@@ -57,11 +58,50 @@ export const ImgWrapperStyled = styled('div')(({ theme }) => ({
 
 export const DescriptionContainer = styled(Typography)(({ theme }) => ({
   overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  display: '-webkit-box',
-  WebkitLineClamp: 3,
-  WebkitBoxOrient: 'vertical',
   minHeight: theme.typography.body2.lineHeight
     ? `calc(${theme.typography.body2.lineHeight} * 3)`
     : '4.5em',
+  position: 'relative',
+}))
+
+export const ModalContentBox = styled(Box)(({ theme }) => ({
+  position: 'relative',
+  background: theme.palette.background.paper,
+  padding: theme.spacing(2),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[5],
+  maxWidth: '600px',
+  width: '90%',
+  maxHeight: '90vh',
+  overflowY: 'auto',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+}))
+
+export const ModalImageBox = styled(Box)({
+  width: '100%',
+  height: '250px',
+  marginBottom: '16px',
+  '& img': {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    borderRadius: '8px',
+  },
+})
+
+export const ModalTextBox = styled(Box)({
+  textAlign: 'left',
+  width: '100%',
+})
+
+export const PriceTypography = styled(Typography)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  fontWeight: 'bold',
+  marginTop: theme.spacing(2),
+}))
+
+export const CloseButton = styled(IconButton)(({ theme }) => ({
+  padding: theme.spacing(1),
 }))

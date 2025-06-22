@@ -1,4 +1,3 @@
-// src/components/EventsShowcase/EventsShowcase.tsx
 import React, { useEffect, useState } from 'react'
 import {
   CardContent,
@@ -10,92 +9,50 @@ import {
   useMediaQuery,
   CircularProgress,
 } from '@mui/material'
-import { Carousel } from 'entities/component' // Assuming this is your Swiper wrapper
+import { Carousel } from 'entities/component'
 import { SwiperSlide } from 'swiper/react'
-import { getEvents, IEvent } from '../../../../entities/api/event.api' // Import the API function and interface
 
-// Import the styled components
 import {
   CardStyled,
   ImgWrapperStyled,
   DescriptionContainer,
   EnrollButtonStyled,
 } from './styles.component'
+import { useAllEventsQuery } from 'entities/query'
 
 // Placeholder image URL for events
 const PLACEHOLDER_EVENT_IMAGE_URL =
   'https://placehold.co/400x300/F0F0F0/333333?text=Edunova+Event'
 
-interface EventsShowcaseProps {
-  // You might add props here if you want to pass filters (e.g., category, search) from a parent
-  // category?: string;
-  // searchQuery?: string;
-}
-
-const EventsShowcase: React.FC<
-  EventsShowcaseProps
-> = (/* { category, searchQuery } */) => {
-  const [events, setEvents] = useState<IEvent[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
+const EventsShowcase = () => {
+  const { data, isLoading, isError } = useAllEventsQuery()
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
   const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'))
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'))
 
-  useEffect(
-    () => {
-      const fetchEventsData = async () => {
-        try {
-          setLoading(true) // Set loading to true at the start of fetch
-          setError(null) // Clear any previous errors
-
-          // Call the API function, passing any relevant filters
-          // No 'upcoming' filter needed as per requirement for 'all events'
-          const data = await getEvents(/* 1, 10, searchQuery */) // You can pass page, limit, search here
-          setEvents(data.data.events)
-        } catch (err: any) {
-          setError(
-            err.message || 'An unknown error occurred while loading events.'
-          )
-        } finally {
-          setLoading(false) // Always set loading to false when done
-        }
-      }
-
-      fetchEventsData()
-    },
-    [
-      /* category, searchQuery */
-    ]
-  ) // Re-run effect if filters change
-
-  // Determine slides per view based on screen size
   const getSlidesPerView = () => {
     if (isSmallScreen) {
-      return 1.1 // Show 1.1 cards to suggest more content, with a slight overlap
+      return 1.1
     }
     if (isMediumScreen) {
-      return 2.2 // Show 2.2 cards on medium screens
+      return 2.2
     }
     if (isLargeScreen) {
-      return 3.5 // Default for larger screens
+      return 3.5
     }
-    return 3 // Fallback for other sizes
+    return 3
   }
 
   return (
     <Box sx={{ width: '100%', py: 4, px: 2 }}>
-      {' '}
-      {/* Add vertical and horizontal padding to the section */}
-      {/* Heading and Description Section */}
       <Stack
         alignItems="center"
         spacing={2}
-        sx={{ mb: 4, textAlign: 'center' }} // Margin bottom for spacing with carousel
+        sx={{ mb: 4, textAlign: 'center' }}
       >
         <Typography
-          variant={isSmallScreen ? 'h5' : 'h4'} // Adjust heading size for responsiveness
+          variant={isSmallScreen ? 'h5' : 'h4'}
           component="h2" // Semantic HTML for main heading of the section
           color="text.primary"
           sx={{ fontWeight: 'bold' }}
@@ -105,8 +62,8 @@ const EventsShowcase: React.FC<
         <Typography
           variant={'body1'}
           textAlign={'center'}
-          maxWidth={isSmallScreen ? '100%' : '80%'} // Allow full width on small screens
-          sx={{ fontSize: isSmallScreen ? '0.9rem' : '1rem' }} // Slightly smaller font on small screens
+          maxWidth={isSmallScreen ? '100%' : '80%'}
+          sx={{ fontSize: isSmallScreen ? '0.9rem' : '1rem' }}
         >
           Travel through your education with ease and comfort at Edunova, where
           our courses provide top-notch lessons and skilled instructors for a
@@ -114,8 +71,7 @@ const EventsShowcase: React.FC<
           enhancement, or intellectual growth.
         </Typography>
       </Stack>
-      {/* Loading, Error, or No Events State */}
-      {loading ? (
+      {isLoading ? (
         <Box
           sx={{
             display: 'flex',
@@ -133,7 +89,7 @@ const EventsShowcase: React.FC<
             Loading exciting events...
           </Typography>
         </Box>
-      ) : error ? (
+      ) : isError ? (
         <Box
           sx={{
             display: 'flex',
@@ -144,29 +100,28 @@ const EventsShowcase: React.FC<
           }}
         >
           <Typography variant="h6" color="error" textAlign="center">
-            Oops! {error} Please try again later.
+            Oops! Please try again later.
           </Typography>
         </Box>
-      ) : events.length > 0 ? (
-        /* Events Carousel */
+      ) : (data?.data?.events.length ?? 0) > 0 ? (
         <Carousel
           slidesPerView={getSlidesPerView()}
-          spaceBetween={isSmallScreen ? 15 : isMediumScreen ? 25 : 40} // Adjust space between slides dynamically
-          centeredSlides={isSmallScreen} // Center slides on small screens
-          loop={events.length > getSlidesPerView()} // Only loop if enough events
+          spaceBetween={isSmallScreen ? 15 : isMediumScreen ? 25 : 40}
+          centeredSlides={isSmallScreen}
+          loop={(data?.data?.events.length ?? 0) > getSlidesPerView()}
           autoplay={{
-            delay: 4000, // Auto-scroll every 4 seconds
-            disableOnInteraction: false, // Keep auto-play even after user interaction
+            delay: 4000,
+            disableOnInteraction: false,
           }}
           pagination={{
             clickable: true,
-            dynamicBullets: true, // Dynamic dots for a cleaner look
+            dynamicBullets: true,
           }}
-          navigation={!isSmallScreen} // Hide navigation arrows on small screens
-          freeMode={true} // Allow free movement (swipe)
-          grabCursor={true} // Indicate that the carousel is draggable
+          navigation={!isSmallScreen}
+          freeMode={true}
+          grabCursor={true}
         >
-          {events.map((event) => (
+          {data?.data?.events.map((event) => (
             <SwiperSlide key={event._id}>
               <CardStyled>
                 <ImgWrapperStyled>
@@ -185,23 +140,22 @@ const EventsShowcase: React.FC<
                 <Divider
                   sx={{ mt: 2, mb: 1.5, borderColor: theme.palette.divider }}
                 />{' '}
-                {/* Subtle divider */}
                 <CardContent
                   component={Stack}
-                  spacing={1} // Reduced spacing in card content
+                  spacing={1}
                   sx={{ flexGrow: 1, p: 1.5, pt: 0, pb: 1 }} // Adjust padding within content area
                 >
                   <Typography
-                    variant="h6" // Use a standard h6 for event titles
+                    variant="h6"
                     sx={{
-                      fontWeight: theme.typography.fontWeightBold, // Make title bold
-                      maxHeight: '3.2em', // Limit title to about 2 lines (adjust line-height as needed)
+                      fontWeight: theme.typography.fontWeightBold,
+                      maxHeight: '3.2em',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       display: '-webkit-box',
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
-                      lineHeight: '1.6em', // Explicit line height for title
+                      lineHeight: '1.6em',
                       color: theme.palette.text.primary,
                     }}
                   >
@@ -212,18 +166,20 @@ const EventsShowcase: React.FC<
                     {event.description}
                   </DescriptionContainer>
 
+                  <Box sx={{ flexGrow: 1 }} />
+
                   <Typography
-                    variant="subtitle1" // Use subtitle1 for price for emphasis
-                    color="primary.main" // Highlight price with primary color
-                    sx={{ fontWeight: theme.typography.fontWeightBold, mt: 1 }} // Bold and some top margin
+                    variant="body2.400"
+                    color="primary.main"
+                    sx={{ fontWeight: theme.typography.fontWeightBold, mt: 1 }}
                   >
                     Price: {event.price === 0 ? 'Free' : `₹${event.price}`}
                   </Typography>
 
                   <EnrollButtonStyled
                     variant="contained"
-                    onClick={() => window.open(event.paymentUrl, '_blank')} // Open payment URL in new tab
-                    disabled={!event.paymentUrl} // Disable button if no payment URL
+                    onClick={() => window.open(event.paymentUrl, '_blank')}
+                    disabled={!event.paymentUrl}
                   >
                     Enroll Now
                   </EnrollButtonStyled>
@@ -233,7 +189,6 @@ const EventsShowcase: React.FC<
           ))}
         </Carousel>
       ) : (
-        /* No Events Found State */
         <Box
           sx={{
             display: 'flex',
