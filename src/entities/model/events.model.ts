@@ -13,6 +13,7 @@ export type Event = {
   updatedAt: string
   __v: number
 }
+
 export type EventResponse = ApiContract<{
   events: Event[]
 }> &

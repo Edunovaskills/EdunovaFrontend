@@ -34,6 +34,7 @@ export const MenuItemsWrapperStyled = styled('div')({
   justifyContent: 'space-between',
   alignItems: 'center',
   gap: '30px', // Reduced gap for better fit on wider screens
+  marginLeft: '-200px',
 })
 
 // Note: The `.active-nav-link` CSS class for active links

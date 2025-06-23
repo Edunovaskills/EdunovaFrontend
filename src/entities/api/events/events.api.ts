@@ -1,5 +1,6 @@
 import { getClient, type IClient } from 'shared/data-providers/model/fetcher'
 import { EventResponse, type EventDetail } from 'entities/model'
+import type { EventSchema } from 'features/schema'
 
 export class EventsApi {
   client: IClient

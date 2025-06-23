@@ -23,6 +23,7 @@ import {
 import { appPaths, type AppPathsName } from 'entities/config'
 import { getUserId } from 'shared/data-providers'
 import { UserProfile } from './UserProfile'
+import { useMenuItems, type MenuItem } from 'entities/hooks'
 
 const useScreenSize = () => {
   const [smallScreen, setSmallScreen] = useState(window.innerWidth < 960)
@@ -39,18 +40,6 @@ const useScreenSize = () => {
   return { smallScreen }
 }
 
-type MenuItem = {
-  label: string
-  value: AppPathsName | string // Assuming AppPathsName is defined elsewhere
-}
-
-const menuItems: MenuItem[] = [
-  { label: 'Home', value: '/' },
-  { label: 'About', value: 'about' },
-  { label: 'Courses', value: 'services' },
-  { label: 'Events', value: 'events' },
-]
-
 const smoothScroll = (element: string) => {
   setTimeout(() => {
     const targetElement = document.getElementById(element)
@@ -64,6 +53,7 @@ export const Navbar = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const menuItems = useMenuItems()
 
   // Use the authentication context
 
@@ -74,7 +64,7 @@ export const Navbar = () => {
         pathSegment === item.value || (pathSegment === '' && item.value === '/')
       )
     })
-  }, [location])
+  }, [location, menuItems])
 
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open)
