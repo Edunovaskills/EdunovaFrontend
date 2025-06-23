@@ -33,6 +33,7 @@ export const appPaths = {
   userSignup: '/user/signup',
   userProfile: '/user/profile', // Added user profile path
   verifyEmail: '/verify-email',
+  forgotPassword: '/forgot-password',
 } as const
 
 export const appSearchParams = {

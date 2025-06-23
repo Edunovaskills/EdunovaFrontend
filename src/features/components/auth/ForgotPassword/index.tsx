@@ -1,9 +1,3 @@
-import {
-  FormContainer,
-  FormCard,
-  StyledTextField,
-  SubmitButton,
-} from './styles.component'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link } from 'react-router-dom'
 import { Typography, TextField, IconButton, Button } from '@mui/material'
@@ -15,12 +9,13 @@ import { useLoginMutation } from 'entities/mutation'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { useState } from 'react'
+import { FormCard, FormContainer, StyledTextField } from '../styles.component'
 
 const RenderEndIcon = ({ toggleEye }: { toggleEye: boolean }) => {
   return toggleEye ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />
 }
 
-export const LoginForm = () => {
+export const ForgotPassword = () => {
   const form = useForm<LoginSchema>({
     resolver: yupResolver(loginSchema),
     defaultValues: {

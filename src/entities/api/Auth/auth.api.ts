@@ -1,5 +1,6 @@
 import type { LoginResponse, UserResponse } from 'entities/model'
 import type {
+  ForgotPasswordSchema,
   LoginSchema,
   SignUpSchema,
   VerifyEmailSchema,
@@ -45,6 +46,31 @@ export class AuthApi {
 
   async getUser() {
     const response = await this.client.get<UserResponse>('me')
+    return response
+  }
+
+  async forgotPassword(forgotPasswordPayload: ForgotPasswordSchema['email']) {
+    const response = await this.client.post(
+      'forgot-password',
+      forgotPasswordPayload
+    )
+    return response
+  }
+  async verifyForgotOtp(
+    verifyForgotOtpPayload: Pick<ForgotPasswordSchema, 'otp' | 'email'>
+  ) {
+    const response = await this.client.post(
+      'verify-forgot-otp',
+      verifyForgotOtpPayload
+    )
+    return response
+  }
+
+  async resetPassword(resetPasswordPayload: ForgotPasswordSchema) {
+    const response = await this.client.post(
+      'reset-password',
+      resetPasswordPayload
+    )
     return response
   }
 }
