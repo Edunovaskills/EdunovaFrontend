@@ -22,15 +22,17 @@ import {
 import { CloudUpload, Delete, Close } from '@mui/icons-material'
 import type { Course } from 'entities/model/courses.model'
 import { CourseDetailModal } from 'entities/component/CourseDetailModal'
+import { preview } from 'vite'
 
 interface AddCourseProps {}
 
 export const AddCourse: React.FC<AddCourseProps> = () => {
   const [imageFile, setImageFile] = useState<File | null>(null) // Actual File object for upload
-  const [preview, setPreview] = useState<string | null>(() => {
-    // Load image preview from localStorage for persistence
-    return localStorage.getItem('courseImagePreview') || null
-  })
+  const [preview, setPreview] = useState<string | null>(null)
+  // const [preview, setPreview] = useState<string | null>(() => {
+  //   // Load image preview from localStorage for persistence
+  //   return localStorage.getItem('courseImagePreview') || null
+  // })
 
   // State for view preference (table or grid)
   const [currentView, setCurrentView] = useState<'table' | 'grid'>(() => {
@@ -45,13 +47,13 @@ export const AddCourse: React.FC<AddCourseProps> = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
 
   // Save image preview to localStorage
-  useEffect(() => {
-    if (preview) {
-      localStorage.setItem('courseImagePreview', preview)
-    } else {
-      localStorage.removeItem('courseImagePreview')
-    }
-  }, [preview])
+  // useEffect(() => {
+  //   if (preview) {
+  //     localStorage.setItem('courseImagePreview', preview)
+  //   } else {
+  //     localStorage.removeItem('courseImagePreview')
+  //   }
+  // }, [preview])
 
   // Save view preference to localStorage
   useEffect(() => {
