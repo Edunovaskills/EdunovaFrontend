@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React, { useState, useEffect } from 'react';
 import { AdminNavbar } from './AdminNavbar';
 import { Dashboard } from './Dashboard';
@@ -7,6 +8,18 @@ import { Analytics } from './Analytics';
 import { Users } from './Users';
 import { adminStyles } from './AdminStyles';
 import { Settings } from './Settings/Settings';
+=======
+import React, { useState, useEffect } from 'react'
+import { AdminNavbar } from './AdminNavbar'
+import { Dashboard } from './Dashboard'
+import { AddEvent } from './AddEvent'
+import { AddCourse } from './AddCourse'
+import { AddBlog } from './AddBlog'
+import { Analytics } from './Analytics'
+import { Users } from './Users'
+import { adminStyles } from './AdminStyles'
+import { Settings } from './Settings/Settings'
+>>>>>>> Stashed changes
 
 export const Admin: React.FC = () => {
   // Initialize activeTab from localStorage, default to 'dashboard' if not set
@@ -26,7 +39,13 @@ export const Admin: React.FC = () => {
       case 'events':
         return <AddEvent />;
       case 'courses':
+<<<<<<< Updated upstream
         return <AddCourse />;
+=======
+        return <AddCourse />
+      case 'blogs': 
+        return <AddBlog />
+>>>>>>> Stashed changes
       case 'users':
         return <Users />;
       case 'analytics':

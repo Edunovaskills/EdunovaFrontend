@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { adminNavbarStyles, getNavItemStyles } from './styles.component';
@@ -110,6 +109,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'events', label: 'Events', icon: '📅' },
     { id: 'courses', label: 'Courses', icon: '📚' },
+    { id: 'blogs', label: 'Blogs', icon: '✍️' }, // Added Blogs tab
     { id: 'users', label: 'Users', icon: '👥' },
     { id: 'analytics', label: 'Analytics', icon: '📈' },
     { id: 'settings', label: 'Settings', icon: '⚙️' }
@@ -133,7 +133,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
         $isActive={isActive}
         $isLoading={loading}
         onClick={() => handleTabChange(item.id)}
-        aria-label={`Navigate to ${item.label}`}
+        aria-label={`Maps to ${item.label}`}
         aria-current={isActive ? 'page' : undefined}
       >
         <NavIcon role="img" aria-label={item.label}>
