@@ -49,6 +49,7 @@ export const AddEvent: React.FC = () => {
   const [dragActive, setDragActive] = useState(false)
   const [isGridView, setIsGridView] = useState(true)
   const { mutateAsync, isPending: isCreatingEvent } = useCreateEventMutation()
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null)
 
   // TanStack Query for events
   const { data: eventsData, isLoading: isLoadingEvents } = useAllEventsQuery()
@@ -56,29 +57,24 @@ export const AddEvent: React.FC = () => {
 
   // TODO: Replace with actual mutation hook
   const createEvent = async (data: EventSchema) => {
-    // Implement mutation logic here
-    // On success: reset(); refetch events query
-    await mutateAsync({
-      title: data.title,
-      description: data.description,
-      price: data.price,
-      paymentUrl: data.paymentUrl,
-      image: data.image,
-    })
+    if (!selectedImageFile) {
+      alert('Please select an image for the event.')
+      return
+    }
+    await mutateAsync({ data, imageFile: selectedImageFile })
+    setSelectedImageFile(null)
     reset()
   }
 
   // Image upload handlers
   const handleImageChange = (file: File, onChange: (value: string) => void) => {
     if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader()
-      reader.onload = () => {
-        const url = URL.createObjectURL(file)
-        onChange(url)
-      }
-      reader.readAsDataURL(file)
+      setSelectedImageFile(file) // <-- Save the file for upload
+      const url = URL.createObjectURL(file)
+      onChange(url)
     } else {
       alert('Please select a valid image file (PNG, JPG, GIF)')
+      setSelectedImageFile(null)
       onChange('')
     }
   }

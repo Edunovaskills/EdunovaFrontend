@@ -4,12 +4,17 @@ import { AllEventsQueryKey } from 'entities/query'
 import { useSnackBar } from 'entities/state'
 import type { EventSchema } from 'features/schema'
 
+type CreateEventPayload = {
+  data: EventSchema
+  imageFile: File
+}
+
 export const useCreateEventMutation = () => {
   const { show } = useSnackBar()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (body: EventSchema) => {
-      const res = await adminEventApi.createEvent(body)
+    mutationFn: async ({ data, imageFile }: CreateEventPayload) => {
+      const res = await adminEventApi.createEvent(data, imageFile)
       return res.data
     },
     onSuccess: () => {

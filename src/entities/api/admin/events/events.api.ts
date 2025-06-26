@@ -8,8 +8,25 @@ export class AdminEventApi {
     this.client = client
   }
 
-  async createEvent(eventPayload: EventSchema) {
-    const response = await this.client.post<EventDetail>('events', eventPayload)
+  async createEvent(eventPayload: EventSchema, imageFile?: File) {
+    const formData = new FormData()
+    formData.append('title', eventPayload.title)
+    formData.append('description', eventPayload.description)
+    formData.append('price', String(eventPayload.price))
+    formData.append('paymentUrl', eventPayload.paymentUrl)
+    if (imageFile) {
+      formData.append('image', imageFile)
+    }
+    // Use the correct backend endpoint
+    const response = await this.client.post<EventDetail>(
+      'create-events',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
     return response
   }
 }
