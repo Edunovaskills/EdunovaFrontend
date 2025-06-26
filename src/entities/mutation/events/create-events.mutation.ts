@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminEventApi } from 'entities/api'
+import type { ErrorResponse } from 'entities/definitions'
 import { AllEventsQueryKey } from 'entities/query'
 import { useSnackBar } from 'entities/state'
 import type { EventSchema } from 'features/schema'
@@ -24,9 +25,9 @@ export const useCreateEventMutation = () => {
       })
       queryClient.invalidateQueries({ queryKey: [AllEventsQueryKey] })
     },
-    onError: () => {
+    onError: (error: ErrorResponse) => {
       show({
-        title: 'Failed to create event',
+        title: error.response?.data.error,
         color: 'Error',
       })
     },

@@ -17,3 +17,8 @@ export {
   useEventByIdQuery,
   EventByIdQueryKey,
 } from './events/get-event-by-id.query'
+
+export {
+  useAllCoursesForAdminQuery,
+  AllCoursesForAdminQueryKey,
+} from './courses/get-all-cources-for-admin.query'

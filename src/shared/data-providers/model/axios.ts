@@ -37,6 +37,7 @@ const clientInstance = axios.create({
  * Additional Instance
  * @description Additional axios instance for API calls with interceptors
  */
+
 const additionalInstance = axios.create({
   baseURL: baseServerUrl, // NOTE: Add your base URL and update the interceptor configuration
   headers: { 'Content-Type': 'application/json' },
@@ -48,6 +49,7 @@ const failedClientQueue: FailedQueue = []
 const failedAdditionalQueue: FailedQueue = []
 
 function handleRequest(req: InternalAxiosRequestConfig) {
+  console.log(req, 'reqq')
   // if(req)
   ;[ACCESS_TOKEN, USER_ID_TOKEN].forEach((token) => {
     const tokenValue = Cookies.get(token)

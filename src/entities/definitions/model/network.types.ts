@@ -29,6 +29,7 @@ export type NetworkErrorResponse = {
   message: string
   debugId: string
   type: ERROR_RESPONSE_TYPES
+  error: string
 }
 
 export type ErrorResponse = AxiosError<NetworkErrorResponse>

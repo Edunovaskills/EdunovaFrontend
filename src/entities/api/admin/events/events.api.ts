@@ -17,7 +17,6 @@ export class AdminEventApi {
     if (imageFile) {
       formData.append('image', imageFile)
     }
-    // Use the correct backend endpoint
     const response = await this.client.post<EventDetail>(
       'create-events',
       formData,
