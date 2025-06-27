@@ -29,6 +29,12 @@ export const appPaths = {
   'privacy-policy': '/privacy-policy',
   'terms-of-services': '/terms-of-services',
   admin: '/admin',
+  adminDashboard: '/admin/dashboard',
+  adminEvents: '/admin/events',
+  adminCourses: '/admin/courses',
+  adminBlogs: '/admin/blogs',
+  adminUsers: '/admin/users',
+  adminSettings: '/admin/settings',
   userLogin: '/user/login',
   userSignup: '/user/signup',
   userProfile: '/user/profile', // Added user profile path

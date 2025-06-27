@@ -59,9 +59,10 @@ export const Navbar = () => {
 
   const currentMenuItem = useMemo(() => {
     return menuItems.find((item) => {
-      const pathSegment = location.pathname.split('/')[1] || '/'
+      const itemPath = appPaths[item.value as AppPathsName] || item.value
       return (
-        pathSegment === item.value || (pathSegment === '' && item.value === '/')
+        location.pathname === itemPath ||
+        location.pathname.startsWith(itemPath + '/')
       )
     })
   }, [location, menuItems])

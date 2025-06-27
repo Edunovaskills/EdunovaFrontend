@@ -14,10 +14,12 @@ const baseMenuItems: MenuItem[] = [
 ]
 
 const adminMenuItems: MenuItem[] = [
-  { label: 'Home', value: '/' },
-  { label: 'About', value: 'about' },
-  { label: 'Events', value: 'events' },
-  { label: 'Admin', value: 'admin' },
+  { label: 'Dashboard', value: 'adminDashboard' },
+  { label: 'Events', value: 'adminEvents' },
+  { label: 'Courses', value: 'adminCourses' },
+  { label: 'Blogs', value: 'adminBlogs' },
+  { label: 'Users', value: 'adminUsers' },
+  { label: 'Settings', value: 'adminSettings' },
 ]
 
 export const useMenuItems = (): MenuItem[] => {

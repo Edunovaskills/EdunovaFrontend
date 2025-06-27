@@ -44,8 +44,8 @@ export const Admin: React.FC = () => {
 
   return (
     <div style={adminStyles.container}>
-      <AdminNavbar activeTab={activeTab} onTabChange={setActiveTab} />
-      <main style={adminStyles.content}>{renderContent()}</main>
+      {/* <AdminNavbar activeTab={activeTab} onTabChange={setActiveTab} /> */}
+      {/* <main style={adminStyles.content}>{renderContent()}</main> */}
     </div>
   )
 }

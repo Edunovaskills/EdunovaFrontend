@@ -10,6 +10,11 @@ import { AdminPage } from 'pages/components/admin/Admin'
 import { LoginPage } from 'pages/components/user/Login' // Keep this import
 import { SignupPage } from 'pages/components/user/Signup' // Keep this import
 import { EventDetailsPage } from 'pages/components'
+import AdminEventsPage from 'pages/components/admin/AdminEventsPage'
+import AdminCoursesPage from 'pages/components/admin/AdminCoursesPage'
+import AdminBlogsPage from 'pages/components/admin/AdminBlogsPage'
+import AdminUsersPage from 'pages/components/admin/AdminUsersPage'
+import AdminSettingsPage from 'pages/components/admin/AdminSettingsPage'
 
 // Import UserProfile and PrivateRoute
 
@@ -41,7 +46,6 @@ const Router = createBrowserRouter(
             path={appPaths.ticketBookingServices}
             element={<TicketBookingServicesPage />}
           />
-          
 
           {/* Admin route - now protected by PrivateRoute with role check */}
           <Route
