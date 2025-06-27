@@ -53,3 +53,13 @@ export {
   useBlogByIdAdminQuery,
   GetBlogByIdAdminQueryKey,
 } from './blogs/get-blog-by-id-admin.query'
+
+export {
+  useAllEventsForAdminQuery,
+  AllEventsForAdminQueryKey,
+} from './events/get-all-events-for-admin.query'
+
+export {
+  useEventByIdAdminQuery,
+  GetEventByIdAdminQueryKey,
+} from './events/get-event-by-id-admin.query'

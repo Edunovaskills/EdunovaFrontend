@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminEventApi } from 'entities/api'
 import type { ErrorResponse } from 'entities/definitions'
-import { AllEventsQueryKey } from 'entities/query'
+import { AllEventsForAdminQueryKey } from 'entities/query'
 import { useSnackBar } from 'entities/state'
 import type { EventSchema } from 'features/schema'
 
@@ -23,7 +23,7 @@ export const useCreateEventMutation = () => {
         title: 'Event created successfully',
         color: 'Success',
       })
-      queryClient.invalidateQueries({ queryKey: [AllEventsQueryKey] })
+      queryClient.invalidateQueries({ queryKey: [AllEventsForAdminQueryKey] })
     },
     onError: (error: ErrorResponse) => {
       show({

@@ -1,7 +1,3 @@
-// src/features/components/admin/AddEvent/styles.component.ts
-
-import React from 'react';
-
 export const addEventStyles: { [key: string]: React.CSSProperties } = {
   container: {
     padding: '2rem',
@@ -9,8 +5,14 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
     maxWidth: '1200px',
     margin: '2rem auto',
-    backgroundColor: '#ffffff', // Default light mode background
+    backgroundColor: '#ffffff',
     transition: 'background-color 0.3s ease-in-out',
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '2rem',
   },
   title: {
     fontSize: '2.5rem',
@@ -19,6 +21,55 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     textAlign: 'center',
     fontWeight: '700',
     textShadow: '1px 1px 2px rgba(0,0,0,0.05)',
+  },
+  formContainer: {
+    padding: '2rem',
+    marginBottom: '2rem',
+  },
+  submitButton: {
+    backgroundColor: '#16a34a',
+    color: '#ffffff',
+    padding: '1.2rem 2rem',
+    borderRadius: '8px',
+    border: 'none',
+    fontSize: '1.2rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    marginTop: '2rem',
+    transition: 'background-color 0.2s ease-in-out, transform 0.2s ease-in-out',
+  },
+  subHeader: {
+    fontSize: '1.8rem',
+    fontWeight: '600',
+    color: '#1e293b',
+    marginBottom: '1.5rem',
+  },
+  searchAndSwitchContainer: {
+    display: 'flex',
+    gap: '1rem',
+    marginBottom: '2rem',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  searchField: {
+    flexGrow: 1,
+    maxWidth: '400px',
+  },
+  eventGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    gap: '2rem',
+    marginBottom: '2rem',
+  },
+  eventCard: {
+    borderRadius: '12px',
+    overflow: 'hidden',
+    transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  },
+  paginationContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '2rem',
   },
   form: {
     display: 'flex',
@@ -53,12 +104,6 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     boxSizing: 'border-box',
     width: '100%',
     transition: 'border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    // These pseudo-class styles are for conceptual reference and won't work with pure inline styles
-    // '&:focus': {
-    //   borderColor: '#3b82f6',
-    //   boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.2)',
-    //   outline: 'none',
-    // },
   },
   textarea: {
     padding: '0.9rem',
@@ -72,11 +117,6 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     boxSizing: 'border-box',
     width: '100%',
     transition: 'border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    // '&:focus': {
-    //   borderColor: '#3b82f6',
-    //   boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.2)',
-    //   outline: 'none',
-    // },
   },
   select: {
     padding: '0.9rem',
@@ -88,11 +128,6 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     boxSizing: 'border-box',
     width: '100%',
     transition: 'border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    // '&:focus': {
-    //   borderColor: '#3b82f6',
-    //   boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.2)',
-    //   outline: 'none',
-    // },
   },
   fileInput: {
     display: 'none',
@@ -112,7 +147,7 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     gap: '1rem',
     minHeight: '180px',
   },
-  uploadAreaActive: { // This can be applied via conditional styling in React
+  uploadAreaActive: {
     borderColor: '#3b82f6',
     backgroundColor: '#e0edff',
     boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.3)',
@@ -151,7 +186,6 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
     margin: '0.5rem auto',
     transition: 'transform 0.2s ease-in-out',
-    // '&:hover': { transform: 'scale(1.02)' }, // Won't work inline
   },
   imagePreview: {
     width: '100%',
@@ -159,7 +193,6 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     objectFit: 'cover',
     display: 'block',
     transition: 'transform 0.3s ease-in-out',
-    // '&:hover': { transform: 'scale(1.05)' }, // Won't work inline
   },
   imageOverlay: {
     position: 'absolute',
@@ -173,9 +206,8 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     justifyContent: 'center',
     alignItems: 'center',
     gap: '1rem',
-    opacity: 0, // Initial opacity
+    opacity: 0,
     transition: 'opacity 0.3s ease-in-out',
-    // '&:hover': { opacity: 1 }, // Won't work inline. Handled in component with JS.
   },
   removeButton: {
     background: '#dc2626',
@@ -187,7 +219,6 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     fontSize: '0.95rem',
     fontWeight: '600',
     transition: 'background-color 0.2s ease-in-out',
-    // '&:hover': { backgroundColor: '#b91c1c' }, // Won't work inline
   },
   replaceButton: {
     background: '#2563eb',
@@ -201,21 +232,6 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     textAlign: 'center',
     display: 'inline-block',
     transition: 'background-color 0.2s ease-in-out',
-    // '&:hover': { backgroundColor: '#1d4ed8' }, // Won't work inline
-  },
-  submitButton: {
-    backgroundColor: '#16a34a',
-    color: '#ffffff',
-    padding: '1.2rem 2rem',
-    borderRadius: '8px',
-    border: 'none',
-    fontSize: '1.2rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    marginTop: '2rem',
-    transition: 'background-color 0.2s ease-in-out, transform 0.2s ease-in-out',
-    // '&:hover': { backgroundColor: '#15803d', transform: 'translateY(-2px)' }, // Won't work inline
-    // '&:disabled': { backgroundColor: '#94a3b8', cursor: 'not-allowed', transform: 'none' }, // Conditional style in React
   },
 
   // --- Styles for the Event List ---
@@ -240,13 +256,11 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     fontWeight: '600',
     color: '#475569',
     transition: 'all 0.2s ease-in-out',
-    // '&:hover': { backgroundColor: '#e2e8f0' }, // Won't work inline
   },
-  viewToggleButtonActive: { // Applied conditionally
+  viewToggleButtonActive: {
     backgroundColor: '#3b82f6',
     borderColor: '#3b82f6',
     color: '#ffffff',
-    // '&:hover': { backgroundColor: '#2563eb' }, // Won't work inline
   },
 
   table: {
@@ -276,7 +290,6 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     verticalAlign: 'middle',
     backgroundColor: '#ffffff',
   },
-  // 'tr:last-child td': { borderBottom: 'none' }, // Won't work inline
   thumbnail: {
     width: '45px',
     height: '45px',
@@ -293,17 +306,6 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     gap: '2rem',
     padding: '1rem',
   },
-  eventCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
-    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.1)',
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-    cursor: 'pointer',
-    // '&:hover': { transform: 'translateY(-8px)', boxShadow: '0 12px 30px rgba(0, 0, 0, 0.2)' }, // Won't work inline
-  },
   cardImageWrapper: {
     width: '100%',
     height: '180px',
@@ -317,7 +319,6 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     objectFit: 'cover',
     display: 'block',
     transition: 'transform 0.3s ease-in-out',
-    // '&:hover': { transform: 'scale(1.05)' }, // Won't work inline
   },
   cardContent: {
     padding: '1.5rem',
@@ -361,99 +362,50 @@ export const addEventStyles: { [key: string]: React.CSSProperties } = {
     color: '#3b82f6',
     textDecoration: 'none',
     fontWeight: '600',
-    // '&:hover': { textDecoration: 'underline' }, // Won't work inline
   },
 
   // New Pagination Styles
   pagination: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center', // Align items vertically
-    gap: '0.8rem', // Adjusted gap for numbers
+    alignItems: 'center',
+    gap: '0.8rem',
     marginTop: '2rem',
   },
   paginationButton: {
-    backgroundColor: '#60a5fa', // A slightly softer blue
+    backgroundColor: '#60a5fa',
     color: '#ffffff',
-    padding: '0.75rem 1.4rem', // More generous padding
-    borderRadius: '8px', // More rounded buttons
+    padding: '0.75rem 1.4rem',
+    borderRadius: '8px',
     border: 'none',
     fontSize: '1rem',
     fontWeight: '600',
     cursor: 'pointer',
     transition: 'background-color 0.2s ease-in-out, transform 0.2s ease-in-out',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Subtle shadow
-    // '&:hover': { backgroundColor: '#3b82f6', transform: 'translateY(-2px)' }, // Won't work inline
-    // '&:disabled': { backgroundColor: '#94a3b8', cursor: 'not-allowed', boxShadow: 'none', transform: 'none' }, // Conditional style in React
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   },
   pageNumberContainer: {
     display: 'flex',
     gap: '0.5rem',
-    margin: '0 1rem', // Space between buttons and numbers
+    margin: '0 1rem',
   },
   pageNumber: {
-    minWidth: '40px', // Fixed width for number circles
+    minWidth: '40px',
     height: '40px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '50%', // Circle shape
+    borderRadius: '50%',
     border: '1px solid #cbd5e1',
     color: '#475569',
     fontSize: '0.9rem',
     fontWeight: '600',
     cursor: 'pointer',
     transition: 'all 0.2s ease-in-out',
-    // '&:hover': { backgroundColor: '#f1f5f9' }, // Won't work inline
   },
-  pageNumberActive: { // Applied conditionally
+  pageNumberActive: {
     backgroundColor: '#3b82f6',
     borderColor: '#3b82f6',
     color: '#ffffff',
-    // '&:hover': { backgroundColor: '#2563eb' }, // Won't work inline
   },
-
-  // Responsive adjustments
-  '@media (max-width: 768px)': {
-    container: {
-      padding: '1.5rem',
-      margin: '1rem auto',
-    },
-    title: {
-      fontSize: '2rem',
-    },
-    row: {
-      flexDirection: 'column',
-      gap: '1rem',
-    },
-    field: {
-      flex: '1 1 100%',
-      minWidth: 'unset',
-    },
-    gridContainer: {
-      gridTemplateColumns: '1fr',
-    },
-    uploadArea: {
-      padding: '1.5rem',
-      minHeight: '150px',
-    },
-    imagePreviewContainer: {
-      maxWidth: '100%',
-      height: '180px',
-    },
-    pagination: {
-      flexWrap: 'wrap', // Allow pagination to wrap
-      justifyContent: 'center',
-      gap: '0.5rem',
-    },
-    paginationButton: {
-      padding: '0.6rem 1rem',
-      fontSize: '0.9rem',
-    },
-    pageNumber: {
-      minWidth: '35px',
-      height: '35px',
-      fontSize: '0.8rem',
-    },
-  },
-};
+}

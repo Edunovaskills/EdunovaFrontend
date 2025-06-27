@@ -1,24 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { addEventStyles } from './styles.component'
 import { useForm, Controller } from 'react-hook-form'
 import { eventSchema, type EventSchema } from 'features/schema'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useAllEventsQuery } from 'entities/query'
 import {
-  CardStyled,
-  ImgWrapperStyled,
-  DescriptionContainer,
-  EnrollButtonStyled,
-} from 'features/components/events/EventsShowcase/styles.component'
+  useAllEventsForAdminQuery,
+  useEventByIdAdminQuery,
+} from 'entities/query'
+
 import {
   Typography,
-  CardContent,
   Button,
   TextField,
   Box,
-  Divider,
   Stack,
-  useTheme,
   Paper,
   IconButton,
   Alert,
@@ -42,12 +37,19 @@ import {
   Edit,
   Delete,
   Visibility,
+  Close,
+  CloudUpload,
 } from '@mui/icons-material'
-import { useCreateEventMutation } from 'entities/mutation'
-import { useAppNavigate } from 'entities/state'
+import {
+  useCreateEventMutation,
+  useUpdateEventMutation,
+  useDeleteEventMutation,
+} from 'entities/mutation'
 import { useSnackBar } from 'entities/state'
 import type { Event } from 'entities/model'
 import { addBlogStyles } from '../AddBlog/styles.component'
+import { ConfirmDialog } from 'entities/component/ConfirmDialog'
+import { EventDetailModal } from 'entities/component/EventDetailModal'
 
 const PLACEHOLDER_EVENT_IMAGE_URL =
   'https://placehold.co/400x300/F0F0F0/333333?text=Edunova+Event'
@@ -70,6 +72,7 @@ export const AddEvent: React.FC = () => {
     handleSubmit,
     reset,
     control,
+    setValue,
     formState: { errors, isValid },
   } = form
   const [dragActive, setDragActive] = useState(false)
@@ -87,8 +90,19 @@ export const AddEvent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
 
+  // Edit and delete state
+  const [editEventId, setEditEventId] = useState<string | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [eventToDeleteId, setEventToDeleteId] = useState<string | null>(null)
+  const [isEditMode, setIsEditMode] = useState(false)
+
   // Mutations
-  const { mutateAsync, isPending: isCreatingEvent } = useCreateEventMutation()
+  const { mutateAsync: createEventAsync, isPending: isCreatingEvent } =
+    useCreateEventMutation()
+  const { mutateAsync: updateEventAsync, isPending: isUpdatingEvent } =
+    useUpdateEventMutation()
+  const { mutateAsync: deleteEventAsync, isPending: isDeletingEvent } =
+    useDeleteEventMutation()
 
   // Snackbar for notifications
   const { show: showSnackbar } = useSnackBar()
@@ -100,11 +114,15 @@ export const AddEvent: React.FC = () => {
     isError: isErrorEvents,
     error: eventsError,
     refetch: refetchEvents,
-  } = useAllEventsQuery({
+  } = useAllEventsForAdminQuery({
     page: page + 1,
     limit: rowsPerPage,
     search: debouncedSearchQuery,
   })
+
+  // Query for single event when editing
+  const { data: singleEventData, isLoading: isLoadingSingleEvent } =
+    useEventByIdAdminQuery(editEventId || undefined)
 
   // Debounce search query to prevent excessive API calls
   useEffect(() => {
@@ -119,36 +137,97 @@ export const AddEvent: React.FC = () => {
     localStorage.setItem('eventView', currentView)
   }, [currentView])
 
-  // Create event function
-  const createEvent = async (data: EventSchema) => {
+  // Ref for the form container
+  const formRef = useRef<HTMLDivElement>(null)
+
+  // Populate form when editing
+  useEffect(() => {
+    if (singleEventData?.data?.event && editEventId) {
+      const event = singleEventData.data.event
+      setValue('title', event.title)
+      setValue('description', event.description)
+      setValue('price', event.price)
+      setValue('paymentUrl', event.paymentUrl)
+      setValue('image', event.image)
+      setIsEditMode(true)
+    }
+  }, [singleEventData, editEventId, setValue])
+
+  // Scroll to form when entering edit mode and data is loaded
+  useEffect(() => {
+    if (isEditMode && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [isEditMode, singleEventData])
+
+  // Create/Update event function
+  const handleSubmitEvent = async (data: EventSchema) => {
     try {
-      if (!selectedImageFile) {
+      if (!selectedImageFile && !isEditMode) {
         showSnackbar({
           title: 'Please select an image for the event.',
           color: 'Error',
         })
         return
       }
-      await mutateAsync({ data, imageFile: selectedImageFile })
-      setSelectedImageFile(null)
-      reset()
+
+      if (isEditMode && editEventId) {
+        await updateEventAsync({
+          eventId: editEventId,
+          data,
+          imageFile: selectedImageFile || undefined,
+        })
+        handleCancelEdit()
+      } else {
+        await createEventAsync({ data, imageFile: selectedImageFile! })
+        setSelectedImageFile(null)
+        reset()
+      }
+
       refetchEvents() // Re-fetch events to update the list
-      showSnackbar({
-        title: 'Event created successfully!',
-        color: 'Success',
-      })
     } catch (error: any) {
       showSnackbar({
-        title: error?.response?.data?.message || 'Failed to create event.',
+        title: error?.response?.data?.message || 'Failed to save event.',
         color: 'Error',
       })
+    }
+  }
+
+  // Handle edit event
+  const handleEditEvent = (eventId: string) => {
+    setEditEventId(eventId)
+  }
+
+  // Handle cancel edit
+  const handleCancelEdit = () => {
+    setEditEventId(null)
+    setIsEditMode(false)
+    setSelectedImageFile(null)
+    reset()
+  }
+
+  // Handle delete event
+  const handleDeleteEventClick = (eventId: string) => {
+    setEventToDeleteId(eventId)
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (eventToDeleteId) {
+      try {
+        await deleteEventAsync(eventToDeleteId)
+        setDeleteConfirmOpen(false)
+        setEventToDeleteId(null)
+      } catch (error) {
+        // Error handling is done in the mutation
+      }
     }
   }
 
   // Image upload handlers
   const handleImageChange = (file: File, onChange: (value: string) => void) => {
     if (file && file.type.startsWith('image/')) {
-      setSelectedImageFile(file) // <-- Save the file for upload
+      setSelectedImageFile(file)
       const url = URL.createObjectURL(file)
       onChange(url)
     } else {
@@ -191,25 +270,6 @@ export const AddEvent: React.FC = () => {
     setSelectedImageFile(null)
   }
 
-  // Form submit
-  const onSubmit = (data: EventSchema) => {
-    createEvent(data)
-  }
-
-  const theme = useTheme()
-  const { appNavigate } = useAppNavigate()
-
-  const handleEventClick = (eventId: string) => {
-    appNavigate('eventDetail', { eventId })
-  }
-
-  const handleEnrollClick = (e: React.MouseEvent, paymentUrl: string) => {
-    e.stopPropagation() // Prevent card click when clicking enroll button
-    if (paymentUrl) {
-      window.open(paymentUrl, '_blank')
-    }
-  }
-
   // Handle page change for TablePagination
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -237,180 +297,171 @@ export const AddEvent: React.FC = () => {
   const events = eventsData?.data?.events || []
   const totalEvents = eventsData?.total || 0
 
+  // State for event detail modal
+  const [viewModalOpen, setViewModalOpen] = useState(false)
+  const [viewEventId, setViewEventId] = useState<string | null>(null)
+
   return (
-    <div
-      style={{
-        ...addEventStyles.container,
-      }}
-    >
-      <h2
-        style={{
-          ...addEventStyles.title,
-        }}
-      >
-        Add New Event
-      </h2>
-
-      <form
-        onSubmit={(e) => handleSubmit(onSubmit)(e)}
-        style={addEventStyles.form}
-      >
-        <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-          <TextField
-            fullWidth
-            label="Event Title"
-            {...register('title')}
-            error={!!errors.title}
-            helperText={errors.title?.message}
-            required
+    <div ref={formRef} style={addEventStyles.container}>
+      <Box sx={addEventStyles.header}>
+        <Typography variant="h4" component="h1" sx={addEventStyles.title}>
+          {isEditMode ? 'Edit Event' : 'Add New Event'}
+        </Typography>
+        {isEditMode && (
+          <Button
             variant="outlined"
-          />
-          <TextField
-            fullWidth
-            label="Price"
-            type="number"
-            {...register('price')}
-            error={!!errors.price}
-            helperText={errors.price?.message}
-            required
-            variant="outlined"
-          />
-        </Box>
+            onClick={handleCancelEdit}
+            startIcon={<Close />}
+          >
+            Cancel Edit
+          </Button>
+        )}
+      </Box>
 
-        <TextField
-          fullWidth
-          label="Description"
-          multiline
-          rows={4}
-          {...register('description')}
-          error={!!errors.description}
-          helperText={errors.description?.message}
-          required
-          variant="outlined"
-          sx={{ mb: 2 }}
-        />
+      <Paper elevation={2} sx={addEventStyles.formContainer}>
+        <form onSubmit={handleSubmit(handleSubmitEvent)}>
+          <Stack spacing={3}>
+            <TextField
+              {...register('title')}
+              label="Event Title"
+              fullWidth
+              error={!!errors.title}
+              helperText={errors.title?.message}
+            />
 
-        <TextField
-          fullWidth
-          label="Payment URL"
-          type="text"
-          {...register('paymentUrl')}
-          error={!!errors.paymentUrl}
-          helperText={errors.paymentUrl?.message}
-          placeholder="e.g., https://example.com/event"
-          required
-          variant="outlined"
-          sx={{ mb: 2 }}
-        />
+            <TextField
+              {...register('description')}
+              label="Event Description"
+              fullWidth
+              multiline
+              rows={4}
+              error={!!errors.description}
+              helperText={errors.description?.message}
+            />
 
-        {/* Photo Upload Section */}
-        <div style={addEventStyles.field}>
-          <label style={addEventStyles.label}>Event Photo</label>
-          <Controller
-            name="image"
-            control={control}
-            render={({ field: { value, onChange } }) => (
-              <>
-                {!value ? (
-                  <div
-                    style={{
-                      ...addEventStyles.uploadArea,
-                      ...(dragActive ? addEventStyles.uploadAreaActive : {}),
+            <TextField
+              {...register('price')}
+              label="Event Price"
+              type="number"
+              fullWidth
+              error={!!errors.price}
+              helperText={errors.price?.message}
+            />
+
+            <TextField
+              {...register('paymentUrl')}
+              label="Payment URL"
+              fullWidth
+              error={!!errors.paymentUrl}
+              helperText={errors.paymentUrl?.message}
+            />
+
+            <Controller
+              name="image"
+              control={control}
+              render={({ field }) => (
+                <Box>
+                  <Typography variant="h6" gutterBottom>
+                    Event Image
+                  </Typography>
+                  <Box
+                    sx={{
+                      border: '2px dashed',
+                      borderColor: dragActive ? 'primary.main' : 'grey.300',
+                      borderRadius: 2,
+                      p: 3,
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      backgroundColor: dragActive
+                        ? 'action.hover'
+                        : 'background.paper',
                     }}
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
                     onDragOver={handleDrag}
-                    onDrop={(e) => handleDrop(e, onChange)}
+                    onDrop={(e) => handleDrop(e, field.onChange)}
+                    onClick={() =>
+                      document.getElementById('image-upload')?.click()
+                    }
                   >
                     <input
+                      id="image-upload"
                       type="file"
                       accept="image/*"
-                      onChange={(e) => handleFileInputChange(e, onChange)}
-                      style={addEventStyles.fileInput}
-                      id="event-image-upload"
+                      style={{ display: 'none' }}
+                      onChange={(e) => handleFileInputChange(e, field.onChange)}
                     />
-                    <label
-                      htmlFor="event-image-upload"
-                      style={addEventStyles.uploadLabel}
-                    >
-                      <div style={addEventStyles.uploadIcon}>📸</div>
-                      <div style={addEventStyles.uploadText}>
-                        <p style={addEventStyles.uploadMainText}>
-                          Click to upload or drag and drop
-                        </p>
-                        <p style={addEventStyles.uploadSubText}>
-                          PNG, JPG, GIF up to 10MB
-                        </p>
-                      </div>
-                    </label>
-                  </div>
-                ) : (
-                  <div style={addEventStyles.imagePreviewContainer}>
-                    <img
-                      src={value}
-                      alt="Event preview"
-                      style={addEventStyles.imagePreview}
+                    <CloudUpload
+                      sx={{ fontSize: 48, color: 'grey.500', mb: 2 }}
                     />
-                    <div style={addEventStyles.imageOverlay}>
-                      <button
-                        type="button"
-                        onClick={() => removeImage(onChange)}
-                        style={addEventStyles.removeButton}
+                    <Typography variant="body2" color="textSecondary">
+                      {field.value
+                        ? 'Image selected'
+                        : 'Drag and drop an image or click to select'}
+                    </Typography>
+                    {field.value && (
+                      <Box
+                        sx={{
+                          mt: 2,
+                          position: 'relative',
+                          display: 'inline-block',
+                        }}
                       >
-                        ✕ Remove
-                      </button>
-                      <label
-                        htmlFor="event-image-replace"
-                        style={addEventStyles.replaceButton}
-                      >
-                        🔄 Replace
-                      </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleFileInputChange(e, onChange)}
-                        style={addEventStyles.fileInput}
-                        id="event-image-replace"
-                      />
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-          />
-        </div>
+                        <img
+                          src={field.value}
+                          alt="Preview"
+                          style={{
+                            maxWidth: '200px',
+                            maxHeight: '150px',
+                            objectFit: 'cover',
+                            borderRadius: '8px',
+                          }}
+                        />
+                        <IconButton
+                          size="small"
+                          onClick={() => removeImage(field.onChange)}
+                          sx={{
+                            position: 'absolute',
+                            top: 4,
+                            right: 4,
+                            background: 'rgba(255,255,255,0.8)',
+                            zIndex: 2,
+                          }}
+                        >
+                          <Close fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              )}
+            />
 
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={!isValid || isCreatingEvent}
-          sx={{ mt: 2 }}
-        >
-          {isCreatingEvent ? 'Creating Event...' : 'Create Event'}
-        </Button>
-      </form>
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              disabled={!isValid || isCreatingEvent || isUpdatingEvent}
+              sx={addEventStyles.submitButton}
+            >
+              {isCreatingEvent || isUpdatingEvent ? (
+                <CircularProgress size={24} />
+              ) : isEditMode ? (
+                'Update Event'
+              ) : (
+                'Create Event'
+              )}
+            </Button>
+          </Stack>
+        </form>
+      </Paper>
 
-      {/* Events List Section */}
-      <div style={addEventStyles.eventListSection}>
-        <h2
-          style={{
-            ...addEventStyles.title,
-          }}
-        >
-          All Events
-        </h2>
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h5" component="h2" sx={addEventStyles.subHeader}>
+          Existing Events
+        </Typography>
 
-        {/* Search and View Toggle */}
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 2,
-            mb: 3,
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-          }}
-        >
+        <Box sx={addEventStyles.searchAndSwitchContainer}>
           <TextField
             label="Search Events"
             variant="outlined"
@@ -424,14 +475,13 @@ export const AddEvent: React.FC = () => {
                 </InputAdornment>
               ),
             }}
-            sx={{ flexGrow: 1, maxWidth: 400 }}
+            sx={addEventStyles.searchField}
           />
           <ToggleButtonGroup
             value={currentView}
             exclusive
             onChange={toggleView}
             aria-label="event view"
-            size="small"
             sx={addBlogStyles.viewToggle}
           >
             <ToggleButton
@@ -454,7 +504,6 @@ export const AddEvent: React.FC = () => {
           </ToggleButtonGroup>
         </Box>
 
-        {/* Loading, Error, or No Events Found States */}
         {isLoadingEvents ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
             <CircularProgress />
@@ -470,7 +519,6 @@ export const AddEvent: React.FC = () => {
         ) : (
           <>
             {currentView === 'table' ? (
-              // Table View
               <TableContainer component={Paper} sx={{ mb: 2 }}>
                 <Table sx={{ minWidth: 650 }}>
                   <TableHead>
@@ -498,9 +546,9 @@ export const AddEvent: React.FC = () => {
                             src={event.image || PLACEHOLDER_EVENT_IMAGE_URL}
                             alt={event.title}
                             style={{
-                              width: '50px',
-                              height: '50px',
-                              objectFit: 'cover' as const,
+                              width: '60px',
+                              height: '40px',
+                              objectFit: 'cover',
                               borderRadius: '4px',
                             }}
                           />
@@ -519,9 +567,11 @@ export const AddEvent: React.FC = () => {
                             href={event.paymentUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ color: '#3b82f6', textDecoration: 'none' }}
+                            style={{ color: 'inherit' }}
                           >
-                            Link
+                            {event.paymentUrl.length > 30
+                              ? `${event.paymentUrl.substring(0, 30)}...`
+                              : event.paymentUrl}
                           </a>
                         </TableCell>
                         <TableCell>
@@ -541,25 +591,33 @@ export const AddEvent: React.FC = () => {
                             }}
                           >
                             <IconButton
+                              color="primary"
                               size="small"
-                              onClick={() => handleEventClick(event._id)}
-                              aria-label="view event"
-                            >
-                              <Visibility fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              aria-label="edit event"
-                              disabled={!event.isActive}
+                              onClick={() => handleEditEvent(event._id)}
+                              disabled={!event.isActive || isEditMode}
                             >
                               <Edit fontSize="small" />
                             </IconButton>
                             <IconButton
+                              color="error"
                               size="small"
-                              aria-label="delete event"
-                              disabled={!event.isActive}
+                              onClick={() => handleDeleteEventClick(event._id)}
+                              loading={isDeletingEvent}
+                              disabled={
+                                !event.isActive || isDeletingEvent || isEditMode
+                              }
                             >
                               <Delete fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              color="success"
+                              size="small"
+                              onClick={() => {
+                                setViewEventId(event._id)
+                                setViewModalOpen(true)
+                              }}
+                            >
+                              <Visibility fontSize="small" />
                             </IconButton>
                           </Box>
                         </TableCell>
@@ -567,7 +625,6 @@ export const AddEvent: React.FC = () => {
                     ))}
                   </TableBody>
                 </Table>
-                {/* Table Pagination */}
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
@@ -579,77 +636,110 @@ export const AddEvent: React.FC = () => {
                 />
               </TableContainer>
             ) : (
-              // Grid View
               <Stack>
-                <div style={addEventStyles.gridContainer}>
-                  {events.map((event) => (
-                    <CardStyled
+                <Box sx={addEventStyles.eventGrid}>
+                  {events.map((event: Event) => (
+                    <Paper
                       key={event._id}
-                      onClick={() => handleEventClick(event._id)}
-                      sx={{ cursor: 'pointer' }}
+                      elevation={2}
+                      sx={{
+                        ...addEventStyles.eventCard,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100%',
+                      }}
                     >
-                      <ImgWrapperStyled>
-                        <img
-                          src={event.image || PLACEHOLDER_EVENT_IMAGE_URL}
-                          alt={event.title || 'Event Image'}
-                          onError={(e) => {
-                            // Fallback if image fails to load
-                            const target = e.target as HTMLImageElement
-                            target.src = PLACEHOLDER_EVENT_IMAGE_URL
-                          }}
-                        />
-                      </ImgWrapperStyled>
-                      <Divider
-                        sx={{
-                          mt: 2,
-                          mb: 1.5,
-                          borderColor: theme.palette.divider,
+                      <img
+                        src={event.image || PLACEHOLDER_EVENT_IMAGE_URL}
+                        alt={event.title}
+                        style={{
+                          width: '100%',
+                          height: '180px',
+                          objectFit: 'cover',
                         }}
                       />
-                      <CardContent
-                        component={Stack}
-                        spacing={1}
-                        sx={{ flexGrow: 1, p: 1.5, pt: 0, pb: 1 }}
+                      <Box
+                        sx={{
+                          p: 2,
+                          flexGrow: 1,
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
                       >
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            fontWeight: theme.typography.fontWeightBold,
-                            maxHeight: '3.2em',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            lineHeight: '1.6em',
-                            color: theme.palette.text.primary,
-                          }}
-                        >
+                        <Typography variant="h6" gutterBottom>
                           {event.title}
                         </Typography>
-
-                        <DescriptionContainer variant="body2">
-                          {event.description}
-                        </DescriptionContainer>
-
-                        <Box sx={{ flexGrow: 1 }} />
-
                         <Typography
-                          variant="body2.400"
-                          color="primary.main"
+                          variant="body2"
+                          color="textSecondary"
                           sx={{
-                            fontWeight: theme.typography.fontWeightBold,
-                            mt: 1,
+                            mb: 2,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
                           }}
+                        >
+                          {event.description}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="primary"
+                          sx={{ fontWeight: 'bold', mb: 2 }}
                         >
                           Price:{' '}
                           {event.price === 0 ? 'Free' : `₹${event.price}`}
                         </Typography>
-                      </CardContent>
-                    </CardStyled>
+                        <Box sx={{ flexGrow: 1 }} />
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginTop: 'auto',
+                          }}
+                        >
+                          <Chip
+                            label={event.isActive ? 'Active' : 'Inactive'}
+                            color={event.isActive ? 'success' : 'error'}
+                            variant="filled"
+                            size="small"
+                          />
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <IconButton
+                              color="primary"
+                              size="small"
+                              onClick={() => handleEditEvent(event._id)}
+                              disabled={!event.isActive || isEditMode}
+                            >
+                              <Edit fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              color="error"
+                              size="small"
+                              onClick={() => handleDeleteEventClick(event._id)}
+                              disabled={
+                                !event.isActive || isDeletingEvent || isEditMode
+                              }
+                            >
+                              <Delete fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              color="success"
+                              size="small"
+                              onClick={() => {
+                                setViewEventId(event._id)
+                                setViewModalOpen(true)
+                              }}
+                            >
+                              <Visibility fontSize="small" />
+                            </IconButton>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Paper>
                   ))}
-                </div>
-                {/* Grid View Pagination */}
+                </Box>
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
@@ -658,12 +748,32 @@ export const AddEvent: React.FC = () => {
                   page={page}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
+                  sx={addEventStyles.paginationContainer}
                 />
               </Stack>
             )}
           </>
         )}
-      </div>
+      </Box>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        title="Delete Event"
+        description="Are you sure you want to delete this event? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
+        loading={isDeletingEvent}
+        onClose={() => {
+          setDeleteConfirmOpen(false)
+          setEventToDeleteId(null)
+        }}
+      />
+
+      <EventDetailModal
+        open={viewModalOpen}
+        onClose={() => setViewModalOpen(false)}
+        eventId={viewEventId}
+      />
     </div>
   )
 }
