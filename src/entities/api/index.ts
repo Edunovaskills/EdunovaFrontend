@@ -1,3 +1,6 @@
 export { authApi } from './Auth/auth.api'
 export { eventsApi } from './events/events.api'
 export { adminEventApi } from './admin/events/events.api'
+export { coursesApi } from './courses/courses.api'
+export { adminCourseApi } from './admin/courses/courses.api'
+export { adminBlogApi } from './admin/blogs/blogs.api'

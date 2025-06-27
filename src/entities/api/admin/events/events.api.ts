@@ -28,6 +28,34 @@ export class AdminEventApi {
     )
     return response
   }
+
+  async updateEvent(
+    eventId: string,
+    eventPayload: EventSchema,
+    imageFile?: File
+  ) {
+    const formData = new FormData()
+    formData.append('title', eventPayload.title)
+    formData.append('description', eventPayload.description)
+    formData.append('price', String(eventPayload.price))
+    formData.append('paymentUrl', eventPayload.paymentUrl)
+    if (imageFile) {
+      formData.append('image', imageFile)
+    }
+    const response = await this.client.patch<EventDetail>(
+      `update-events/${eventId}`,
+      formData
+    )
+    return response
+  }
+
+  async deleteEvent(eventId: string) {
+    const response = await this.client.patch<EventDetail>(
+      `delete-events/${eventId}`,
+      {}
+    )
+    return response
+  }
 }
 
 export const adminEventApi = new AdminEventApi(getClient('admin'))

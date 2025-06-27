@@ -1,31 +1,46 @@
-import type { CourseResponse } from 'entities/model'
-import type { Course } from 'entities/model/courses.model'
-import type { CourseSchema } from 'features/schema'
+// src/entities/api/admin/courses/courses.api.ts
 import { getClient, type IClient } from 'shared/data-providers/model/fetcher'
+import type { CourseResponse, CourseDetails } from 'entities/model'
+import type { CourseSchema } from 'features/schema' // Ensure CourseSchema is updated to not include price
 
-type UpdatePayload = {
-  eventPayload: CourseSchema
-  imageFile: File
-  courseId: string
-}
-export class AdminCourseApi {
+export class AdminCoursesApi {
   client: IClient
   constructor(client: IClient) {
     this.client = client
   }
 
-  async getAllCourses() {
-    return await this.client.get<CourseResponse>('courses')
+  async getAllCourses(
+    page: number = 1,
+    limit: number = 10,
+    search: string = ''
+  ) {
+    const response = await this.client.get<CourseResponse>(
+      `admin/courses?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`
+    )
+    return response
   }
-  async createCourse(eventPayload: CourseSchema, imageFile: File) {
+
+  async getCourseById(courseId: string) {
+    const response = await this.client.get<CourseDetails>(
+      `admin/courses/${courseId}`
+    )
+    return response
+  }
+
+  async createCourse(
+    course: Omit<CourseSchema, 'image' | 'price'>,
+    imageFile?: File
+  ) {
+    // Updated Omit type
     const formData = new FormData()
-    formData.append('title', eventPayload.title)
-    formData.append('description', eventPayload.description)
+    formData.append('title', course.title)
+    formData.append('description', course.description)
+    // Removed: formData.append('price', course.price.toString());
     if (imageFile) {
       formData.append('image', imageFile)
     }
-    const response = await this.client.post<Course>(
-      'create-courses',
+    const response = await this.client.post<CourseDetails>(
+      'admin/create-courses',
       formData,
       {
         headers: {
@@ -36,15 +51,26 @@ export class AdminCourseApi {
     return response
   }
 
-  async updateCourses({ courseId, eventPayload, imageFile }: UpdatePayload) {
+  async updateCourses({
+    courseId,
+    coursePayload,
+    imageFile,
+  }: {
+    courseId: string
+    coursePayload: Partial<Omit<CourseSchema, 'image' | 'price'>> // Updated Omit type
+    imageFile?: File
+  }) {
     const formData = new FormData()
-    formData.append('title', eventPayload.title)
-    formData.append('description', eventPayload.description)
+    if (coursePayload.title) formData.append('title', coursePayload.title)
+    if (coursePayload.description)
+      formData.append('description', coursePayload.description)
+    // Removed: if (coursePayload.price !== undefined) formData.append('price', coursePayload.price.toString());
     if (imageFile) {
       formData.append('image', imageFile)
     }
-    const response = await this.client.patch<Course>(
-      `courses/${courseId}`,
+
+    const response = await this.client.patch<CourseDetails>(
+      `admin/courses/${courseId}`,
       formData,
       {
         headers: {
@@ -56,8 +82,13 @@ export class AdminCourseApi {
   }
 
   async deleteCourse(courseId: string) {
-    return this.client.patch(`courses/${courseId}`, {})
+    // Backend uses PATCH for soft delete
+    const response = await this.client.patch<CourseDetails>(
+      `admin/delete-courses/${courseId}`,
+      {}
+    )
+    return response
   }
 }
 
-export const adminCourseApi = new AdminCourseApi(getClient('admin'))
+export const adminCourseApi = new AdminCoursesApi(getClient(''))

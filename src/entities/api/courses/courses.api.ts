@@ -1,3 +1,4 @@
+// src/entities/api/courses/courses.api.ts
 import type { CourseDetails, CourseResponse } from 'entities/model'
 import { getClient, type IClient } from 'shared/data-providers/model/fetcher'
 
@@ -7,8 +8,10 @@ export class CoursesApi {
     this.client = client
   }
 
-  async getCourses() {
-    const response = await this.client.get<CourseResponse>('')
+  async getCourses(page: number = 1, limit: number = 10, search: string = '') {
+    const response = await this.client.get<CourseResponse>(
+      `courses?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`
+    )
     return response
   }
 
@@ -18,4 +21,4 @@ export class CoursesApi {
   }
 }
 
-export const coursesApi = new CoursesApi(getClient('courses'))
+export const coursesApi = new CoursesApi(getClient('')) // Adjust base URL if needed

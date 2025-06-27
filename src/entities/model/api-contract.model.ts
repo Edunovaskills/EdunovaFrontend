@@ -5,7 +5,7 @@ export type ApiContract<T extends object> = {
 }
 
 export type PaginatedResponse = {
-  total: 0
-  currentPage: 1
-  totalPages: 0
+  total: number
+  currentPage: number
+  totalPages: number
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { addEventStyles } from './styles.component'
 import { useForm, Controller } from 'react-hook-form'
 import { eventSchema, type EventSchema } from 'features/schema'
@@ -19,9 +19,35 @@ import {
   Divider,
   Stack,
   useTheme,
+  Paper,
+  IconButton,
+  Alert,
+  CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+  InputAdornment,
+  ToggleButtonGroup,
+  ToggleButton,
+  Chip,
 } from '@mui/material'
+import {
+  Search,
+  TableRows,
+  GridView,
+  Edit,
+  Delete,
+  Visibility,
+} from '@mui/icons-material'
 import { useCreateEventMutation } from 'entities/mutation'
 import { useAppNavigate } from 'entities/state'
+import { useSnackBar } from 'entities/state'
+import type { Event } from 'entities/model'
+import { addBlogStyles } from '../AddBlog/styles.component'
 
 const PLACEHOLDER_EVENT_IMAGE_URL =
   'https://placehold.co/400x300/F0F0F0/333333?text=Edunova+Event'
@@ -47,23 +73,76 @@ export const AddEvent: React.FC = () => {
     formState: { errors, isValid },
   } = form
   const [dragActive, setDragActive] = useState(false)
-  const [isGridView, setIsGridView] = useState(true)
-  const { mutateAsync, isPending: isCreatingEvent } = useCreateEventMutation()
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null)
 
-  // TanStack Query for events
-  const { data: eventsData, isLoading: isLoadingEvents } = useAllEventsQuery()
-  const events = eventsData?.data?.events || []
+  // View state management
+  const [currentView, setCurrentView] = useState<'table' | 'grid'>(() => {
+    // Initialize currentView from localStorage, default to 'grid'
+    return (localStorage.getItem('eventView') as 'table' | 'grid') || 'grid'
+  })
 
-  // TODO: Replace with actual mutation hook
+  // Pagination and search state
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
+
+  // Mutations
+  const { mutateAsync, isPending: isCreatingEvent } = useCreateEventMutation()
+
+  // Snackbar for notifications
+  const { show: showSnackbar } = useSnackBar()
+
+  // TanStack Query for events with pagination and search
+  const {
+    data: eventsData,
+    isLoading: isLoadingEvents,
+    isError: isErrorEvents,
+    error: eventsError,
+    refetch: refetchEvents,
+  } = useAllEventsQuery({
+    page: page + 1,
+    limit: rowsPerPage,
+    search: debouncedSearchQuery,
+  })
+
+  // Debounce search query to prevent excessive API calls
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  // Persist current view preference to localStorage
+  useEffect(() => {
+    localStorage.setItem('eventView', currentView)
+  }, [currentView])
+
+  // Create event function
   const createEvent = async (data: EventSchema) => {
-    if (!selectedImageFile) {
-      alert('Please select an image for the event.')
-      return
+    try {
+      if (!selectedImageFile) {
+        showSnackbar({
+          title: 'Please select an image for the event.',
+          color: 'Error',
+        })
+        return
+      }
+      await mutateAsync({ data, imageFile: selectedImageFile })
+      setSelectedImageFile(null)
+      reset()
+      refetchEvents() // Re-fetch events to update the list
+      showSnackbar({
+        title: 'Event created successfully!',
+        color: 'Success',
+      })
+    } catch (error: any) {
+      showSnackbar({
+        title: error?.response?.data?.message || 'Failed to create event.',
+        color: 'Error',
+      })
     }
-    await mutateAsync({ data, imageFile: selectedImageFile })
-    setSelectedImageFile(null)
-    reset()
   }
 
   // Image upload handlers
@@ -73,7 +152,10 @@ export const AddEvent: React.FC = () => {
       const url = URL.createObjectURL(file)
       onChange(url)
     } else {
-      alert('Please select a valid image file (PNG, JPG, GIF)')
+      showSnackbar({
+        title: 'Please select a valid image file (PNG, JPG, GIF)',
+        color: 'Error',
+      })
       setSelectedImageFile(null)
       onChange('')
     }
@@ -106,6 +188,7 @@ export const AddEvent: React.FC = () => {
 
   const removeImage = (onChange: (value: string) => void) => {
     onChange('')
+    setSelectedImageFile(null)
   }
 
   // Form submit
@@ -126,6 +209,33 @@ export const AddEvent: React.FC = () => {
       window.open(paymentUrl, '_blank')
     }
   }
+
+  // Handle page change for TablePagination
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage)
+  }
+
+  // Handle rows per page change for TablePagination
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0) // Reset to first page when rows per page changes
+  }
+
+  // Toggle between table and grid view
+  const toggleView = (
+    event: React.MouseEvent<HTMLElement>,
+    newView: 'table' | 'grid' | null
+  ) => {
+    if (newView !== null) {
+      setCurrentView(newView)
+    }
+  }
+
+  // Extract events data and total count
+  const events = eventsData?.data?.events || []
+  const totalEvents = eventsData?.total || 0
 
   return (
     <div
@@ -275,10 +385,9 @@ export const AddEvent: React.FC = () => {
           variant="contained"
           color="primary"
           disabled={!isValid || isCreatingEvent}
-          loading={isCreatingEvent}
           sx={{ mt: 2 }}
         >
-          {'Create Event'}
+          {isCreatingEvent ? 'Creating Event...' : 'Create Event'}
         </Button>
       </form>
 
@@ -292,139 +401,267 @@ export const AddEvent: React.FC = () => {
           All Events
         </h2>
 
-        {/* View Toggle Buttons */}
-        <div style={addEventStyles.viewToggleContainer}>
-          <button
-            onClick={() => setIsGridView(true)}
-            style={{
-              ...addEventStyles.viewToggleButton,
-              ...(isGridView ? addEventStyles.viewToggleButtonActive : {}),
+        {/* Search and View Toggle */}
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            mb: 3,
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <TextField
+            label="Search Events"
+            variant="outlined"
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search />
+                </InputAdornment>
+              ),
             }}
+            sx={{ flexGrow: 1, maxWidth: 400 }}
+          />
+          <ToggleButtonGroup
+            value={currentView}
+            exclusive
+            onChange={toggleView}
+            aria-label="event view"
+            size="small"
+            sx={addBlogStyles.viewToggle}
           >
-            <span>&#9638; Grid View</span>
-          </button>
-          <button
-            onClick={() => setIsGridView(false)}
-            style={{
-              ...addEventStyles.viewToggleButton,
-              ...(!isGridView ? addEventStyles.viewToggleButtonActive : {}),
-            }}
-          >
-            <span>&#9776; Table View</span>
-          </button>
-        </div>
+            <ToggleButton
+              value="table"
+              aria-label="table view"
+              buttonType="block"
+              sx={{
+                marginRight: 0.5,
+              }}
+            >
+              <TableRows />
+            </ToggleButton>
+            <ToggleButton
+              value="grid"
+              aria-label="grid view"
+              buttonType="block"
+            >
+              <GridView />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
 
+        {/* Loading, Error, or No Events Found States */}
         {isLoadingEvents ? (
-          <div>Loading events...</div>
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : isErrorEvents ? (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            Error loading events: {eventsError?.message}
+          </Alert>
         ) : events.length === 0 ? (
-          <p style={{ textAlign: 'center', color: addEventStyles.label.color }}>
-            No events found. Add some!
-          </p>
-        ) : isGridView ? (
-          // Grid View: Use the same card as home page
-          <div style={addEventStyles.gridContainer}>
-            {events.map((event) => (
-              <CardStyled
-                onClick={() => handleEventClick(event._id)}
-                sx={{ cursor: 'pointer' }}
-              >
-                <ImgWrapperStyled>
-                  <img
-                    src={event.image || PLACEHOLDER_EVENT_IMAGE_URL}
-                    alt={event.title || 'Event Image'}
-                    onError={(
-                      e: React.SyntheticEvent<HTMLImageElement, Event>
-                    ) => {
-                      // Fallback if image fails to load
-                      const target = e.target as HTMLImageElement
-                      target.src = PLACEHOLDER_EVENT_IMAGE_URL
-                    }}
-                  />
-                </ImgWrapperStyled>
-                <Divider
-                  sx={{ mt: 2, mb: 1.5, borderColor: theme.palette.divider }}
-                />{' '}
-                <CardContent
-                  component={Stack}
-                  spacing={1}
-                  sx={{ flexGrow: 1, p: 1.5, pt: 0, pb: 1 }} // Adjust padding within content area
-                >
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: theme.typography.fontWeightBold,
-                      maxHeight: '3.2em',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      lineHeight: '1.6em',
-                      color: theme.palette.text.primary,
-                    }}
-                  >
-                    {event.title}
-                  </Typography>
-
-                  <DescriptionContainer variant="body2">
-                    {event.description}
-                  </DescriptionContainer>
-
-                  <Box sx={{ flexGrow: 1 }} />
-
-                  <Typography
-                    variant="body2.400"
-                    color="primary.main"
-                    sx={{
-                      fontWeight: theme.typography.fontWeightBold,
-                      mt: 1,
-                    }}
-                  >
-                    Price: {event.price === 0 ? 'Free' : `₹${event.price}`}
-                  </Typography>
-
-                  <EnrollButtonStyled
-                    variant="contained"
-                    onClick={(e) => handleEnrollClick(e, event.paymentUrl)}
-                    disabled={!event.paymentUrl}
-                  >
-                    Enroll Now
-                  </EnrollButtonStyled>
-                </CardContent>
-              </CardStyled>
-            ))}
-          </div>
+          <Alert severity="info" sx={{ mb: 2 }}>
+            No events found.
+          </Alert>
         ) : (
-          // Table View
-          <table style={addEventStyles.table}>
-            <thead>
-              <tr>
-                <th style={addEventStyles.th}>Title</th>
-                <th style={addEventStyles.th}>Description</th>
-                <th style={addEventStyles.th}>Price</th>
-                <th style={addEventStyles.th}>Payment URL</th>
-              </tr>
-            </thead>
-            <tbody>
-              {events.map((event) => (
-                <tr key={event._id}>
-                  <td style={addEventStyles.td}>{event.title}</td>
-                  <td style={addEventStyles.td}>{event.description}</td>
-                  <td style={addEventStyles.td}>{event.price}</td>
-                  <td style={addEventStyles.td}>
-                    <a
-                      href={event.paymentUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: '#3b82f6', textDecoration: 'none' }}
+          <>
+            {currentView === 'table' ? (
+              // Table View
+              <TableContainer component={Paper} sx={{ mb: 2 }}>
+                <Table sx={{ minWidth: 650 }}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ fontWeight: 'bold' }}>Image</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold' }}>
+                        Description
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: 'bold' }}>Price</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold' }}>
+                        Payment URL
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
+                      <TableCell sx={{ fontWeight: 'bold' }} align="right">
+                        Actions
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {events.map((event: Event) => (
+                      <TableRow key={event._id}>
+                        <TableCell>
+                          <img
+                            src={event.image || PLACEHOLDER_EVENT_IMAGE_URL}
+                            alt={event.title}
+                            style={{
+                              width: '50px',
+                              height: '50px',
+                              objectFit: 'cover' as const,
+                              borderRadius: '4px',
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell>{event.title}</TableCell>
+                        <TableCell>
+                          {event.description.length > 50
+                            ? `${event.description.substring(0, 50)}...`
+                            : event.description}
+                        </TableCell>
+                        <TableCell>
+                          {event.price === 0 ? 'Free' : `₹${event.price}`}
+                        </TableCell>
+                        <TableCell>
+                          <a
+                            href={event.paymentUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: '#3b82f6', textDecoration: 'none' }}
+                          >
+                            Link
+                          </a>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            label={event.isActive ? 'Active' : 'Inactive'}
+                            color={event.isActive ? 'success' : 'error'}
+                            variant="filled"
+                            size="small"
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              gap: 1,
+                              justifyContent: 'flex-end',
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={() => handleEventClick(event._id)}
+                              aria-label="view event"
+                            >
+                              <Visibility fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              aria-label="edit event"
+                              disabled={!event.isActive}
+                            >
+                              <Edit fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              aria-label="delete event"
+                              disabled={!event.isActive}
+                            >
+                              <Delete fontSize="small" />
+                            </IconButton>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                {/* Table Pagination */}
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={totalEvents}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </TableContainer>
+            ) : (
+              // Grid View
+              <Stack>
+                <div style={addEventStyles.gridContainer}>
+                  {events.map((event) => (
+                    <CardStyled
+                      key={event._id}
+                      onClick={() => handleEventClick(event._id)}
+                      sx={{ cursor: 'pointer' }}
                     >
-                      Link
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      <ImgWrapperStyled>
+                        <img
+                          src={event.image || PLACEHOLDER_EVENT_IMAGE_URL}
+                          alt={event.title || 'Event Image'}
+                          onError={(e) => {
+                            // Fallback if image fails to load
+                            const target = e.target as HTMLImageElement
+                            target.src = PLACEHOLDER_EVENT_IMAGE_URL
+                          }}
+                        />
+                      </ImgWrapperStyled>
+                      <Divider
+                        sx={{
+                          mt: 2,
+                          mb: 1.5,
+                          borderColor: theme.palette.divider,
+                        }}
+                      />
+                      <CardContent
+                        component={Stack}
+                        spacing={1}
+                        sx={{ flexGrow: 1, p: 1.5, pt: 0, pb: 1 }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: theme.typography.fontWeightBold,
+                            maxHeight: '3.2em',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            lineHeight: '1.6em',
+                            color: theme.palette.text.primary,
+                          }}
+                        >
+                          {event.title}
+                        </Typography>
+
+                        <DescriptionContainer variant="body2">
+                          {event.description}
+                        </DescriptionContainer>
+
+                        <Box sx={{ flexGrow: 1 }} />
+
+                        <Typography
+                          variant="body2.400"
+                          color="primary.main"
+                          sx={{
+                            fontWeight: theme.typography.fontWeightBold,
+                            mt: 1,
+                          }}
+                        >
+                          Price:{' '}
+                          {event.price === 0 ? 'Free' : `₹${event.price}`}
+                        </Typography>
+                      </CardContent>
+                    </CardStyled>
+                  ))}
+                </div>
+                {/* Grid View Pagination */}
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={totalEvents}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </Stack>
+            )}
+          </>
         )}
       </div>
     </div>

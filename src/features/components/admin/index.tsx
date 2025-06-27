@@ -3,6 +3,7 @@ import { AdminNavbar } from './AdminNavbar'
 import { Dashboard } from './Dashboard'
 import { AddEvent } from './AddEvent'
 import { AddCourse } from './AddCourse'
+import { AddBlog } from './AddBlog'
 import { Analytics } from './Analytics'
 import { Users } from './Users'
 import { adminStyles } from './AdminStyles'
@@ -27,6 +28,9 @@ export const Admin: React.FC = () => {
         return <AddEvent />
       case 'courses':
         return <AddCourse />
+      case 'blogs':
+        return <AddBlog />
+
       case 'users':
         return <Users />
       case 'analytics':

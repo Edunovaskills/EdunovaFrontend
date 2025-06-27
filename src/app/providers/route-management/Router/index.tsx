@@ -41,18 +41,7 @@ const Router = createBrowserRouter(
             path={appPaths.ticketBookingServices}
             element={<TicketBookingServicesPage />}
           />
-          {/* Keep using LoginPage and SignupPage as you specified */}
-
-          {/* New: Protected User Profile Route */}
-          {/* <Route
-          path={appPaths.userProfile}
-          element={
-            // <PrivateRoute>
-            //   <UserProfilepage />
-            // </PrivateRoute>
-            <div>User Profile</div>
-          }
-        /> */}
+          
 
           {/* Admin route - now protected by PrivateRoute with role check */}
           <Route

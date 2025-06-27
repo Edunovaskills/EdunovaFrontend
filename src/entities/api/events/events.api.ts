@@ -8,8 +8,14 @@ export class EventsApi {
     this.client = client
   }
 
-  async getAllEvents() {
-    const response = await this.client.get<EventResponse>('')
+  async getAllEvents(
+    page: number = 1,
+    limit: number = 10,
+    search: string = ''
+  ) {
+    const response = await this.client.get<EventResponse>(
+      `?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`
+    )
     return response
   }
 
