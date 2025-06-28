@@ -1,0 +1,1 @@
+import{j as n,Q as o,U as t,V as a}from"./index-0GGCgQc5.js";const d=({content:e,iconBackgroundColor:r,size:s})=>n.jsx(o,{size:s,iconBackgroundColor:r,children:e}),i=({topInfo:e,showcaseSection:r})=>n.jsxs(t,{children:[n.jsx(a,{children:e}),r]});export{i as B,d as R};

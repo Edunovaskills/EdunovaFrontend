@@ -1,0 +1,1 @@
+import{a,a5 as u}from"./index-0GGCgQc5.js";const n="all-courses-for-admin",l=(o={})=>{const{page:s=1,limit:e=10,search:r=""}=o;return a({queryKey:[n,s,e,r],queryFn:async()=>(await u.getAllCourses(s,e,r)).data})};export{n as A,l as u};

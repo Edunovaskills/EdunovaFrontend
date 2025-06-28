@@ -1,0 +1,1 @@
+import{a as i,aN as n}from"./index-0GGCgQc5.js";const c="all-certificates-for-admin",l=(s={})=>{const{page:e=1,limit:r=10,search:a=""}=s;return i({queryKey:[c,e,r,a],queryFn:async()=>await n.getAllCertificates(e,r,a),placeholderData:t=>t})};export{c as A,l as u};

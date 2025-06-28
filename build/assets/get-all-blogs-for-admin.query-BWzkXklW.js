@@ -1,0 +1,1 @@
+import{a as o,a7 as l}from"./index-0GGCgQc5.js";const n="all-blogs-for-admin",u=(a={})=>{const{page:e=1,limit:s=10,search:r=""}=a;return o({queryKey:[n,e,s,r],queryFn:async()=>(await l.getAllBlogs(e,s,r)).data,staleTime:1*60*1e3,gcTime:5*60*1e3})};export{n as A,u};

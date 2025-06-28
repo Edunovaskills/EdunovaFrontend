@@ -1,0 +1,1 @@
+import{a as t,a0 as a}from"./index-0GGCgQc5.js";const o="all-events-for-admin",u=(r={})=>{const{page:e=1,limit:s=10,search:n=""}=r;return t({queryKey:[o,e,s,n],queryFn:async()=>(await a.getAllEvents(e,s,n)).data,staleTime:1*60*1e3,gcTime:5*60*1e3})};export{o as A,u};
