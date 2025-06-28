@@ -14,7 +14,8 @@ import AdminEventsPage from 'pages/components/admin/AdminEventsPage'
 import AdminCoursesPage from 'pages/components/admin/AdminCoursesPage'
 import AdminBlogsPage from 'pages/components/admin/AdminBlogsPage'
 import AdminUsersPage from 'pages/components/admin/AdminUsersPage'
-import AdminSettingsPage from 'pages/components/admin/AdminSettingsPage'
+import AdminEnquiryPage from 'pages/components/admin/AdminEnquiryPage'
+import AdminTestimonialsPage from 'pages/components/admin/AdminTestimonialsPage'
 
 // Import UserProfile and PrivateRoute
 
@@ -99,10 +100,10 @@ const Router = createBrowserRouter(
             }
           />
           <Route
-            path={appPaths.adminSettings}
+            path={appPaths.adminEnquiries}
             element={
               <AdminRouteGuard>
-                <AdminSettingsPage />
+                <AdminEnquiryPage />
               </AdminRouteGuard>
             }
           />
@@ -111,6 +112,14 @@ const Router = createBrowserRouter(
             element={
               <AdminRouteGuard>
                 <AdminCertificatePage />
+              </AdminRouteGuard>
+            }
+          />
+          <Route
+            path={appPaths.adminTestimonials}
+            element={
+              <AdminRouteGuard>
+                <AdminTestimonialsPage />
               </AdminRouteGuard>
             }
           />

@@ -7,8 +7,9 @@ import { AddBlog } from './AddBlog'
 import { Analytics } from './Analytics'
 import { Users } from './Users'
 import { adminStyles } from './AdminStyles'
-import { Settings } from './Settings/Settings'
-import { AddCertificate } from './AddCertificate'; 
+import { AddCertificate } from './AddCertificate'
+import { EnquiryManagement } from './EnquiryManagement'
+import { Testimonials } from './Testimonials'
 
 export const Admin: React.FC = () => {
   // Initialize activeTab from localStorage, default to 'dashboard' if not set
@@ -31,15 +32,16 @@ export const Admin: React.FC = () => {
         return <AddCourse />
       case 'blogs':
         return <AddBlog />
-      case 'certificates': 
+      case 'certificates':
         return <AddCertificate />
-
+      case 'enquiries':
+        return <EnquiryManagement />
       case 'users':
         return <Users />
+      case 'testimonials':
+        return <Testimonials />
       case 'analytics':
         return <Analytics />
-      case 'settings':
-        return <Settings />
       default:
         return <Dashboard />
     }

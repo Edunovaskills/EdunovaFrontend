@@ -36,6 +36,7 @@ import {
   Visibility,
   Search,
   PictureAsPdf,
+  Close,
 } from '@mui/icons-material'
 import type { Certificate } from 'entities/model/certificate.model'
 import { CertificateDetailModal } from 'entities/component/CertificateDetailModal'
@@ -282,14 +283,15 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
     setPage(0)
   }
 
-  const filteredCertificates = certificatesData?.data?.certificates?.filter(
-    (certificate) =>
-      certificate.certificateKey
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase().trim())
-  )
+  const certificates = certificatesData?.data?.certificates || []
+  const filteredCertificates = certificates.filter((certificate) => {
+    const query = searchQuery.toLowerCase().trim()
+    return (
+      certificate.certificateKey?.toLowerCase().includes(query) ||
+      certificate.userEmail?.toLowerCase().includes(query)
+    )
+  })
 
-  const certificates = filteredCertificates || []
   const totalCertificates = certificatesData?.data?.certificates?.length || 0
   // const totalPages = certificatesData?.totalPages || 1; // Not used with MUI pagination
   const dataToRender = debouncedSearchQuery
@@ -355,7 +357,7 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
                   component="span"
                   startIcon={<CloudUpload />}
                   sx={addCertificateStyles.uploadButton}
-                  disabled={createCertificateMutation.isPending}
+                  disabled={createCertificateMutation.isPending || !!pdfFile}
                 >
                   Upload PDF
                 </Button>
@@ -366,6 +368,52 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
                 </Typography>
               )}
             </Box>
+            {/* PDF Preview with Remove Button */}
+            {pdfFile && previewPdfName && (
+              <Box
+                sx={{
+                  mt: 2,
+                  mb: 1,
+                  p: 1.5,
+                  border: '1px solid #e0e0e0',
+                  borderRadius: 2,
+                  background: '#f9f9f9',
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1.5,
+                }}
+              >
+                <PictureAsPdf color="error" />
+                <a
+                  href={URL.createObjectURL(pdfFile)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    textDecoration: 'underline',
+                    color: '#1976d2',
+                    fontWeight: 500,
+                    wordBreak: 'break-all',
+                  }}
+                >
+                  {previewPdfName}
+                </a>
+                <IconButton
+                  size="small"
+                  sx={{
+                    position: 'absolute',
+                    top: 4,
+                    right: 4,
+                    background: '#fff',
+                    boxShadow: 1,
+                  }}
+                  onClick={resetFileInput}
+                  aria-label="Remove PDF"
+                >
+                  <Close fontSize="small" />
+                </IconButton>
+              </Box>
+            )}
             <Button
               type="submit"
               variant="contained"
@@ -472,7 +520,7 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
                     PDF
                   </TableCell>
                   <TableCell sx={addCertificateStyles.tableHeader}>
-                    Uploaded By
+                    User
                   </TableCell>
                   <TableCell sx={addCertificateStyles.tableHeader}>
                     Status
@@ -520,24 +568,14 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
                           wordBreak: 'break-all',
                         }}
                       >
-                        {' '}
-                        {/* Used pdfUrl */}
                         <PictureAsPdf sx={addCertificateStyles.tablePdfIcon} />
                         View PDF
                       </a>
                     </TableCell>
                     <TableCell sx={addCertificateStyles.tableCell}>
-                      {certificate.uploadedBy &&
-                      typeof certificate.uploadedBy === 'object'
-                        ? (certificate.uploadedBy as any).name
-                        : 'N/A'}
+                      {certificate.userEmail}
                     </TableCell>
                     <TableCell sx={addCertificateStyles.tableCell}>
-                      {/* <Switch
-                            checked={certificate.isActive}
-                            inputProps={{ 'aria-label': 'certificate active status' }}
-                            disabled // Disabled as backend only offers softDelete, not generic isActive toggle
-                          /> */}
                       <Chip
                         label={certificate.isActive ? 'Active' : 'Inactive'}
                         color={certificate.isActive ? 'success' : 'error'}

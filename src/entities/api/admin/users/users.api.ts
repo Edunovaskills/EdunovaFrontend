@@ -8,7 +8,7 @@ export class AdminUserApi {
     this.client = client
   }
 
-  async getAllUsers(params: PaginationParams) {
+  async getAllUsers(params?: PaginationParams) {
     const response = await this.client.get<UsersResponse>('get-all-users', {
       params,
     })

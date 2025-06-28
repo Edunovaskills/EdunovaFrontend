@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { dashboardStyles } from './styles.component'
-import { fetchCourses } from '../AddCourse/mock/mockCourses'
-import { fetchUsers } from '../Users/users.api'
-import { DashboardStats } from './types'
+
 import {
+  useAllCertificatesForAdminQuery,
   useAllCoursesForAdminQuery,
   useAllEventsForAdminQuery,
+  useAllUsersQuery,
+  useAllBlogsForAdminQuery,
+  useAllEnquiryAdminQuery,
+  useTestimonialsForAdminQuery,
 } from 'entities/query'
+import { Link } from 'react-router-dom'
 
-// Fixed AnimatedCounter component - moved outside and properly typed
 interface AnimatedCounterProps {
   endValue: number
   duration?: number
@@ -62,14 +65,6 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
 }
 
 export const Dashboard: React.FC = () => {
-  const [stats, setStats] = useState<DashboardStats>({
-    totalEvents: 24,
-    totalCourses: 0,
-    activeUsers: 0,
-    revenue: '0',
-  })
-  const [loading, setLoading] = useState(true)
-
   const recentActivities = [
     { action: 'New user registered', time: '2 minutes ago', type: 'user' },
     {
@@ -84,35 +79,36 @@ export const Dashboard: React.FC = () => {
     },
   ]
 
-  useEffect(() => {
-    const loadDashboardData = async () => {
-      try {
-        setLoading(true)
-
-        // Fetch courses and users data
-        const [coursesResponse, usersData] = await Promise.all([
-          fetchCourses(100), // Fetch all courses to get total count
-          fetchUsers(),
-        ])
-
-        setStats((prevStats) => ({
-          ...prevStats,
-          totalCourses: coursesResponse.courses.length,
-          activeUsers: usersData.length,
-        }))
-      } catch (error) {
-        console.error('Error loading dashboard data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadDashboardData()
-  }, [])
-
   // Fixed statsDisplay to handle numeric values properly for AnimatedCounter
-  const { data: eventsData } = useAllEventsForAdminQuery()
-  const { data: coursesData } = useAllCoursesForAdminQuery()
+  const { data: eventsData, isLoading: isLoadingEvents } =
+    useAllEventsForAdminQuery()
+  const { data: coursesData, isLoading: isLoadingCourses } =
+    useAllCoursesForAdminQuery()
+  const { data: usersData, isLoading: isLoadingUsers } = useAllUsersQuery({
+    page: 1,
+    limit: 100,
+  })
+  const { data: certificatesData, isLoading: isLoadingCertificates } =
+    useAllCertificatesForAdminQuery({
+      page: 1,
+      limit: 100,
+    })
+  const { data: blogsData, isLoading: isLoadingBlogs } =
+    useAllBlogsForAdminQuery({
+      page: 1,
+      limit: 100,
+    })
+  const { data: enquiriesData, isLoading: isLoadingEnquiries } =
+    useAllEnquiryAdminQuery({
+      page: 1,
+      limit: 100,
+    })
+
+  const { data: testimonialsData, isLoading: isLoadingTestimonials } =
+    useTestimonialsForAdminQuery({
+      page: 1,
+      limit: 100,
+    })
 
   const statsDisplay = [
     {
@@ -120,21 +116,56 @@ export const Dashboard: React.FC = () => {
       value: eventsData?.total || 0,
       icon: '📅',
       color: '#667eea',
-      isLoading: false,
+      isLoading: isLoadingEvents,
+      link: '/admin/events',
     },
     {
       title: 'Total Courses',
       value: coursesData?.total || 0,
       icon: '📚',
       color: '#f093fb',
-      isLoading: loading,
+      isLoading: isLoadingCourses,
+      link: '/admin/courses',
     },
     {
       title: 'Active Users',
-      value: stats.activeUsers,
+      value: usersData?.data?.pagination.totalUsers || 0,
       icon: '👥',
       color: '#4facfe',
-      isLoading: loading,
+      isLoading: isLoadingUsers,
+      link: '/admin/users',
+    },
+    {
+      title: 'Total Certificates',
+      value: certificatesData?.data?.certificates.length || 0,
+      icon: '📄',
+      color: '#4facfe',
+      isLoading: isLoadingCertificates,
+      link: '/admin/certificates',
+    },
+    {
+      title: 'Total Blogs',
+      value: blogsData?.total || 0,
+      icon: '📝',
+      color: '#4facfe',
+      isLoading: isLoadingBlogs,
+      link: '/admin/blogs',
+    },
+    {
+      title: 'Total Enquiries',
+      value: enquiriesData?.data?.total || 0,
+      icon: '📞',
+      color: '#4facfe',
+      isLoading: isLoadingEnquiries,
+      link: '/admin/enquiries',
+    },
+    {
+      title: 'Total Testimonials',
+      value: testimonialsData?.data?.total || 0,
+      icon: '💬',
+      color: '#4facfe',
+      isLoading: isLoadingTestimonials,
+      link: '/admin/testimonials',
     },
   ]
 
@@ -143,11 +174,13 @@ export const Dashboard: React.FC = () => {
       <h2 style={dashboardStyles.title as any}>Dashboard Overview</h2>
       <div style={dashboardStyles.statsGrid}>
         {statsDisplay.map((stat, index) => (
-          <div
-            key={index}
+          <Link
+            to={stat.link}
             style={{
               ...dashboardStyles.statCard,
               borderLeft: `4px solid ${stat.color}`,
+              textDecoration: 'none',
+              color: 'inherit',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px)'
@@ -173,7 +206,7 @@ export const Dashboard: React.FC = () => {
               </h3>
               <p style={dashboardStyles.statTitle}>{stat.title}</p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 

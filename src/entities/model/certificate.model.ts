@@ -10,6 +10,7 @@ export type Certificate = {
   isActive: boolean // For soft delete
   createdAt: string
   updatedAt: string
+  userEmail: string
   __v: number
 }
 

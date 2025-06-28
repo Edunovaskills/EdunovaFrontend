@@ -23,7 +23,7 @@ import {
 import { appPaths, type AppPathsName } from 'entities/config'
 import { getUserId } from 'shared/data-providers'
 import { UserProfile } from './UserProfile'
-import { useMenuItems, type MenuItem } from 'entities/hooks'
+import { useMenuItems } from 'entities/hooks'
 
 const useScreenSize = () => {
   const [smallScreen, setSmallScreen] = useState(window.innerWidth < 960)

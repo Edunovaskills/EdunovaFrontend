@@ -75,3 +75,17 @@ export {
 } from './certificates/get-certificate-by-key.query'
 
 export { useAllUsersQuery, AllUsersQueryKey } from './user/get-all-user.query'
+export {
+  useAllEnquiryAdminQuery,
+  AllEnquiryForAdminKey,
+} from './enquiry/get-all-enquiry-admin.query'
+
+export {
+  useEnquiryByIdQuery,
+  EnquiryByIdKey,
+} from './enquiry/get-enquiry-by-id.query'
+
+export {
+  useTestimonialsForAdminQuery,
+  AllTestimonialForAdminQueryKey,
+} from './testimonial/get-testimonial-admin.query'

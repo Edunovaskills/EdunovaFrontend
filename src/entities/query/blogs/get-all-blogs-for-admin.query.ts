@@ -1,7 +1,6 @@
 // src/entities/query/get-all-blogs-for-admin.query.ts
 import { useQuery } from '@tanstack/react-query'
 import { adminBlogApi } from 'entities/api/admin/blogs/blogs.api' // Ensure this path is correct
-import type { BlogResponse } from 'entities/model/blog.model'
 
 export const AllBlogsForAdminQueryKey = 'all-blogs-for-admin'
 
@@ -23,6 +22,6 @@ export const useAllBlogsForAdminQuery = (
       return response.data
     },
     staleTime: 1 * 60 * 1000, // 1 minute
-    gc: 5 * 60 * 1000, // 5 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
   })
 }

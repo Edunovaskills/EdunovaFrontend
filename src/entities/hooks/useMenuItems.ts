@@ -20,7 +20,8 @@ const adminMenuItems: MenuItem[] = [
   { label: 'Blogs', value: 'adminBlogs' },
   { label: 'Users', value: 'adminUsers' },
   { label: 'Certificates', value: 'adminCertificates' },
-  { label: 'Settings', value: 'adminSettings' },
+  { label: 'Enquiries', value: 'adminEnquiries' },
+  { label: 'Testimonials', value: 'adminTestimonials' },
 ]
 
 export const useMenuItems = (): MenuItem[] => {

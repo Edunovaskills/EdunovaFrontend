@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { adminStyles } from '../AdminStyles'
 import { userStyles } from './styles.component'
 import { useAllUsersQuery } from 'entities/query'
@@ -20,28 +20,72 @@ export const Users: React.FC = () => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [search, setSearch] = useState('')
-  const { data: usersData, isLoading } = useAllUsersQuery({
-    page: page + 1,
-    limit: rowsPerPage,
-  })
-  const users = usersData?.data?.users || []
-  const totalUsers = usersData?.data?.pagination?.totalUsers || 0
 
-  // Filter users by search query (name, email, or id)
-  const filteredUsers = users.filter((user) => {
+  // Fetch all users for global search (no pagination)
+  const { data: allUsersData, isLoading: isLoadingAll } = useAllUsersQuery()
+
+  // Fetch paginated users for normal view
+  const { data: paginatedUserData, isLoading: isLoadingPaginated } =
+    useAllUsersQuery({
+      page: page + 1,
+      limit: rowsPerPage,
+    })
+
+  const allUsers = allUsersData?.data?.users || []
+  const paginatedUsers = paginatedUserData?.data?.users || []
+  const totalUsers = allUsersData?.data?.pagination?.totalUsers || 0
+
+  // Global search across all users
+  const filteredUsers = useMemo(() => {
+    if (!search.trim()) {
+      return paginatedUsers
+    }
+
     const query = search.toLowerCase()
-    return (
-      user.name?.toLowerCase().includes(query) ||
-      user.email?.toLowerCase().includes(query) ||
-      user._id?.toLowerCase().includes(query)
-    )
-  })
+    return allUsers.filter((user) => {
+      return (
+        user.name?.toLowerCase().includes(query) ||
+        user.email?.toLowerCase().includes(query) ||
+        user._id?.toLowerCase().includes(query)
+      )
+    })
+  }, [allUsers, paginatedUsers, search])
+
+  // Determine if we're in search mode
+  const isSearchMode = search.trim().length > 0
+
+  // Calculate pagination for filtered results
+  const totalFilteredUsers = filteredUsers.length
+  const startIndex = page * rowsPerPage
+  const endIndex = startIndex + rowsPerPage
+  const paginatedFilteredUsers = filteredUsers.slice(startIndex, endIndex)
+
+  // Use appropriate data for display
+  const displayUsers = isSearchMode ? paginatedFilteredUsers : paginatedUsers
+  const displayCount = isSearchMode ? totalFilteredUsers : totalUsers
+  const isLoading = isSearchMode ? isLoadingAll : isLoadingPaginated
+
+  const handlePageChange = (
+    _: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage)
+  }
+
+  const handleRowsPerPageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(e.target.value, 10))
+    setPage(0)
+  }
 
   return (
     <Box sx={adminStyles.container}>
-      <Typography variant="h5" sx={{ color: 'black', mb: 2 }}>
-        Users List
+      <Typography variant="h5.600" sx={{ mb: 2 }}>
+        Users
       </Typography>
+      <Typography variant="body2" sx={{ mb: 2 }}>
+        Manage users for your website. Users to showcase your clients' feedback.
+      </Typography>
+
       {/* Search Bar */}
       <Box
         sx={{
@@ -51,7 +95,6 @@ export const Users: React.FC = () => {
           justifyContent: 'flex-end',
         }}
       >
-        <Typography sx={{ mr: 2 }}>Search Users</Typography>
         <Box
           sx={{
             display: 'flex',
@@ -79,7 +122,10 @@ export const Users: React.FC = () => {
             type="text"
             placeholder="Search by name, email, or ID"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value)
+              setPage(0) // Reset to first page when searching
+            }}
             style={{
               border: 'none',
               outline: 'none',
@@ -90,6 +136,7 @@ export const Users: React.FC = () => {
           />
         </Box>
       </Box>
+
       <TableContainer
         component={Paper}
         sx={{
@@ -117,37 +164,37 @@ export const Users: React.FC = () => {
                   </Box>
                 </TableCell>
               </TableRow>
-            ) : filteredUsers.length === 0 ? (
+            ) : displayUsers.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <Typography color="text.secondary">
-                    No users found.
+                    {isSearchMode
+                      ? 'No users found matching your search.'
+                      : 'No users found.'}
                   </Typography>
                 </TableCell>
               </TableRow>
             ) : (
-              filteredUsers.map((user) => (
+              displayUsers.map((user) => (
                 <TableRow key={user._id}>
                   <TableCell>{user._id}</TableCell>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.createdAt}</TableCell>
+                  <TableCell>{user.createdAt.split('T')[0]}</TableCell>
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
       </TableContainer>
+
       <TablePagination
         component="div"
-        count={totalUsers}
+        count={displayCount}
         page={page}
-        onPageChange={(_, newPage) => setPage(newPage)}
+        onPageChange={handlePageChange}
         rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={(e) => {
-          setRowsPerPage(parseInt(e.target.value, 10))
-          setPage(0)
-        }}
+        onRowsPerPageChange={handleRowsPerPageChange}
         rowsPerPageOptions={[5, 10, 25]}
       />
     </Box>

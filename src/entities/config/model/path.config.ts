@@ -34,8 +34,9 @@ export const appPaths = {
   adminCourses: '/admin/courses',
   adminBlogs: '/admin/blogs',
   adminUsers: '/admin/users',
-  adminSettings: '/admin/settings',
+  adminEnquiries: '/admin/enquiries',
   adminCertificates: '/admin/certificates',
+  adminTestimonials: '/admin/testimonials',
   userLogin: '/user/login',
   userSignup: '/user/signup',
   userProfile: '/user/profile', // Added user profile path
