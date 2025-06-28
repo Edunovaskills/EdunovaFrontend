@@ -2,6 +2,7 @@ import { CssBaseline } from '@mui/material'
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 
 import { ThemeModeProvider, useThemeMode } from 'shared/state'
+import { ClientOnly } from 'shared/components'
 
 import getTheme from '../theme'
 
@@ -23,7 +24,9 @@ function ThemeSetup({ children }: Props) {
 export function ThemeProvider({ children }: Props) {
   return (
     <ThemeModeProvider>
-      <ThemeSetup>{children}</ThemeSetup>
+      <ClientOnly fallback={<div>Loading theme...</div>}>
+        <ThemeSetup>{children}</ThemeSetup>
+      </ClientOnly>
     </ThemeModeProvider>
   )
 }
