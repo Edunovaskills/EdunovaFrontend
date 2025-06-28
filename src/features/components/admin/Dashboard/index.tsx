@@ -3,6 +3,11 @@ import { dashboardStyles } from './styles.component'
 import { fetchCourses } from '../AddCourse/mock/mockCourses'
 import { fetchUsers } from '../Users/users.api'
 import { DashboardStats } from './types'
+import {
+  useAllBlogsForAdminQuery,
+  useAllCoursesForAdminQuery,
+  useAllEventsForAdminQuery,
+} from 'entities/query'
 
 // Fixed AnimatedCounter component - moved outside and properly typed
 interface AnimatedCounterProps {
@@ -62,6 +67,7 @@ export const Dashboard: React.FC = () => {
     totalEvents: 24,
     totalCourses: 0,
     activeUsers: 0,
+    revenue: '0',
   })
   const [loading, setLoading] = useState(true)
 
@@ -106,17 +112,20 @@ export const Dashboard: React.FC = () => {
   }, [])
 
   // Fixed statsDisplay to handle numeric values properly for AnimatedCounter
+  const { data: eventsData } = useAllEventsForAdminQuery()
+  const { data: coursesData } = useAllCoursesForAdminQuery()
+
   const statsDisplay = [
     {
       title: 'Total Events',
-      value: stats.totalEvents,
+      value: eventsData?.total || 0,
       icon: '📅',
       color: '#667eea',
       isLoading: false,
     },
     {
       title: 'Total Courses',
-      value: stats.totalCourses,
+      value: coursesData?.total || 0,
       icon: '📚',
       color: '#f093fb',
       isLoading: loading,

@@ -9,3 +9,4 @@ export { WhyChooseUs } from './WhyChoose/index'
 export { GetInTouch } from './GetInTouch/GetInTouch'
 export { ReversableSection } from './Reversable-Section/index'
 export { FAQ } from './FAQ/index'
+export { CertificateDetailModal } from './CertificateDetailModal';

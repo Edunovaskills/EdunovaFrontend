@@ -27,6 +27,8 @@ import {
 import { VerifyEmailPage } from 'pages/components/verfiy-form/verify'
 import { RouteGuard } from '../RouteGuard'
 import { AdminRouteGuard } from '../AdminRouteGuard'
+import AdminDashboardPage from 'pages/components/admin/AdminDashboardPage'
+import { AdminCertificatePage } from 'pages/components/admin/AdminCertificatePage'
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
@@ -56,7 +58,62 @@ const Router = createBrowserRouter(
               </AdminRouteGuard>
             }
           />
-
+          <Route
+            path={appPaths.adminDashboard}
+            element={
+              <AdminRouteGuard>
+                <AdminDashboardPage />
+              </AdminRouteGuard>
+            }
+          />
+          <Route
+            path={appPaths.adminEvents}
+            element={
+              <AdminRouteGuard>
+                <AdminEventsPage />
+              </AdminRouteGuard>
+            }
+          />
+          <Route
+            path={appPaths.adminCourses}
+            element={
+              <AdminRouteGuard>
+                <AdminCoursesPage />
+              </AdminRouteGuard>
+            }
+          />
+          <Route
+            path={appPaths.adminBlogs}
+            element={
+              <AdminRouteGuard>
+                <AdminBlogsPage />
+              </AdminRouteGuard>
+            }
+          />
+          <Route
+            path={appPaths.adminUsers}
+            element={
+              <AdminRouteGuard>
+                <AdminUsersPage />
+              </AdminRouteGuard>
+            }
+          />
+          <Route
+            path={appPaths.adminSettings}
+            element={
+              <AdminRouteGuard>
+                <AdminSettingsPage />
+              </AdminRouteGuard>
+            }
+          />
+          <Route
+            path={appPaths.adminCertificates}
+            element={
+              <AdminRouteGuard>
+                <AdminCertificatePage />
+              </AdminRouteGuard>
+            }
+          />
           {/* Catch-all route for 404 */}
 
           <Route path="*" element={<h1>Page not found</h1>} />

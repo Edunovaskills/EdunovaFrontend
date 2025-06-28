@@ -24,12 +24,8 @@ export const useUpdateCourseMutation = () => {
       })
       return response.data
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey[0] === AllCoursesForAdminQueryKey
-        },
-      })
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: [AllCoursesForAdminQueryKey] })
       show({
         title: 'Course updated successfully',
         color: 'Success', // Use 'success'

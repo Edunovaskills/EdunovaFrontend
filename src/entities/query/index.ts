@@ -63,3 +63,13 @@ export {
   useEventByIdAdminQuery,
   GetEventByIdAdminQueryKey,
 } from './events/get-event-by-id-admin.query'
+export {
+  useAllCertificatesForAdminQuery,
+  AllCertificatesForAdminQueryKey,
+} from './certificates/get-all-certificates-for-admin.query'
+
+export {
+  useCertificateByKeyQuery,
+  GetCertificateByKeyQueryKey,
+  useDownloadCertificate,
+} from './certificates/get-certificate-by-key.query'

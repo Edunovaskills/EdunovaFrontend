@@ -18,7 +18,7 @@ export const useLoginMutation = () => {
         color: 'Success',
       })
       if (data.data?.user.role === 'admin') {
-        appNavigate('admin')
+        appNavigate('adminDashboard')
       } else {
         appNavigate('/')
       }

@@ -109,7 +109,8 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'events', label: 'Events', icon: '📅' },
     { id: 'courses', label: 'Courses', icon: '📚' },
-    { id: 'blogs', label: 'Blogs', icon: '✍️' }, // Added Blogs tab
+    { id: 'blogs', label: 'Blogs', icon: '✍️' }, 
+    { id: 'certificates', label: 'Certificates', icon: '🏅' },
     { id: 'users', label: 'Users', icon: '👥' },
     { id: 'analytics', label: 'Analytics', icon: '📈' },
     { id: 'settings', label: 'Settings', icon: '⚙️' }
