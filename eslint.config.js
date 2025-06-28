@@ -13,7 +13,7 @@ const featureSliceDesignError =
 // Define the ESLint configuration
 const config = [
   {
-    ignores: ['dist'], // Add other paths you want to ignore
+    ignores: ['dist', 'build', 'node_modules'], // Add other paths you want to ignore
   },
   {
     // Base configuration for JavaScript files

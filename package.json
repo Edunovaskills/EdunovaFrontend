@@ -9,6 +9,7 @@
   "type": "module",
   "scripts": {
     "start": "vite",
+    "prebuild": "npm install --legacy-peer-deps",
     "build": "vite build",
     "serve": "vite preview"
   },
