@@ -23,6 +23,9 @@ export default defineConfig({
       '@emotion/styled',
       'swiper/modules',
       'prop-types',
+      'react',
+      'react-dom',
+      'react-is',
     ],
     exclude: ['mui-one-time-password-input'],
   },
@@ -60,7 +63,12 @@ export default defineConfig({
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
             if (id.includes('@mui')) return 'mui'
-            if (id.includes('react') || id.includes('react-dom')) return 'vendor'
+            if (
+              id.includes('react') ||
+              id.includes('react-dom') ||
+              id.includes('react-is')
+            )
+              return 'vendor'
             if (id.includes('react-router')) return 'router'
             if (id.includes('@tanstack')) return 'query'
             if (id.includes('swiper')) return 'swiper'
