@@ -4,6 +4,7 @@ import { HeroSection } from './hero'
 import { HelpAndSupportWrapperStyled } from './styles.component'
 import EventsShowcase from './EventsShowcase/EventsShowcase'
 import EventDetails from './EventDetails'
+import EventTestimonials from './EventTestimonials/EventTestimonials'
 
 export const HelpAndSupport = () => {
   return (
@@ -11,6 +12,7 @@ export const HelpAndSupport = () => {
       <HeroSection />
       <HelpAndSupportWrapperStyled>
         <EventsShowcase />
+        <EventTestimonials />
       </HelpAndSupportWrapperStyled>
     </div>
   )

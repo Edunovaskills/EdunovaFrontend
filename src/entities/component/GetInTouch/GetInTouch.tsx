@@ -74,14 +74,16 @@ export const GetInTouch = () => {
                 Email Us:{' '}
                 <Link to="mailto:contact@buzzcabs.com" color="secondary.main">
                   <Typography variant="body1.600" color="secondary.main">
-                    contact@buzzcabs.com
+                    contact@edunova.com
                   </Typography>
                 </Link>
               </Typography>
               <Typography variant="body2">
-                Send your enquiry, specifications, and/or RFP to
-                contact@effortlessautomation.com
-              </Typography>
+              For enquiries, academic collaboration proposals, or detailed specifications, please reach out to us at{' '}
+              <Link href="mailto:contact@edunova.com" color="secondary.main">
+               contact@edunova.com
+  </Link>
+</Typography>
             </Stack>
           </RightViewWrapperStyled>
 
@@ -95,13 +97,12 @@ export const GetInTouch = () => {
                 Call Us:{' '}
                 <Link to="tel:+919876543210" color="secondary.main">
                   <Typography variant="body1.600" color="secondary.main">
-                    +91 98765 43210
+                    +91 12345 67890
                   </Typography>
                 </Link>
               </Typography>
               <Typography variant="body2">
-                Reach out to one of our global office locations and let us know
-                how we can assist you.
+                We're here to help — how can we assist you today?
               </Typography>
             </Stack>
           </RightViewWrapperStyled>

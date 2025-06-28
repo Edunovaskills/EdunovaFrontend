@@ -3,23 +3,23 @@ import { CardDataType } from 'shared/model'
 
 export const whyChooseUseCardDataForAbout: CardDataType[] = [
   {
-    title: 'Safety & Trust',
-    desc: 'We prioritize your safety with driver background checks and vehicles.',
+    title: 'Quality & Trust',
+    desc: 'We prioritize your learning experience with accredited courses and expert instructors, ensuring a trusted educational journey.',
     iconUrl: publicImages.safety,
   },
   {
     title: 'Convenience',
-    desc: 'With our app, booking a ride is effortless. Get location in few clicks.',
+    desc: 'Access our platform effortlessly, with intuitive navigation to explore courses and resources in just a few clicks.',
     iconUrl: publicImages.location,
   },
   {
     title: 'Affordability',
-    desc: 'We ensure fair pricing with competitive rates and no hidden charges.',
+    desc: 'We offer competitive pricing for our programs, with transparent costs and accessible options for all learners.',
     iconUrl: publicImages.rupees,
   },
   {
-    title: 'Customer Support',
-    desc: 'Our 24/7 support team is always available to assist you.',
+    title: 'Student Support',
+    desc: 'Our dedicated support team is available 24/7 to assist with your academic needs and queries.',
     iconUrl: publicImages['24HrsImage'],
   },
 ]

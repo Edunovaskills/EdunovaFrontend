@@ -1,8 +1,6 @@
 import React from 'react'
 import { Stack, Typography } from '@mui/material'
 import { BuzInfoSection } from 'entities/component'
-import { publicImages } from 'shared/config'
-import { ImagesWrapperStyled } from './styles.component'
 import { useScreenSize } from 'shared/hooks'
 
 const TopView = () => {
@@ -15,31 +13,27 @@ const TopView = () => {
         </Typography>
       </Typography>
 
-      <Typography variant="body2">Your Reliable Ride Partner</Typography>
+      <Typography variant="body2">Your Trusted Partner in Lifelong Learning</Typography>
     </>
   )
 }
 
 const BottomView = () => {
-  const images = [
-    publicImages.aboutImg1,
-    publicImages.aboutImg2,
-    publicImages.aboutImg3,
-    publicImages.aboutImg4,
-    publicImages.aboutImg5,
-  ]
+  // const images = [
+  //   publicImages.aboutImg1,
+  //   publicImages.aboutImg2,
+  //   publicImages.aboutImg3,
+  //   publicImages.aboutImg4,
+  //   publicImages.aboutImg5,
+  // ]
   const { smallScreen } = useScreenSize()
 
   return (
     <Stack gap={'50px'}>
       <Typography variant="body3" textAlign={'center'}>
-        At BuzzCabs, we are passionate about transforming urban transportation.
-        Our platform offers a user-centric, hassle-free way to book bikes, cars,
-        and autos for any journey—whether it's a quick commute or a long trip.
-        We strive to provide a ride experience that is convenient, reliable, and
-        affordable.
+        At Edunova Academic, we are passionate about transforming education through innovation. Our platform offers a student-centric, seamless way to access courses and resources for any learning journey—whether it's academic growth or professional development. We strive to provide an educational experience that is engaging, reliable, and accessible to all.
       </Typography>
-      <ImagesWrapperStyled issmall={smallScreen}>
+      {/* <ImagesWrapperStyled issmall={smallScreen}>
         {images.map((url) => (
           <img
             src={url}
@@ -48,7 +42,7 @@ const BottomView = () => {
             width={smallScreen ? '100%' : 'unset'}
           />
         ))}
-      </ImagesWrapperStyled>
+      </ImagesWrapperStyled> */}
     </Stack>
   )
 }
