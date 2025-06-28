@@ -66,10 +66,10 @@ export {
 export {
   useAllCertificatesForAdminQuery,
   AllCertificatesForAdminQueryKey,
-} from './certificates/get-all-certificates-for-admin.query';
+} from './certificates/get-all-certificates-for-admin.query'
 
 export {
   useCertificateByKeyQuery,
   GetCertificateByKeyQueryKey,
   useDownloadCertificate,
-} from './certificates/get-certificate-by-key.query';
+} from './certificates/get-certificate-by-key.query'

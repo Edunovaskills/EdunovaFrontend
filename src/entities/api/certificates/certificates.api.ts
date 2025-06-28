@@ -1,26 +1,28 @@
 // src/entities/api/certificates/certificates.api.ts
-import { getClient, type IClient } from 'shared/data-providers/model/fetcher';
-import type { CertificateDetails } from 'entities/model/certificate.model';
+import { getClient, type IClient } from 'shared/data-providers/model/fetcher'
+import type { CertificateDetails } from 'entities/model/certificate.model'
 
 export class CertificatesApi {
-  client: IClient;
+  client: IClient
   constructor(client: IClient) {
-    this.client = client;
+    this.client = client
   }
 
   async getCertificateByKey(key: string): Promise<CertificateDetails> {
-    const response = await this.client.get<CertificateDetails>(`/certificate/${key}`);
-    return response;
+    const response = await this.client.get<CertificateDetails>(`${key}`)
+    return response.data
   }
 
   async downloadCertificate(key: string): Promise<Blob> {
     // This endpoint should return a PDF blob
-    const response = await this.client.get<Blob>(`/certificate/${key}/download`, {
+    const response = await this.client.get<Blob>(`${key}/download`, {
       responseType: 'blob', // Important for downloading files
-    });
-    return response;
+    })
+    return response.data
   }
 }
 
-export const certificatesApi = new CertificatesApi(getClient('certificates'));
-
+export const certificatesApi = new CertificatesApi(getClient('certificates'))
+export const certificateDownloadApi = new CertificatesApi(
+  getClient('certificate')
+)

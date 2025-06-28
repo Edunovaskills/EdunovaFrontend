@@ -1,5 +1,5 @@
 // src/entities/component/CertificateDetailModal.tsx
-import React from 'react';
+import React from 'react'
 import {
   Modal,
   Box,
@@ -8,16 +8,19 @@ import {
   CircularProgress,
   Paper,
   Button,
-} from '@mui/material';
-import { Close as CloseIcon, Download as DownloadIcon } from '@mui/icons-material';
-import type { Certificate } from 'entities/model/certificate.model';
-import { useDownloadCertificate } from 'entities/query'; // Use the download hook
+} from '@mui/material'
+import {
+  Close as CloseIcon,
+  Download as DownloadIcon,
+} from '@mui/icons-material'
+import type { Certificate } from 'entities/model/certificate.model'
+import { useDownloadCertificate } from 'entities/query' // Use the download hook
 
 interface CertificateDetailModalProps {
-  open: boolean;
-  onClose: () => void;
-  certificate: Certificate | null;
-  loading: boolean;
+  open: boolean
+  onClose: () => void
+  certificate: Certificate | null
+  loading: boolean
 }
 
 const modalStyle = {
@@ -33,7 +36,7 @@ const modalStyle = {
   outline: 'none',
   maxHeight: '90vh',
   overflowY: 'auto',
-};
+}
 
 export const CertificateDetailModal: React.FC<CertificateDetailModalProps> = ({
   open,
@@ -41,13 +44,13 @@ export const CertificateDetailModal: React.FC<CertificateDetailModalProps> = ({
   certificate,
   loading,
 }) => {
-  const { download } = useDownloadCertificate();
+  const { download } = useDownloadCertificate()
 
   const handleDownloadClick = () => {
-    if (certificate?.key) {
-      download(certificate.key);
+    if (certificate?.certificateKey) {
+      download(certificate.certificateKey)
     }
-  };
+  }
 
   return (
     <Modal
@@ -69,7 +72,12 @@ export const CertificateDetailModal: React.FC<CertificateDetailModalProps> = ({
         >
           <CloseIcon />
         </IconButton>
-        <Typography id="certificate-detail-modal-title" variant="h5" component="h2" gutterBottom>
+        <Typography
+          id="certificate-detail-modal-title"
+          variant="h5"
+          component="h2"
+          gutterBottom
+        >
           Certificate Details
         </Typography>
 
@@ -80,27 +88,42 @@ export const CertificateDetailModal: React.FC<CertificateDetailModalProps> = ({
         ) : certificate ? (
           <Paper elevation={0} sx={{ p: 2, mt: 2, bgcolor: '#f8fafc' }}>
             <Typography variant="body1" color="text.secondary">
-              <strong>Key:</strong> {certificate.key}
+              <strong>Key:</strong> {certificate.certificateKey}
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
               <strong>PDF URL:</strong>{' '}
-              <a href={certificate.certificatePdf} target="_blank" rel="noopener noreferrer" style={{ wordBreak: 'break-all' }}>
-                {certificate.certificatePdf}
+              <a
+                href={certificate.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ wordBreak: 'break-all' }}
+              >
+                {certificate.pdfUrl}
               </a>
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-              <strong>Status:</strong> {certificate.isActive ? 'Active' : 'Inactive'}
+              <strong>Status:</strong>{' '}
+              {certificate.isActive ? 'Active' : 'Inactive'}
             </Typography>
-            {certificate.uploadedBy && typeof certificate.uploadedBy === 'object' && (
-              <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-                <strong>Uploaded By:</strong> {(certificate.uploadedBy as any).name} ({(certificate.uploadedBy as any).email})
-              </Typography>
-            )}
+            {certificate.uploadedBy &&
+              typeof certificate.uploadedBy === 'object' && (
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ mt: 1 }}
+                >
+                  <strong>Uploaded By:</strong>{' '}
+                  {(certificate.uploadedBy as any).name} (
+                  {(certificate.uploadedBy as any).email})
+                </Typography>
+              )}
             <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-              <strong>Uploaded At:</strong> {new Date(certificate.createdAt).toLocaleString()}
+              <strong>Uploaded At:</strong>{' '}
+              {new Date(certificate.createdAt).toLocaleString()}
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-              <strong>Last Updated:</strong> {new Date(certificate.updatedAt).toLocaleString()}
+              <strong>Last Updated:</strong>{' '}
+              {new Date(certificate.updatedAt).toLocaleString()}
             </Typography>
 
             <Button
@@ -120,5 +143,5 @@ export const CertificateDetailModal: React.FC<CertificateDetailModalProps> = ({
         )}
       </Box>
     </Modal>
-  );
-};
+  )
+}

@@ -1,14 +1,16 @@
 // src/features/components/admin/AddCertificate/index.tsx
-import React, { useState, useEffect } from 'react';
-import { addCertificateStyles } from './styles.component';
-import { useAllCertificatesForAdminQuery } from 'entities/query/certificates/get-all-certificates-for-admin.query';
-import { useForm, Controller } from 'react-hook-form';
-import { certificateSchema, type CertificateSchema } from 'features/schema/certificate.schema';
-import { yupResolver } from '@hookform/resolvers/yup';
+import React, { useState, useEffect, useRef } from 'react'
+import { addCertificateStyles } from './styles.component'
+import { useAllCertificatesForAdminQuery } from 'entities/query/certificates/get-all-certificates-for-admin.query'
+import { useForm } from 'react-hook-form'
 import {
-  useCreateCertificateMutation,
-  useDeleteCertificateMutation,
-} from 'entities/mutation';
+  certificateSchema,
+  type CertificateSchema,
+} from 'features/schema/certificate.schema'
+import { yupResolver } from '@hookform/resolvers/yup'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import { useCreateCertificateMutation } from 'entities/mutation/certificates/create-certificate.mutation'
+import { useDeleteCertificateMutation } from 'entities/mutation/certificates/delete-certificate.mutation'
 import {
   TextField,
   Button,
@@ -26,36 +28,130 @@ import {
   TableRow,
   TablePagination,
   InputAdornment,
-  Switch,
-  ToggleButtonGroup,
-  ToggleButton,
-} from '@mui/material';
-import { CloudUpload, Delete, Close, Visibility, Search, TableRows, GridView, PictureAsPdf } from '@mui/icons-material';
-import type { Certificate } from 'entities/model/certificate.model';
-import { CertificateDetailModal } from 'entities/component/CertificateDetailModal';
-import { ConfirmDialog } from 'entities/component/ConfirmDialog';
-import { useSnackBar } from 'entities/state';
+  Chip,
+} from '@mui/material'
+import {
+  CloudUpload,
+  Delete,
+  Visibility,
+  Search,
+  PictureAsPdf,
+} from '@mui/icons-material'
+import type { Certificate } from 'entities/model/certificate.model'
+import { CertificateDetailModal } from 'entities/component/CertificateDetailModal'
+import { ConfirmDialog } from 'entities/component/ConfirmDialog'
+import { useSnackBar } from 'entities/state'
+import { keyframes } from '@mui/system'
 
 interface AddCertificateProps {}
 
+// New CertificateInfoPanel component
+interface CertificateInfoPanelProps {
+  pdfName: string | null
+  certKey: string | null
+  onCopyKey: () => void
+  onClose: () => void
+  isCopyDisabled: boolean
+}
+
+const slideDownFadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+`
+
+const CertificateInfoPanel: React.FC<CertificateInfoPanelProps> = ({
+  pdfName,
+  certKey,
+  onCopyKey,
+  onClose,
+  isCopyDisabled,
+}) => (
+  <Box
+    sx={{
+      p: 3,
+      border: '1px solid #e0e0e0',
+      borderRadius: 2,
+      background: '#fafbfc',
+      minWidth: 260,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      gap: 2,
+      animation: `${slideDownFadeIn} 0.5s cubic-bezier(0.4,0,0.2,1)`,
+    }}
+  >
+    {certKey ? (
+      <>
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          Certificate Info
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <PictureAsPdf color="error" />
+          <Typography variant="body2">{pdfName}</Typography>
+        </Box>
+        {certKey && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+              Key:
+            </Typography>
+            <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+              {certKey}
+            </Typography>
+          </Box>
+        )}
+        <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<ContentCopyIcon />}
+            onClick={onCopyKey}
+            disabled={isCopyDisabled}
+          >
+            Copy Cert Key
+          </Button>
+          <Button
+            variant="outlined"
+            size="small"
+            color="error"
+            onClick={onClose}
+          >
+            Close
+          </Button>
+        </Box>
+      </>
+    ) : (
+      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+        Upload a certificate to see the details
+      </Typography>
+    )}
+  </Box>
+)
+
 export const AddCertificate: React.FC<AddCertificateProps> = () => {
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [previewPdfName, setPreviewPdfName] = useState<string | null>(null);
+  const [pdfFile, setPdfFile] = useState<File | null>(null)
+  const [previewPdfName, setPreviewPdfName] = useState<string | null>(null)
+  const [uploadedCertKey, setUploadedCertKey] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [currentView, setCurrentView] = useState<'table' | 'grid'>(() => {
-    return (localStorage.getItem('certificateView') as 'table' | 'grid') || 'table';
-  });
+  const [modalOpen, setModalOpen] = useState(false)
+  const [selectedCertificate, setSelectedCertificate] =
+    useState<Certificate | null>(null)
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [certificateToDeleteKey, setCertificateToDeleteKey] = useState<
+    string | null
+  >(null)
 
-  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [certificateToDeleteKey, setCertificateToDeleteKey] = useState<string | null>(null);
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
 
   const {
     data: certificatesData,
@@ -63,16 +159,19 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
     isError: isErrorCertificates,
     error: certificatesError,
     refetch: refetchCertificates,
-  } = useAllCertificatesForAdminQuery({ page: page + 1, limit: rowsPerPage, search: debouncedSearchQuery });
+  } = useAllCertificatesForAdminQuery({
+    page: page + 1,
+    limit: rowsPerPage,
+    search: searchQuery,
+  })
 
-  const createCertificateMutation = useCreateCertificateMutation();
-  const deleteCertificateMutation = useDeleteCertificateMutation();
+  const createCertificateMutation = useCreateCertificateMutation()
+  const deleteCertificateMutation = useDeleteCertificateMutation()
 
-  const { show: showSnackbar } = useSnackBar();
+  const { show: showSnackbar } = useSnackBar()
 
   const {
     handleSubmit,
-    control,
     reset,
     setValue,
     formState: { errors, isSubmitting },
@@ -82,104 +181,118 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
       // Removed 'key' from defaultValues as it's no longer a form field for creation
       certificatePdf: undefined,
     },
-  });
+  })
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
+      setDebouncedSearchQuery(searchQuery)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
 
   useEffect(() => {
     // Reset form and PDF preview
-    reset();
-    setPreviewPdfName(null);
-    setPdfFile(null);
+    reset()
+    setPreviewPdfName(null)
+    setPdfFile(null)
     // Explicitly clear form field value
-    setValue('certificatePdf', undefined);
-  }, [reset, setValue]);
+    setValue('certificatePdf', null as any)
+  }, [reset, setValue])
 
-
-  useEffect(() => {
-    localStorage.setItem('certificateView', currentView);
-  }, [currentView]);
+  // Reset file input utility
+  const resetFileInput = () => {
+    setPdfFile(null)
+    setPreviewPdfName(null)
+    setUploadedCertKey(null)
+    setValue('certificatePdf', null as any)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
 
   const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setPdfFile(file);
-      setPreviewPdfName(file.name);
-      setValue('certificatePdf', file); // Set the file object to form value for validation
+      const file = e.target.files[0]
+      setPdfFile(file)
+      setPreviewPdfName(file.name)
+      setValue('certificatePdf', file)
+      setUploadedCertKey(null)
     } else {
-      setPdfFile(null);
-      setPreviewPdfName(null);
-      setValue('certificatePdf', undefined); // Clear the form value
+      resetFileInput()
     }
-  };
+  }
 
   const onSubmit = async (data: CertificateSchema) => {
     if (!pdfFile) {
       showSnackbar({
         title: 'Please select a PDF file for the certificate.',
-        color: 'error',
-      });
-      return;
+        color: 'Error',
+      })
+      return
     }
     // Only send the pdfFile, as the key is now generated by the backend
-    await createCertificateMutation.mutateAsync({
+    const result = await createCertificateMutation.mutateAsync({
       pdfFile: pdfFile,
-    });
-    reset();
-    setPdfFile(null);
-    setPreviewPdfName(null);
-    setValue('certificatePdf', undefined); // Ensure form value is cleared
-    refetchCertificates();
-  };
+    })
+    reset()
+    setPdfFile(null)
+    setPreviewPdfName(null)
+    setValue('certificatePdf', null as any)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+    // Show the uploaded key if available
+    if (result?.certificate?.certificateKey) {
+      setUploadedCertKey(result.certificate.certificateKey)
+      setPreviewPdfName(pdfFile.name)
+    }
+  }
 
   const handleViewCertificate = (certificate: Certificate) => {
-    setSelectedCertificate(certificate);
-    setModalOpen(true);
-  };
+    setSelectedCertificate(certificate)
+    setModalOpen(true)
+  }
 
-  const handleDeleteCertificateClick = (certificateKey: string) => { // Changed parameter name
-    setCertificateToDeleteKey(certificateKey);
-    setDeleteConfirmOpen(true);
-  };
+  const handleDeleteCertificateClick = (certificateKey: string) => {
+    // Changed parameter name
+    setCertificateToDeleteKey(certificateKey)
+    setDeleteConfirmOpen(true)
+  }
 
   const handleDeleteConfirm = async () => {
     if (certificateToDeleteKey) {
-      await deleteCertificateMutation.mutateAsync(certificateToDeleteKey); // Changed argument
-      setDeleteConfirmOpen(false);
-      setCertificateToDeleteKey(null);
-      refetchCertificates();
+      await deleteCertificateMutation.mutateAsync(certificateToDeleteKey) // Changed argument
+      setDeleteConfirmOpen(false)
+      setCertificateToDeleteKey(null)
+      refetchCertificates()
     }
-  };
+  }
 
   const handleCancelDelete = () => {
-    setDeleteConfirmOpen(false);
-    setCertificateToDeleteKey(null);
-  };
+    setDeleteConfirmOpen(false)
+    setCertificateToDeleteKey(null)
+  }
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
 
-  const toggleView = (event: React.MouseEvent<HTMLElement>, newView: 'table' | 'grid' | null) => {
-    if (newView !== null) {
-      setCurrentView(newView);
-    }
-  };
+  const filteredCertificates = certificatesData?.data?.certificates?.filter(
+    (certificate) =>
+      certificate.certificateKey
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase().trim())
+  )
 
-  const certificates = certificatesData?.data?.certificates || [];
-  const totalCertificates = certificatesData?.total || 0;
+  const certificates = filteredCertificates || []
+  const totalCertificates = certificatesData?.data?.certificates?.length || 0
   // const totalPages = certificatesData?.totalPages || 1; // Not used with MUI pagination
-
+  const dataToRender = debouncedSearchQuery
+    ? filteredCertificates
+    : certificatesData?.data?.certificates
 
   return (
     <Box sx={addCertificateStyles.container}>
@@ -187,106 +300,115 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
         Add New Certificate
       </Typography>
 
-      {createCertificateMutation.isError && (
-        <Alert severity="error" sx={addCertificateStyles.alert}>
-          {createCertificateMutation.error?.response?.data?.message || 'Failed to create certificate.'}
-        </Alert>
-      )}
-      {deleteCertificateMutation.isError && (
-        <Alert severity="error" sx={addCertificateStyles.alert}>
-          {deleteCertificateMutation.error?.response?.data?.message || 'Failed to delete certificate.'}
-        </Alert>
-      )}
-
-      {createCertificateMutation.isSuccess && (
-        <Alert severity="success" sx={addCertificateStyles.alert}>
-          {createCertificateMutation.data?.message || 'Certificate created successfully!'}
-        </Alert>
-      )}
-      {deleteCertificateMutation.isSuccess && (
-        <Alert severity="success" sx={addCertificateStyles.alert}>
-          {deleteCertificateMutation.data?.message || 'Certificate deleted successfully!'}
-        </Alert>
-      )}
-
-      <Paper elevation={3} sx={addCertificateStyles.formContainer}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Removed TextField for 'key' as it's generated by the backend */}
-          {/* <Controller
-            name="key"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Certificate Key"
-                variant="outlined"
-                fullWidth
-                sx={addCertificateStyles.inputField}
-                error={!!errors.key}
-                helperText={errors.key?.message}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 3,
+          alignItems: 'flex-start',
+          mb: 3,
+        }}
+      >
+        <Paper
+          elevation={3}
+          sx={{
+            ...addCertificateStyles.formContainer,
+            flex: 1,
+            minHeight: 280,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            background: '#fafbfc',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            
+          }}
+        >
+          <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+            <Box
+              sx={{ ...addCertificateStyles.pdfUploadContainer, width: '100%' }}
+            >
+              <input
+                accept="application/pdf"
+                style={{ display: 'none' }}
+                id="certificate-pdf-upload"
+                type="file"
+                onChange={handlePdfChange}
+                ref={fileInputRef}
               />
-            )}
-          /> */}
-
-          <Box sx={addCertificateStyles.pdfUploadContainer}>
-            <input
-              accept="application/pdf"
-              style={{ display: 'none' }}
-              id="certificate-pdf-upload"
-              type="file"
-              onChange={handlePdfChange}
-            />
-            <label htmlFor="certificate-pdf-upload">
-              <Button
-                variant="outlined"
-                component="span"
-                startIcon={<CloudUpload />}
-                sx={addCertificateStyles.uploadButton}
-              >
-                Upload PDF
-              </Button>
-            </label>
-            {previewPdfName && (
-              <Box sx={addCertificateStyles.pdfPreviewBox}>
-                <PictureAsPdf sx={addCertificateStyles.pdfIcon} />
-                <Typography variant="body2">{previewPdfName}</Typography>
-                <IconButton
-                  onClick={() => {
-                    setPreviewPdfName(null);
-                    setPdfFile(null);
-                    setValue('certificatePdf', undefined);
-                  }}
-                  sx={addCertificateStyles.removePdfButton}
+              <label htmlFor="certificate-pdf-upload">
+                <Button
+                  variant="outlined"
+                  component="span"
+                  startIcon={<CloudUpload />}
+                  sx={addCertificateStyles.uploadButton}
+                  disabled={createCertificateMutation.isPending}
                 >
-                  <Close />
-                </IconButton>
-              </Box>
-            )}
-            {errors.certificatePdf && (
-              <Typography color="error" variant="caption" sx={{ mt: 1 }}>
-                {errors.certificatePdf.message as string}
-              </Typography>
-            )}
-          </Box>
-
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={addCertificateStyles.submitButton}
-            disabled={isSubmitting || createCertificateMutation.isPending}
-          >
-            {isSubmitting || createCertificateMutation.isPending ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              'Create Certificate'
-            )}
-          </Button>
-        </form>
-      </Paper>
+                  Upload PDF
+                </Button>
+              </label>
+              {errors.certificatePdf && (
+                <Typography color="error" variant="caption1" sx={{ mt: 1 }}>
+                  {errors.certificatePdf.message as string}
+                </Typography>
+              )}
+            </Box>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ ...addCertificateStyles.submitButton, mt: 2 }}
+              disabled={
+                isSubmitting || createCertificateMutation.isPending || !pdfFile
+              }
+              loading={isSubmitting || createCertificateMutation.isPending}
+            >
+              Upload Certificate
+            </Button>
+          </form>
+        </Paper>
+        {/* Always render the right box to prevent layout shift */}
+        <Box
+          sx={{
+            minWidth: 280,
+            minHeight: 280,
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#fafbfc',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            borderRadius: 2,
+            ml: { md: 0.5 },
+            mt: { xs: 2, md: 0 },
+          }}
+        >
+          <CertificateInfoPanel
+            pdfName={previewPdfName}
+            certKey={uploadedCertKey}
+            onCopyKey={() => {
+              if (uploadedCertKey) {
+                navigator.clipboard.writeText(uploadedCertKey)
+                showSnackbar({
+                  title: 'Certificate key copied to clipboard',
+                  color: 'Success',
+                })
+              }
+            }}
+            onClose={resetFileInput}
+            isCopyDisabled={!uploadedCertKey}
+          />
+        </Box>
+      </Box>
 
       <Box sx={{ mt: 4 }}>
-        <Typography variant="h5" component="h2" sx={addCertificateStyles.subHeader}>
+        <Typography
+          variant="h5"
+          component="h2"
+          sx={addCertificateStyles.subHeader}
+        >
           Existing Certificates
         </Typography>
 
@@ -306,20 +428,6 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
             }}
             sx={addCertificateStyles.searchField}
           />
-          <ToggleButtonGroup
-            value={currentView}
-            exclusive
-            onChange={toggleView}
-            aria-label="certificate view"
-            sx={addCertificateStyles.viewToggle}
-          >
-            <ToggleButton value="table" aria-label="table view">
-              <TableRows />
-            </ToggleButton>
-            <ToggleButton value="grid" aria-label="grid view">
-              <GridView />
-            </ToggleButton>
-          </ToggleButtonGroup>
         </Box>
 
         {isLoadingCertificates ? (
@@ -327,135 +435,142 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
             <CircularProgress />
           </Box>
         ) : isErrorCertificates ? (
-          <Alert severity="error" sx={addCertificateStyles.alert}>Error loading certificates: {certificatesError?.message}</Alert>
+          <Alert severity="error" sx={addCertificateStyles.alert}>
+            Error loading certificates: {certificatesError?.message}
+          </Alert>
         ) : certificates.length === 0 ? (
-          <Alert severity="info" sx={addCertificateStyles.alert}>No certificates found.</Alert>
+          <Alert severity="info" sx={addCertificateStyles.alert}>
+            No certificates found.
+          </Alert>
         ) : (
-          <>
-            {currentView === 'table' ? (
-              <TableContainer component={Paper} sx={addCertificateStyles.tableContainer}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={addCertificateStyles.tableHeader}>Key</TableCell>
-                      <TableCell sx={addCertificateStyles.tableHeader}>PDF</TableCell>
-                      <TableCell sx={addCertificateStyles.tableHeader}>Uploaded By</TableCell>
-                      <TableCell sx={addCertificateStyles.tableHeader}>Status</TableCell>
-                      <TableCell sx={addCertificateStyles.tableHeader} align="right">
-                        Actions
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {certificates.map((certificate) => (
-                      <TableRow key={certificate._id} sx={addCertificateStyles.tableRow}>
-                        <TableCell sx={addCertificateStyles.tableCell}>{certificate.certificateKey}</TableCell> {/* Used certificateKey */}
-                        <TableCell sx={addCertificateStyles.tableCell}>
-                          <a href={certificate.pdfUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', wordBreak: 'break-all' }}> {/* Used pdfUrl */}
-                            <PictureAsPdf sx={addCertificateStyles.tablePdfIcon} />
-                            View PDF
-                          </a>
-                        </TableCell>
-                        <TableCell sx={addCertificateStyles.tableCell}>
-                          {certificate.uploadedBy && typeof certificate.uploadedBy === 'object'
-                            ? (certificate.uploadedBy as any).name
-                            : 'N/A'}
-                        </TableCell>
-                        <TableCell sx={addCertificateStyles.tableCell}>
-                          <Switch
+          <TableContainer
+            component={Paper}
+            sx={addCertificateStyles.tableContainer}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={addCertificateStyles.tableHeader}>
+                    Key
+                  </TableCell>
+                  <TableCell sx={addCertificateStyles.tableHeader}>
+                    PDF
+                  </TableCell>
+                  <TableCell sx={addCertificateStyles.tableHeader}>
+                    Uploaded By
+                  </TableCell>
+                  <TableCell sx={addCertificateStyles.tableHeader}>
+                    Status
+                  </TableCell>
+                  <TableCell
+                    sx={addCertificateStyles.tableHeader}
+                    align="right"
+                  >
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {dataToRender?.map((certificate) => (
+                  <TableRow
+                    key={certificate._id}
+                    sx={addCertificateStyles.tableRow}
+                  >
+                    <TableCell sx={addCertificateStyles.tableCell}>
+                      {certificate.certificateKey}
+                      <IconButton
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            certificate.certificateKey
+                          )
+                          showSnackbar({
+                            title: 'Certificate key copied to clipboard',
+                            color: 'Success',
+                          })
+                        }}
+                      >
+                        <ContentCopyIcon fontSize="small" />
+                      </IconButton>
+                    </TableCell>{' '}
+                    {/* Used certificateKey */}
+                    <TableCell sx={addCertificateStyles.tableCell}>
+                      <a
+                        href={certificate.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          wordBreak: 'break-all',
+                        }}
+                      >
+                        {' '}
+                        {/* Used pdfUrl */}
+                        <PictureAsPdf sx={addCertificateStyles.tablePdfIcon} />
+                        View PDF
+                      </a>
+                    </TableCell>
+                    <TableCell sx={addCertificateStyles.tableCell}>
+                      {certificate.uploadedBy &&
+                      typeof certificate.uploadedBy === 'object'
+                        ? (certificate.uploadedBy as any).name
+                        : 'N/A'}
+                    </TableCell>
+                    <TableCell sx={addCertificateStyles.tableCell}>
+                      {/* <Switch
                             checked={certificate.isActive}
                             inputProps={{ 'aria-label': 'certificate active status' }}
                             disabled // Disabled as backend only offers softDelete, not generic isActive toggle
-                          />
-                          {certificate.isActive ? 'Active' : 'Inactive'}
-                        </TableCell>
-                        <TableCell align="right" sx={addCertificateStyles.tableCell}>
-                          <Box sx={addCertificateStyles.tableActions}>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleViewCertificate(certificate)}
-                              aria-label="view certificate"
-                            >
-                              <Visibility fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleDeleteCertificateClick(certificate.certificateKey)} // Used certificateKey
-                              aria-label="delete certificate"
-                              disabled={deleteCertificateMutation.isPending || !certificate.isActive} // Can only soft-delete if active
-                            >
-                              <Delete fontSize="small" />
-                            </IconButton>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={totalCertificates}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </TableContainer>
-            ) : (
-              <Box sx={addCertificateStyles.paginationContainer}>
-                <Box sx={addCertificateStyles.certificateGrid}>
-                  {certificates.map((certificate) => (
-                    <Paper key={certificate._id} elevation={2} sx={addCertificateStyles.certificateCard}>
-                      <Box sx={addCertificateStyles.certificateCardContent}>
-                        <PictureAsPdf sx={{ fontSize: '3rem', color: '#dc2626', mb: 1 }} />
-                        <Typography variant="h6" sx={addCertificateStyles.certificateCardTitle}>
-                          Key: {certificate.certificateKey} {/* Used certificateKey */}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Uploaded By: {certificate.uploadedBy && typeof certificate.uploadedBy === 'object'
-                            ? (certificate.uploadedBy as any).name
-                            : 'N/A'}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Status: {certificate.isActive ? 'Active' : 'Inactive'}
-                        </Typography>
-                        <Box sx={addCertificateStyles.certificateCardActions}>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            startIcon={<Visibility fontSize="small" />}
-                            onClick={() => handleViewCertificate(certificate)}
-                          >
-                            View
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            color="error"
-                            size="small"
-                            startIcon={<Delete fontSize="small" />}
-                            onClick={() => handleDeleteCertificateClick(certificate.certificateKey)} // Used certificateKey
-                            disabled={deleteCertificateMutation.isPending || !certificate.isActive}
-                          >
-                            Delete
-                          </Button>
-                        </Box>
+                          /> */}
+                      <Chip
+                        label={certificate.isActive ? 'Active' : 'Inactive'}
+                        color={certificate.isActive ? 'success' : 'error'}
+                      />
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      sx={addCertificateStyles.tableCell}
+                    >
+                      <Box sx={addCertificateStyles.tableActions}>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleViewCertificate(certificate)}
+                          aria-label="view certificate"
+                        >
+                          <Visibility fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() =>
+                            handleDeleteCertificateClick(
+                              certificate.certificateKey
+                            )
+                          } // Used certificateKey
+                          aria-label="delete certificate"
+                          disabled={
+                            deleteCertificateMutation.isPending ||
+                            !certificate.isActive
+                          } // Can only soft-delete if active
+                        >
+                          <Delete fontSize="small" />
+                        </IconButton>
                       </Box>
-                    </Paper>
-                  ))}
-                </Box>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={totalCertificates}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </Box>
-            )}
-          </>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={totalCertificates}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TableContainer>
         )}
       </Box>
 
@@ -475,6 +590,5 @@ export const AddCertificate: React.FC<AddCertificateProps> = () => {
         loading={deleteCertificateMutation.isPending}
       />
     </Box>
-  );
-};
-
+  )
+}
