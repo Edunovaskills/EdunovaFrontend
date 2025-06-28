@@ -1,4 +1,4 @@
-import { SearchSharp } from '@mui/icons-material'
+import SearchSharpIcon from '@mui/icons-material/SearchSharp'
 import {
   Button,
   InputAdornment,
@@ -52,7 +52,7 @@ export const CurrentOpening = () => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <SearchSharp />
+              <SearchSharpIcon />
             </InputAdornment>
           ),
         }}

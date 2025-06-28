@@ -1,17 +1,28 @@
 // src/entities/component/BlogDetailModal.tsx
-import React from 'react';
-import { Modal, Box, Typography, Button, IconButton, Paper } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import type { Blog } from 'entities/model/blog.model';
+import React from 'react'
+import {
+  Modal,
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  Paper,
+} from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import type { Blog } from 'entities/model/blog.model'
 
 interface BlogDetailModalProps {
-  open: boolean;
-  onClose: () => void;
-  blog: Blog | null;
+  open: boolean
+  onClose: () => void
+  blog: Blog | null
 }
 
-export const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ open, onClose, blog }) => {
-  if (!blog) return null;
+export const BlogDetailModal: React.FC<BlogDetailModalProps> = ({
+  open,
+  onClose,
+  blog,
+}) => {
+  if (!blog) return null
 
   const style = {
     position: 'absolute' as 'absolute',
@@ -25,7 +36,7 @@ export const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ open, onClose,
     borderRadius: 2,
     maxHeight: '90vh',
     overflowY: 'auto',
-  };
+  }
 
   return (
     <Modal
@@ -45,9 +56,14 @@ export const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ open, onClose,
             color: (theme) => theme.palette.grey[500],
           }}
         >
-          <Close />
+          <CloseIcon />
         </IconButton>
-        <Typography id="blog-detail-title" variant="h5" component="h2" gutterBottom>
+        <Typography
+          id="blog-detail-title"
+          variant="h5"
+          component="h2"
+          gutterBottom
+        >
           {blog.title}
         </Typography>
         <Box sx={{ mb: 2 }}>
@@ -64,17 +80,20 @@ export const BlogDetailModal: React.FC<BlogDetailModalProps> = ({ open, onClose,
           <strong>Status:</strong> {blog.isActive ? 'Active' : 'Inactive'}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          <strong>Created At:</strong> {new Date(blog.createdAt).toLocaleString()}
+          <strong>Created At:</strong>{' '}
+          {new Date(blog.createdAt).toLocaleString()}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          <strong>Last Updated:</strong> {new Date(blog.updatedAt).toLocaleString()}
+          <strong>Last Updated:</strong>{' '}
+          {new Date(blog.updatedAt).toLocaleString()}
         </Typography>
         {blog.createdBy && (
           <Typography variant="body2" color="text.secondary">
-            <strong>Created By:</strong> {blog.createdBy.name} ({blog.createdBy.email})
+            <strong>Created By:</strong> {blog.createdBy.name} (
+            {blog.createdBy.email})
           </Typography>
         )}
       </Paper>
     </Modal>
-  );
-};
+  )
+}

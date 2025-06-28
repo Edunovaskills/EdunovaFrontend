@@ -12,7 +12,9 @@ import {
   Card,
   CardContent,
 } from '@mui/material'
-import { CalendarToday, AccessTime, MonetizationOn } from '@mui/icons-material'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
 import { useNavigate } from 'react-router-dom'
 import { useEventByIdQuery } from 'entities/query'
 import { appPaths } from 'entities/config'
@@ -134,7 +136,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                         }}
                       >
                         <Chip
-                          icon={<MonetizationOn />}
+                          icon={<MonetizationOnIcon />}
                           label={
                             data.data.event.price === 0
                               ? 'Free Event'
@@ -161,7 +163,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                               gap: 2,
                             }}
                           >
-                            <CalendarToday color="primary" />
+                            <CalendarTodayIcon color="primary" />
                             <Typography variant="body1">
                               Created:{' '}
                               {new Date(
@@ -177,7 +179,7 @@ const EventDetails = ({ eventId }: EventDetailsProps) => {
                               gap: 2,
                             }}
                           >
-                            <AccessTime color="primary" />
+                            <AccessTimeIcon color="primary" />
                             <Typography variant="body1">
                               Last Updated:{' '}
                               {new Date(
