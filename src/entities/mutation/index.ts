@@ -10,5 +10,6 @@ export { useDeleteCourseMutation } from './courses/delete-courses.mutation'
 export { useCreateBlogMutation } from './blogs/create-blog.mutation'
 export { useDeleteBlogMutation } from './blogs/delete-blog.mutation'
 export { useUpdateBlogMutation } from './blogs/update-blog.mutation'
-export { useCreateCertificateMutation } from './certificates/create-certificate.mutation';
-export { useDeleteCertificateMutation } from './certificates/delete-certificate.mutation';
+export { useCreateCertificateMutation } from './certificates/create-certificate.mutation'
+export { useDeleteCertificateMutation } from './certificates/delete-certificate.mutation'
+export { useCreateEnquiryMutation } from './user/create-enquiry.mutation'

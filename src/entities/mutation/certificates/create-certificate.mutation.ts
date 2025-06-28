@@ -3,17 +3,14 @@ import type { ErrorResponse } from 'entities/definitions'
 import { AllCertificatesForAdminQueryKey } from 'entities/query'
 import { useSnackBar } from 'entities/state'
 import { adminCertificateApi } from 'entities/api/admin/certificate/certificates.api'
-
-interface CreateCertificateArgs {
-  pdfFile: File
-}
+import type { CertificationPayload } from 'entities/model'
 
 export const useCreateCertificateMutation = () => {
   const { show } = useSnackBar()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async ({ pdfFile }: CreateCertificateArgs) => {
-      const response = await adminCertificateApi.createCertificate(pdfFile)
+    mutationFn: async (payload: CertificationPayload) => {
+      const response = await adminCertificateApi.createCertificate(payload)
       return response.data
     },
     onSuccess: () => {

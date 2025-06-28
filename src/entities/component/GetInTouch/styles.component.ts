@@ -14,7 +14,7 @@ export const StackStyled = styled(Stack)<StackProps & { issmall: boolean }>(
   ({ theme: { palette }, issmall }) => ({
     minWidth: issmall ? '100%' : '690px',
     padding: '10px',
-    gap: '14px',
+    gap: '32px',
     background: palette.neutral.black + '33',
     borderRadius: '10px',
     ['& .MuiFormControl-root']: {

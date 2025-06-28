@@ -3,8 +3,8 @@ import { getClient, type IClient } from 'shared/data-providers/model/fetcher'
 import type {
   CertificateDetails,
   CertificateResponse,
+  CertificationPayload,
 } from 'entities/model/certificate.model'
-import type { ApiContract } from 'entities/model/api-contract.model'
 
 export class AdminCertificateApi {
   client: IClient
@@ -12,9 +12,10 @@ export class AdminCertificateApi {
     this.client = client
   }
 
-  async createCertificate(pdfFile: File): Promise<CertificateDetails> {
+  async createCertificate(payload: CertificationPayload) {
     const formData = new FormData()
-    formData.append('certificatePdf', pdfFile)
+    formData.append('certificatePdf', payload.pdfFile)
+    formData.append('userEmail', payload.email)
 
     const response = await this.client.post<CertificateDetails>('', formData, {
       headers: {

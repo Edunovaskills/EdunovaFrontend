@@ -1,6 +1,6 @@
 import React from 'react'
 import { BuzInfoSection } from '../BuzzInfo-Section/BuzInfoSection'
-import { Stack, TextField, Typography } from '@mui/material'
+import { InputAdornment, Stack, TextField, Typography } from '@mui/material'
 import { RoundedIcon } from 'shared/components'
 import { publicImages } from 'shared/config'
 import { Link } from 'react-router-dom'
@@ -13,6 +13,10 @@ import {
   StackStyled,
 } from './styles.component'
 import { useScreenSize } from 'shared/hooks'
+import { useCreateEnquiryMutation } from 'entities/mutation'
+import { useForm } from 'react-hook-form'
+import { enquirySchema, type EnquirySchema } from 'features/schema'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 export const GetInTouch = () => {
   const TopView = () => {
@@ -33,22 +37,64 @@ export const GetInTouch = () => {
   }
 
   const BottomView = () => {
-    const { smallScreen:smallscreen } = useScreenSize()
+    const { smallScreen: smallscreen } = useScreenSize()
+    const { mutate: createEnquiry, isPending } = useCreateEnquiryMutation()
+    const {
+      handleSubmit,
+      register,
+      formState: { errors, isValid },
+    } = useForm<EnquirySchema>({
+      resolver: yupResolver(enquirySchema),
+      defaultValues: {
+        fullName: '',
+        email: '',
+        message: '',
+      },
+      mode: 'onTouched',
+    })
+
+    const onSubmit = (data: EnquirySchema) => {
+      createEnquiry({ ...data, phone: `+91 ${data.phone}` })
+    }
 
     return (
       <PaperStyled issmall={smallscreen}>
-        <StackStyled component={'form'} issmall={smallscreen}>
-          <TextField placeholder="Full Name" />
+        <StackStyled
+          component={'form'}
+          issmall={smallscreen}
+          onSubmit={(e) => {
+            handleSubmit(onSubmit)(e)
+          }}
+        >
+          <TextField
+            {...register('fullName')}
+            placeholder="Full Name"
+            error={!!errors.fullName}
+            helperText={errors.fullName?.message}
+          />
           <FieldsWrapperStyled>
             <TextField
+              {...register('email')}
               type="email"
               placeholder="Email Address"
               sx={{ flexBasis: '49%' }}
+              error={!!errors.email}
+              helperText={errors.email?.message}
             />
             <TextField
-              placeholder="+91 XXXXX XXXXX"
-              type="number"
+              placeholder="XXXXX XXXXX"
               sx={{ flexBasis: '49%' }}
+              {...register('phone')}
+              error={!!errors.phone}
+              helperText={errors.phone?.message}
+              InputProps={{
+                inputProps: {
+                  maxLength: 10,
+                },
+                startAdornment: (
+                  <InputAdornment position="start">+91</InputAdornment>
+                ),
+              }}
             />
           </FieldsWrapperStyled>
           <TextField
@@ -56,9 +102,17 @@ export const GetInTouch = () => {
             multiline
             rows={4}
             sx={{ width: '100%' }}
+            {...register('message')}
+            error={!!errors.message}
+            helperText={errors.message?.message}
           />
 
-          <ButtonStyled variant="contained" type="submit">
+          <ButtonStyled
+            variant="contained"
+            type="submit"
+            disabled={!isValid || isPending}
+            loading={isPending}
+          >
             SEND US AN ENQUIRY
           </ButtonStyled>
         </StackStyled>
@@ -79,11 +133,12 @@ export const GetInTouch = () => {
                 </Link>
               </Typography>
               <Typography variant="body2">
-              For enquiries, academic collaboration proposals, or detailed specifications, please reach out to us at{' '}
-              <Link href="mailto:contact@edunova.com" color="secondary.main">
-               contact@edunova.com
-  </Link>
-</Typography>
+                For enquiries, academic collaboration proposals, or detailed
+                specifications, please reach out to us at{' '}
+                <Link to="mailto:contact@edunova.com" color="secondary.main">
+                  contact@edunova.com
+                </Link>
+              </Typography>
             </Stack>
           </RightViewWrapperStyled>
 
