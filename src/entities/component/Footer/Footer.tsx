@@ -14,36 +14,41 @@ import {
   TopViewWrapperStyled,
 } from './styles.component'
 import { useScreenSize } from 'shared/hooks'
+import { useMenuItems } from 'entities/hooks'
 
 type MenuItem = {
   label: string
   value: AppPathsName
 }
-const mainMenuItems: MenuItem[] = [
-  { label: 'Home', value: '/' },
-  { label: 'About Us', value: 'about' },
-  { label: 'Contact Us', value: 'contact-us' },
-  { label: 'Career', value: 'career' },
-]
-const secondaryMenuITems: MenuItem[] = [
-  { label: 'Download App', value: 'download' },
-  { label: 'Help & Support', value: 'events' },
-  { label: 'Privacy Policy', value: 'privacy-policy' },
-  { label: 'Terms of Services', value: 'terms-of-services' },
-]
+// const mainMenuItems: MenuItem[] = [
+//   { label: 'Home', value: '/' },
+//   { label: 'About Us', value: 'about' },
+//   { label: 'Contact Us', value: 'contact-us' },
+//   { label: 'Career', value: 'career' },
+// ]
+// const secondaryMenuITems: MenuItem[] = [
+//   { label: 'Download App', value: 'download' },
+//   { label: 'Help & Support', value: 'events' },
+//   { label: 'Privacy Policy', value: 'privacy-policy' },
+//   { label: 'Terms of Services', value: 'terms-of-services' },
+// ]
 
 export const Footer = () => {
   const location = useLocation()
-  const menuItem = [...mainMenuItems, ...secondaryMenuITems]
+  const menuItem = useMenuItems()
 
   const currentMenuItem = useMemo(() => {
-    return (
-      menuItem.find((item) =>
-        location.pathname.split('/')[1].includes(item.value)
-      ) || menuItem[0]
-    )
+    return menuItem.find((item) => {
+      const itemPath = appPaths[item.value as AppPathsName] || item.value
+      return (
+        location.pathname === itemPath ||
+        location.pathname.startsWith(itemPath + '/')
+      )
+    })
   }, [location, menuItem])
 
+  const mainMenuItems = menuItem.slice(0, 4)
+  const secondaryMenuITems = menuItem.slice(4)
   const { smallScreen: smallscreen } = useScreenSize()
 
   return (
@@ -87,12 +92,12 @@ export const Footer = () => {
           <StackWrapperStyled issmall={smallscreen}>
             <Stack>
               {mainMenuItems.map(({ label, value }, ind) => {
-                const isSelected = currentMenuItem.value === value
+                const isSelected = currentMenuItem?.value === value
 
                 return (
                   <NavLink
                     key={value}
-                    to={appPaths[value]}
+                    to={appPaths[value as keyof typeof appPaths]}
                     style={{ textDecoration: 'none' }}
                   >
                     <Typography
@@ -108,11 +113,11 @@ export const Footer = () => {
             </Stack>
             <Stack>
               {secondaryMenuITems.map(({ label, value }, ind) => {
-                const isSelected = currentMenuItem.value === value
+                const isSelected = currentMenuItem?.value === value
                 return (
                   <NavLink
                     key={value}
-                    to={appPaths[value]}
+                    to={appPaths[value as keyof typeof appPaths]}
                     style={{ textDecoration: 'none' }}
                   >
                     <Typography
