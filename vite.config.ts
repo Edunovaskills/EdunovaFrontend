@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import path from 'path'
-
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import svgr from 'vite-plugin-svgr'
@@ -11,14 +10,12 @@ export default defineConfig({
   publicDir: 'public',
   plugins: [react(), tsconfigPaths(), svgr()],
   server: {
-    open: true, // automatically open the app in the browser
+    open: true,
     port: 3000,
   },
+
   optimizeDeps: {
     include: [
-      'react',
-      'react-dom',
-      'react-is',
       '@mui/material',
       '@mui/icons-material',
       '@mui/system',
@@ -27,14 +24,16 @@ export default defineConfig({
       'swiper/modules',
       'prop-types',
     ],
-    exclude: [
-      // Exclude problematic packages that might cause version conflicts
-      'mui-one-time-password-input',
-    ],
+    exclude: ['mui-one-time-password-input'],
   },
 
   resolve: {
+    dedupe: ['react', 'react-dom', 'react-is'], // 🧠 ensures no duplicate React
     alias: {
+      react: path.resolve(__dirname, './node_modules/react'),
+      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+      'react-is': path.resolve(__dirname, './node_modules/react-is'),
+
       '@': path.resolve(__dirname, './src'),
       entities: path.resolve(__dirname, './src/entities'),
       features: path.resolve(__dirname, './src/features'),
@@ -43,7 +42,6 @@ export default defineConfig({
       app: path.resolve(__dirname, './src/app'),
       'prop-types': 'prop-types',
       '@mui/system': '@mui/system',
-      'react-is': 'react-is',
     },
   },
 
@@ -60,38 +58,18 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Handle circular dependencies by grouping related modules
           if (id.includes('node_modules')) {
-            if (id.includes('@mui')) {
-              return 'mui'
-            }
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'vendor'
-            }
-            if (id.includes('react-router')) {
-              return 'router'
-            }
-            if (id.includes('@tanstack')) {
-              return 'query'
-            }
-            if (id.includes('swiper')) {
-              return 'swiper'
-            }
+            if (id.includes('@mui')) return 'mui'
+            if (id.includes('react') || id.includes('react-dom')) return 'vendor'
+            if (id.includes('react-router')) return 'router'
+            if (id.includes('@tanstack')) return 'query'
+            if (id.includes('swiper')) return 'swiper'
             return 'vendor'
           }
-          // Group source code by feature areas to avoid circular dependencies
-          if (id.includes('/entities/')) {
-            return 'entities'
-          }
-          if (id.includes('/features/')) {
-            return 'features'
-          }
-          if (id.includes('/pages/')) {
-            return 'pages'
-          }
-          if (id.includes('/shared/')) {
-            return 'shared'
-          }
+          if (id.includes('/entities/')) return 'entities'
+          if (id.includes('/features/')) return 'features'
+          if (id.includes('/pages/')) return 'pages'
+          if (id.includes('/shared/')) return 'shared'
           return 'app'
         },
       },
