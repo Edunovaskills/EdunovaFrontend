@@ -11,8 +11,5 @@
   to = "/index.html"
   status = 200
 
-[[plugins]]
-  package = "@netlify/plugin-cache"
-
 [build.processing]
   skip_processing = true
