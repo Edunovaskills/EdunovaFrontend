@@ -5,7 +5,6 @@ import {
   AccordionDetails,
   IconButton,
   Box,
-  useTheme,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
@@ -17,7 +16,6 @@ type Props = {
 
 export const FAQ = ({ data }: Props) => {
   const [expanded, setExpanded] = useState<string | false>(false)
-  const theme = useTheme()
 
   const handleToggle = (panel: string) => {
     setExpanded((prev) => (prev === panel ? false : panel))

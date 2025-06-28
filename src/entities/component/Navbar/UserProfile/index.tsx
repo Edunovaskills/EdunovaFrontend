@@ -10,7 +10,6 @@ import {
 } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { useUserQuery } from 'entities/query'
-import { userSessionInactive } from 'shared/data-providers'
 import { useState } from 'react'
 import { useScreenSize } from 'shared/hooks'
 import { LogoutPopup } from '../LogoutPopup'

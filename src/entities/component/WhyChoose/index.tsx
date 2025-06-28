@@ -1,4 +1,4 @@
-import { Typography, useTheme } from '@mui/material'
+import { Typography } from '@mui/material'
 import { BuzInfoSection } from 'entities/component'
 import { BuzCard } from 'shared/components'
 import { useScreenSize } from 'shared/hooks'
@@ -32,13 +32,14 @@ const TopInfoSection = ({
       <Typography variant="h5.700">
         Why Choose{' '}
         <Typography variant="h5.700" color="primary.main">
-        Edunova{' '}
+          Edunova{' '}
         </Typography>
         ?
       </Typography>
 
       <Typography variant="body2">
-      Discover reliable, safe, and efficient education tailored to your goals at Edunova, guiding you seamlessly on your academic journey.
+        Discover reliable, safe, and efficient education tailored to your goals
+        at Edunova, guiding you seamlessly on your academic journey.
       </Typography>
     </>
   )
@@ -51,7 +52,6 @@ const Cards = ({
   data: CardDataType[]
   cardBasis?: string
 }) => {
-  const { palette } = useTheme()
   const { smallScreen } = useScreenSize()
 
   return (
@@ -73,7 +73,7 @@ const Cards = ({
           cardDescription={desc}
           cardTitle={title}
           iconUrl={iconUrl}
-          iconBackgroundColor={palette.neutral.black}
+          iconBackgroundColor="black"
           cardBasis={cardBasis}
           minMaxWidth={smallScreen ? 100 : undefined}
         />

@@ -1,6 +1,6 @@
 import { Stack, styled } from '@mui/material'
 
-export const StackStyled = styled(Stack)(({ theme }) => ({
+export const StackStyled = styled(Stack)(() => ({
   width: '100vw',
   minHeight: '450px',
   justifyContent: 'center',

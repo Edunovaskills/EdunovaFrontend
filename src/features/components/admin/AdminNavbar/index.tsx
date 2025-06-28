@@ -89,7 +89,6 @@ const MobileNavigation = styled.div<{ $isOpen: boolean }>`
 export const AdminNavbar: React.FC<AdminNavbarProps> = ({
   activeTab,
   onTabChange,
-  theme = 'light',
   loading = false,
   badges = {},
 }) => {

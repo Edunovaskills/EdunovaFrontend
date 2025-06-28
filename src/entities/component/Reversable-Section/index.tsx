@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react'
 import { WrapperStyled } from './styles.component'
-import { Divider } from '@mui/material'
 
 export const ReversableSection = ({
   imgUrl,

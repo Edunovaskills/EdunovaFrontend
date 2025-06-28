@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react'
 import { adminStyles } from '../AdminStyles'
-import { userStyles } from './styles.component'
 import { useAllUsersQuery } from 'entities/query'
 import {
   Table,

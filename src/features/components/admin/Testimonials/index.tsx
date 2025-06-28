@@ -19,7 +19,6 @@ import {
   styled,
 } from '@mui/material'
 import {
-  Visibility as VisibilityIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Save as SaveIcon,
@@ -34,7 +33,7 @@ import {
 import type { Testimonial } from 'entities/model/testimonail.model'
 
 // Styled components
-const MessageCell = styled(Box)(({ theme }) => ({
+const MessageCell = styled(Box)(() => ({
   maxWidth: 300,
   overflow: 'hidden',
   textOverflow: 'ellipsis',

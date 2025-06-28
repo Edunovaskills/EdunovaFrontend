@@ -9,7 +9,6 @@ import {
   useTheme,
   useMediaQuery,
   Modal,
-  IconButton,
 } from '@mui/material'
 import { BuzInfoSection, Carousel } from 'entities/component'
 import { SwiperSlide } from 'swiper/react'
@@ -20,7 +19,6 @@ import {
   ModalContentBox,
   ModalImageBox,
   ModalTextBox,
-  PriceTypography,
   CloseButton,
 } from './styles.component'
 import { useCourseByIdQuery, useGetAllCoursesQuery } from 'entities/query'

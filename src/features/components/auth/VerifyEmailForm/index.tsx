@@ -45,7 +45,6 @@ export function VerifyEmailForm({ signUpPayload }: Props) {
 
   const {
     control,
-    setError,
     handleSubmit,
     reset,
     formState: { isValid },

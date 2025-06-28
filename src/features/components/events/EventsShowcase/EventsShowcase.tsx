@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   CardContent,
   Divider,
@@ -10,12 +10,6 @@ import {
 } from '@mui/material'
 import { Carousel } from 'entities/component'
 import { SwiperSlide } from 'swiper/react'
-import { useNavigate } from 'react-router-dom'
-import { appPaths } from 'entities/config'
-import {
-  getAppPath,
-  useAppNavigate,
-} from 'entities/state/app-route/app.route.state'
 import { LoadingComponent } from 'shared/components'
 
 import {
@@ -33,7 +27,6 @@ const PLACEHOLDER_EVENT_IMAGE_URL =
 const EventsShowcase = () => {
   const { data, isLoading, isError } = useAllEventsQuery()
   const theme = useTheme()
-  const { appNavigate } = useAppNavigate()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
   const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'))
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'))
@@ -52,7 +45,7 @@ const EventsShowcase = () => {
   }
 
   const handleEventClick = (eventId: string) => {
-    appNavigate('eventDetail', { eventId })
+    // Implement event click logic
   }
 
   const handleEnrollClick = (e: React.MouseEvent, paymentUrl: string) => {

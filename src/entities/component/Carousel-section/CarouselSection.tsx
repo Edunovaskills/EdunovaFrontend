@@ -1,10 +1,8 @@
 import React, { PropsWithChildren } from 'react'
-import { Divider, Stack, useTheme } from '@mui/material'
-import { Box, Card, CardContent, Typography } from '@mui/material'
+import { useTheme } from '@mui/material'
+import { Box } from '@mui/material'
 
-import { publicImages } from 'shared/config'
-import ReactStars from 'react-stars'
-import { Swiper, SwiperProps, SwiperSlide } from 'swiper/react'
+import { Swiper, SwiperProps } from 'swiper/react'
 import { Navigation, Pagination, A11y } from 'swiper/modules'
 import { useScreenSize } from 'shared/hooks'
 

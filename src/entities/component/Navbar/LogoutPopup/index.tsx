@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 
 import {
   Button,
-  Chip,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -15,7 +14,6 @@ import { useLocation } from 'react-router-dom'
 import { userSessionInactive } from 'shared/data-providers'
 
 import { DialogBlurredBackdrop } from './styles.component'
-import { LogOutIcon } from 'lucide-react'
 import CloseIcon from '@mui/icons-material/Close'
 
 type Props = {

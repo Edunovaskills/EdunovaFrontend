@@ -31,7 +31,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Switch, // For isActive status
   TablePagination,
   InputAdornment,
   Chip,
@@ -537,12 +536,6 @@ export const AddCourse: React.FC<AddCourseProps> = () => {
                               : 'Admin'}
                           </TableCell>
                           <TableCell sx={addCourseStyles.tableCell}>
-                            {/* <Switch
-                              checked={course.isActive}
-                              inputProps={{
-                                'aria-label': 'course active status',
-                              }}
-                            /> */}
                             <Chip
                               label={course.isActive ? 'Active' : 'Inactive'}
                               color={course.isActive ? 'success' : 'error'}

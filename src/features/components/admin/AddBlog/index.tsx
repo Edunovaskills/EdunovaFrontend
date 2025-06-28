@@ -27,7 +27,6 @@ import {
   TableRow,
   TablePagination,
   InputAdornment,
-  Switch,
   ToggleButtonGroup,
   ToggleButton,
   Chip,
@@ -207,28 +206,6 @@ export const AddBlog: React.FC<AddBlogProps> = () => {
     setEditingBlogId(blog._id)
     setSelectedBlog(blog)
     // Preview existing image, don't set imageFile for existing images
-  }
-
-  // Toggle blog's active status
-  const handleToggleActive = async (blogId: string, isActive: boolean) => {
-    try {
-      await updateBlogMutation.mutateAsync({
-        blogId: blogId,
-        blogPayload: { isActive },
-        imageFile: undefined, // No image update needed for status toggle
-      })
-      refetchBlogs() // Re-fetch to show updated status
-      showSnackbar({
-        title: 'Blog status updated successfully!',
-        color: 'Success',
-      })
-    } catch (error: any) {
-      showSnackbar({
-        title:
-          error?.response?.data?.message || 'Failed to toggle blog status.',
-        color: 'Error',
-      })
-    }
   }
 
   // Open delete confirmation dialog

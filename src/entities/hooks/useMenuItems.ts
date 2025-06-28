@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { getUserRole } from 'shared/data-providers'
-import { appPaths, type AppPathsName } from 'entities/config'
+import { type AppPathsName } from 'entities/config'
 
 export type MenuItem = {
   label: string

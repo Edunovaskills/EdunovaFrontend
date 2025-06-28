@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react'
 import { Button, Stack, Typography } from '@mui/material'
-import { publicImages } from 'shared/config'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import { AppPathsName, appPaths } from 'entities/config'
 import { NavLink, useLocation } from 'react-router-dom'
@@ -11,7 +10,6 @@ import {
   StackWrapperStyled,
   SubscribeStyled,
   TextFieldStyled,
-  TopViewWrapperStyled,
 } from './styles.component'
 import { useScreenSize } from 'shared/hooks'
 import { useMenuItems } from 'entities/hooks'

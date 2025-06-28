@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { publicImages } from 'shared/config'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import VerifiedIcon from '@mui/icons-material/Verified';

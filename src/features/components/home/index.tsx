@@ -1,9 +1,4 @@
-import {
-  ComingSoon,
-  DownloadSection,
-  HeroSection,
-  WhyChooseUs,
-} from 'entities/component'
+import { HeroSection, WhyChooseUs } from 'entities/component'
 import { Services } from './course'
 import { BuzWorking } from './BuzWorking'
 import { HomeWrapperStyled } from './styles.component'

@@ -121,8 +121,9 @@ export const AddEvent: React.FC = () => {
   })
 
   // Query for single event when editing
-  const { data: singleEventData, isLoading: isLoadingSingleEvent } =
-    useEventByIdAdminQuery(editEventId || undefined)
+  const { data: singleEventData } = useEventByIdAdminQuery(
+    editEventId || undefined
+  )
 
   // Debounce search query to prevent excessive API calls
   useEffect(() => {

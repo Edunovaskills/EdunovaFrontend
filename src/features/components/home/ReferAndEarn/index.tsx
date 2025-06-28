@@ -35,7 +35,7 @@ const BottomSection = () => {
         <Typography variant="h4.700">How it Works</Typography>
 
         <ContainerStyled>
-          {referralSteps.map(({ description, id, title }, ind) => {
+          {referralSteps.map(({ description, id, title }) => {
             return (
               <Stack key={id}>
                 <Stack direction={'row'} gap={'10px'}>

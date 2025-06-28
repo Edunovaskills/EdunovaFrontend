@@ -1,7 +1,6 @@
 import React from 'react'
 import { Stack, Typography } from '@mui/material'
 import { BuzInfoSection } from 'entities/component'
-import { useScreenSize } from 'shared/hooks'
 
 const TopView = () => {
   return (
@@ -13,7 +12,9 @@ const TopView = () => {
         </Typography>
       </Typography>
 
-      <Typography variant="body2">Your Trusted Partner in Lifelong Learning</Typography>
+      <Typography variant="body2">
+        Your Trusted Partner in Lifelong Learning
+      </Typography>
     </>
   )
 }
@@ -26,12 +27,16 @@ const BottomView = () => {
   //   publicImages.aboutImg4,
   //   publicImages.aboutImg5,
   // ]
-  const { smallScreen } = useScreenSize()
 
   return (
     <Stack gap={'50px'}>
       <Typography variant="body3" textAlign={'center'}>
-        At Edunova Academic, we are passionate about transforming education through innovation. Our platform offers a student-centric, seamless way to access courses and resources for any learning journey—whether it's academic growth or professional development. We strive to provide an educational experience that is engaging, reliable, and accessible to all.
+        At Edunova Academic, we are passionate about transforming education
+        through innovation. Our platform offers a student-centric, seamless way
+        to access courses and resources for any learning journey—whether it's
+        academic growth or professional development. We strive to provide an
+        educational experience that is engaging, reliable, and accessible to
+        all.
       </Typography>
       {/* <ImagesWrapperStyled issmall={smallScreen}>
         {images.map((url) => (

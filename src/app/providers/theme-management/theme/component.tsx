@@ -1,10 +1,9 @@
 /* eslint-disable complexity */
-import React, { CSSProperties } from 'react'
+import { CSSProperties } from 'react'
 
 import {
   buttonBaseClasses,
   buttonClasses,
-  CircularProgress,
   circularProgressClasses,
   formHelperTextClasses,
   formLabelClasses,

@@ -1,61 +1,175 @@
 import { MainLayout } from 'app/layout/MainLayout/MainLayout'
 import { appPaths } from 'entities/config'
-import { AboutUsPage } from 'pages/components/about-us/AboutUs'
-import { CabServicesPage } from 'pages/components/cab-services/CabServices'
-import { HelpSupportPage } from 'pages/components/help-support/HelpSupport'
-import { HomePage } from 'pages/components/home/Home'
-import { ServicesPage } from 'pages/components/services/Services'
-import { TicketBookingServicesPage } from 'pages/components/ticket-booking-services/TicketBookingServices'
-import { AdminPage } from 'pages/components/admin/Admin'
-import { LoginPage } from 'pages/components/user/Login' // Keep this import
-import { SignupPage } from 'pages/components/user/Signup' // Keep this import
-import { EventDetailsPage } from 'pages/components'
-import AdminEventsPage from 'pages/components/admin/AdminEventsPage'
-import AdminCoursesPage from 'pages/components/admin/AdminCoursesPage'
-import AdminBlogsPage from 'pages/components/admin/AdminBlogsPage'
-import AdminUsersPage from 'pages/components/admin/AdminUsersPage'
-import AdminEnquiryPage from 'pages/components/admin/AdminEnquiryPage'
-import AdminTestimonialsPage from 'pages/components/admin/AdminTestimonialsPage'
-
-// Import UserProfile and PrivateRoute
-
+import { lazy, Suspense } from 'react'
 import {
   Outlet,
   Route,
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom'
-import { VerifyEmailPage } from 'pages/components/verfiy-form/verify'
 import { RouteGuard } from '../RouteGuard'
 import { AdminRouteGuard } from '../AdminRouteGuard'
-import AdminDashboardPage from 'pages/components/admin/AdminDashboardPage'
-import { AdminCertificatePage } from 'pages/components/admin/AdminCertificatePage'
+import { LoadingComponent } from 'shared/components'
+
+// Lazy load all page components for better code splitting
+const AboutUsPage = lazy(() =>
+  import('pages/components/about-us/AboutUs').then((module) => ({
+    default: module.AboutUsPage,
+  }))
+)
+const CabServicesPage = lazy(() =>
+  import('pages/components/cab-services/CabServices').then((module) => ({
+    default: module.CabServicesPage,
+  }))
+)
+const HelpSupportPage = lazy(() =>
+  import('pages/components/help-support/HelpSupport').then((module) => ({
+    default: module.HelpSupportPage,
+  }))
+)
+const HomePage = lazy(() =>
+  import('pages/components/home/Home').then((module) => ({
+    default: module.HomePage,
+  }))
+)
+const ServicesPage = lazy(() =>
+  import('pages/components/services/Services').then((module) => ({
+    default: module.ServicesPage,
+  }))
+)
+const TicketBookingServicesPage = lazy(() =>
+  import('pages/components/ticket-booking-services/TicketBookingServices').then(
+    (module) => ({ default: module.TicketBookingServicesPage })
+  )
+)
+const AdminPage = lazy(() =>
+  import('pages/components/admin/Admin').then((module) => ({
+    default: module.AdminPage,
+  }))
+)
+const LoginPage = lazy(() =>
+  import('pages/components/user/Login').then((module) => ({
+    default: module.LoginPage,
+  }))
+)
+const SignupPage = lazy(() =>
+  import('pages/components/user/Signup').then((module) => ({
+    default: module.SignupPage,
+  }))
+)
+const EventDetailsPage = lazy(() =>
+  import('pages/components').then((module) => ({
+    default: module.EventDetailsPage,
+  }))
+)
+const AdminEventsPage = lazy(
+  () => import('pages/components/admin/AdminEventsPage')
+)
+const AdminCoursesPage = lazy(
+  () => import('pages/components/admin/AdminCoursesPage')
+)
+const AdminBlogsPage = lazy(
+  () => import('pages/components/admin/AdminBlogsPage')
+)
+const AdminUsersPage = lazy(
+  () => import('pages/components/admin/AdminUsersPage')
+)
+const AdminEnquiryPage = lazy(
+  () => import('pages/components/admin/AdminEnquiryPage')
+)
+const AdminTestimonialsPage = lazy(
+  () => import('pages/components/admin/AdminTestimonialsPage')
+)
+const VerifyEmailPage = lazy(() =>
+  import('pages/components/verfiy-form/verify').then((module) => ({
+    default: module.VerifyEmailPage,
+  }))
+)
+const AdminDashboardPage = lazy(
+  () => import('pages/components/admin/AdminDashboardPage')
+)
+const AdminCertificatePage = lazy(() =>
+  import('pages/components/admin/AdminCertificatePage').then((module) => ({
+    default: module.AdminCertificatePage,
+  }))
+)
+
+// Loading fallback component
+const PageLoader = () => (
+  <LoadingComponent loading={true} message="Loading page..." />
+)
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Outlet />}>
       <Route element={<MainLayout />}>
-        {' '}
-        {/* Wrap all routes that need the MainLayout */}
         <Route element={<Outlet />}>
           {/* Routes that use MainLayout */}
-          <Route path={appPaths['/']} element={<HomePage />} />
-          <Route path={appPaths.about} element={<AboutUsPage />} />
-          <Route path={appPaths.events} element={<HelpSupportPage />} />
-          <Route path={appPaths.eventDetail} element={<EventDetailsPage />} />
-          <Route path={appPaths.services} element={<ServicesPage />} />
-          <Route path={appPaths.cabServices} element={<CabServicesPage />} />
+          <Route
+            path={appPaths['/']}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <HomePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path={appPaths.about}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <AboutUsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path={appPaths.events}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <HelpSupportPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path={appPaths.eventDetail}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <EventDetailsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path={appPaths.services}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ServicesPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path={appPaths.cabServices}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <CabServicesPage />
+              </Suspense>
+            }
+          />
           <Route
             path={appPaths.ticketBookingServices}
-            element={<TicketBookingServicesPage />}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <TicketBookingServicesPage />
+              </Suspense>
+            }
           />
 
-          {/* Admin route - now protected by PrivateRoute with role check */}
+          {/* Admin routes - now protected by PrivateRoute with role check */}
           <Route
             path={appPaths.admin}
             element={
               <AdminRouteGuard>
-                <AdminPage />
+                <Suspense fallback={<PageLoader />}>
+                  <AdminPage />
+                </Suspense>
               </AdminRouteGuard>
             }
           />
@@ -63,7 +177,9 @@ const Router = createBrowserRouter(
             path={appPaths.adminDashboard}
             element={
               <AdminRouteGuard>
-                <AdminDashboardPage />
+                <Suspense fallback={<PageLoader />}>
+                  <AdminDashboardPage />
+                </Suspense>
               </AdminRouteGuard>
             }
           />
@@ -71,7 +187,9 @@ const Router = createBrowserRouter(
             path={appPaths.adminEvents}
             element={
               <AdminRouteGuard>
-                <AdminEventsPage />
+                <Suspense fallback={<PageLoader />}>
+                  <AdminEventsPage />
+                </Suspense>
               </AdminRouteGuard>
             }
           />
@@ -79,7 +197,9 @@ const Router = createBrowserRouter(
             path={appPaths.adminCourses}
             element={
               <AdminRouteGuard>
-                <AdminCoursesPage />
+                <Suspense fallback={<PageLoader />}>
+                  <AdminCoursesPage />
+                </Suspense>
               </AdminRouteGuard>
             }
           />
@@ -87,7 +207,9 @@ const Router = createBrowserRouter(
             path={appPaths.adminBlogs}
             element={
               <AdminRouteGuard>
-                <AdminBlogsPage />
+                <Suspense fallback={<PageLoader />}>
+                  <AdminBlogsPage />
+                </Suspense>
               </AdminRouteGuard>
             }
           />
@@ -95,7 +217,9 @@ const Router = createBrowserRouter(
             path={appPaths.adminUsers}
             element={
               <AdminRouteGuard>
-                <AdminUsersPage />
+                <Suspense fallback={<PageLoader />}>
+                  <AdminUsersPage />
+                </Suspense>
               </AdminRouteGuard>
             }
           />
@@ -103,7 +227,9 @@ const Router = createBrowserRouter(
             path={appPaths.adminEnquiries}
             element={
               <AdminRouteGuard>
-                <AdminEnquiryPage />
+                <Suspense fallback={<PageLoader />}>
+                  <AdminEnquiryPage />
+                </Suspense>
               </AdminRouteGuard>
             }
           />
@@ -111,7 +237,9 @@ const Router = createBrowserRouter(
             path={appPaths.adminCertificates}
             element={
               <AdminRouteGuard>
-                <AdminCertificatePage />
+                <Suspense fallback={<PageLoader />}>
+                  <AdminCertificatePage />
+                </Suspense>
               </AdminRouteGuard>
             }
           />
@@ -119,12 +247,13 @@ const Router = createBrowserRouter(
             path={appPaths.adminTestimonials}
             element={
               <AdminRouteGuard>
-                <AdminTestimonialsPage />
+                <Suspense fallback={<PageLoader />}>
+                  <AdminTestimonialsPage />
+                </Suspense>
               </AdminRouteGuard>
             }
           />
           {/* Catch-all route for 404 */}
-
           <Route path="*" element={<h1>Page not found</h1>} />
         </Route>
       </Route>
@@ -135,9 +264,30 @@ const Router = createBrowserRouter(
           </RouteGuard>
         }
       >
-        <Route path={appPaths.userLogin} element={<LoginPage />} />
-        <Route path={appPaths.userSignup} element={<SignupPage />} />
-        <Route path={appPaths.verifyEmail} element={<VerifyEmailPage />} />
+        <Route
+          path={appPaths.userLogin}
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <LoginPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path={appPaths.userSignup}
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <SignupPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path={appPaths.verifyEmail}
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <VerifyEmailPage />
+            </Suspense>
+          }
+        />
       </Route>
     </Route>
   )
