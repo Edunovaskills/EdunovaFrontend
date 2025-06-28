@@ -9,3 +9,8 @@ export type PaginatedResponse = {
   currentPage: number
   totalPages: number
 }
+
+export type PaginationParams = {
+  page: number
+  limit: number
+}

@@ -115,7 +115,12 @@ export const Navbar = () => {
             >
               Edunova
             </Typography>
-            <Typography variant="caption2">
+            <Typography
+              variant="caption2"
+              sx={{
+                textDecoration: 'none',
+              }}
+            >
               UPGRADE YOUR SKILLS, UPGRADE YOUR FUTURE
             </Typography>
           </div>

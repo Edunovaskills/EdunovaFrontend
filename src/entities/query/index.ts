@@ -73,3 +73,5 @@ export {
   GetCertificateByKeyQueryKey,
   useDownloadCertificate,
 } from './certificates/get-certificate-by-key.query'
+
+export { useAllUsersQuery, AllUsersQueryKey } from './user/get-all-user.query'

@@ -4,7 +4,6 @@ import { fetchCourses } from '../AddCourse/mock/mockCourses'
 import { fetchUsers } from '../Users/users.api'
 import { DashboardStats } from './types'
 import {
-  useAllBlogsForAdminQuery,
   useAllCoursesForAdminQuery,
   useAllEventsForAdminQuery,
 } from 'entities/query'
@@ -141,7 +140,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div style={dashboardStyles.container}>
-      <h2 style={dashboardStyles.title}>Dashboard Overview</h2>
+      <h2 style={dashboardStyles.title as any}>Dashboard Overview</h2>
       <div style={dashboardStyles.statsGrid}>
         {statsDisplay.map((stat, index) => (
           <div
@@ -168,7 +167,7 @@ export const Dashboard: React.FC = () => {
                   <AnimatedCounter
                     endValue={stat.value}
                     duration={2000 + index * 200}
-                    prefix={stat.prefix || ''}
+                    prefix={''}
                   />
                 )}
               </h3>

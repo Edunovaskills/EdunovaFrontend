@@ -19,6 +19,7 @@ const adminMenuItems: MenuItem[] = [
   { label: 'Courses', value: 'adminCourses' },
   { label: 'Blogs', value: 'adminBlogs' },
   { label: 'Users', value: 'adminUsers' },
+  { label: 'Certificates', value: 'adminCertificates' },
   { label: 'Settings', value: 'adminSettings' },
 ]
 

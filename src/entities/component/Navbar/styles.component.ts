@@ -33,18 +33,7 @@ export const MenuItemsWrapperStyled = styled('div')({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  gap: '30px', // Reduced gap for better fit on wider screens
+  gap: '16px',
   marginLeft: '-200px',
+  maxWidth: '600px',
 })
-
-// Note: The `.active-nav-link` CSS class for active links
-// should ideally be handled in a global stylesheet or integrated into your Material-UI theme.
-// For example, if you have a global CSS file, you would add:
-/*
-.active-nav-link .MuiTypography-root {
-  font-weight: 700 !important;
-  color: #2563eb !important; // Or theme.palette.primary.main
-}
-*/
-// Or you can achieve it via `sx` prop directly on NavLink's Typography component
-// by checking `isActive` prop from NavLink's render prop.
