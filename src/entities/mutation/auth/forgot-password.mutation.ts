@@ -7,7 +7,7 @@ export const useForgotPasswordMutation = () => {
   const { show } = useSnackBar()
   return useMutation({
     mutationFn: async (
-      forgotPasswordPayload: ForgotPasswordSchema['email']
+      forgotPasswordPayload: Partial<ForgotPasswordSchema>
     ) => {
       const response = await authApi.forgotPassword(forgotPasswordPayload)
       return response.data

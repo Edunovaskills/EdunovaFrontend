@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import React from 'react'
+import { ArrowRight } from 'lucide-react'
 import {
   CardContainer,
   ImageContainer,
@@ -7,21 +7,21 @@ import {
   ContentContainer,
   CardTitle,
   CardDescription,
-  ActionButton
-} from './Card.styles';
+  ActionButton,
+} from './Card.styles'
 
 interface CardProps {
-  title: string;
-  description: string;
-  image?: string;
-  price?: number;
-  isFree?: boolean;
-  onClick?: () => void;
-  onActionClick?: (e: React.MouseEvent) => void;
-  actionText?: string;
-  actionDisabled?: boolean;
-  type?: 'event' | 'course' | 'blog';
-  className?: string;
+  title: string
+  description: React.ReactNode
+  image?: string
+  price?: number
+  isFree?: boolean
+  onClick?: () => void
+  onActionClick?: (e: React.MouseEvent) => void
+  actionText?: string
+  actionDisabled?: boolean
+  type?: 'event' | 'course' | 'blog'
+  className?: string
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -32,12 +32,12 @@ export const Card: React.FC<CardProps> = ({
   isFree,
   onClick,
   onActionClick,
-  actionText = "Learn More",
+  actionText,
   actionDisabled = false,
   type = 'event',
-  className = ""
+  className = '',
 }) => {
-  const placeholderImage = `https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=300&fit=crop&crop=center`;
+  const placeholderImage = `https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=300&fit=crop&crop=center`
 
   return (
     <CardContainer $type={type} className={className} onClick={onClick}>
@@ -46,11 +46,11 @@ export const Card: React.FC<CardProps> = ({
           src={image || placeholderImage}
           alt={title}
           onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = placeholderImage;
+            const target = e.target as HTMLImageElement
+            target.src = placeholderImage
           }}
         />
-        
+
         {(price !== undefined || isFree) && (
           <PriceBadge $type={type} $isFree={isFree || price === 0}>
             {isFree || price === 0 ? 'Free' : `₹${price}`}
@@ -60,19 +60,21 @@ export const Card: React.FC<CardProps> = ({
 
       <ContentContainer>
         <CardTitle $type={type}>{title}</CardTitle>
-        
+
         <CardDescription>{description}</CardDescription>
 
-        <ActionButton
-          $type={type}
-          $disabled={actionDisabled}
-          onClick={onActionClick}
-          disabled={actionDisabled}
-        >
-          {actionText}
-          {!actionDisabled && <ArrowRight />}
-        </ActionButton>
+        {actionText && (
+          <ActionButton
+            $type={type}
+            $disabled={actionDisabled}
+            onClick={onActionClick}
+            disabled={actionDisabled}
+          >
+            {actionText}
+            {!actionDisabled && <ArrowRight />}
+          </ActionButton>
+        )}
       </ContentContainer>
     </CardContainer>
-  );
-};
+  )
+}

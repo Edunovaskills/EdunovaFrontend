@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { theme } from 'styles/theme';
+import styled from 'styled-components'
+import { theme } from 'styles/theme'
 
 export const CardContainer = styled.div<{ $type: 'event' | 'course' | 'blog' }>`
   background: white;
@@ -20,7 +20,7 @@ export const CardContainer = styled.div<{ $type: 'event' | 'course' | 'blog' }>`
     box-shadow: ${theme.shadows['2xl']};
     transform: translateY(-0.5rem);
   }
-`;
+`
 
 export const ImageContainer = styled.div`
   position: relative;
@@ -33,7 +33,6 @@ export const ImageContainer = styled.div`
   /* For a fixed height as previously seen in Card component: */
   height: 12rem; // Already set, confirming this fixed height
   // --- END: Added for fixed image height ---
-
 
   img {
     width: 100%;
@@ -58,9 +57,12 @@ export const ImageContainer = styled.div`
   &:hover::after {
     opacity: 1;
   }
-`;
+`
 
-export const PriceBadge = styled.span<{ $type: 'event' | 'course' | 'blog'; $isFree: boolean }>`
+export const PriceBadge = styled.span<{
+  $type: 'event' | 'course' | 'blog'
+  $isFree: boolean
+}>`
   position: absolute;
   top: ${theme.spacing.md};
   right: ${theme.spacing.md};
@@ -70,20 +72,20 @@ export const PriceBadge = styled.span<{ $type: 'event' | 'course' | 'blog'; $isF
   font-weight: ${theme.fontWeights.semibold};
   color: white;
   background: ${({ $type, $isFree }) => {
-    if ($isFree) return theme.colors.green[500];
+    if ($isFree) return theme.colors.green[500]
     switch ($type) {
       case 'event':
-        return `linear-gradient(135deg, ${theme.colors.purple[500]}, ${theme.colors.primary[500]})`;
+        return `linear-gradient(135deg, ${theme.colors.purple[500]}, ${theme.colors.primary[500]})`
       case 'course':
-        return `linear-gradient(135deg, ${theme.colors.green[500]}, #0d9488)`;
+        return `linear-gradient(135deg, ${theme.colors.green[500]}, #0d9488)`
       case 'blog':
-        return `linear-gradient(135deg, #0d9488, ${theme.colors.gray[500]})`;
+        return `linear-gradient(135deg, #0d9488, ${theme.colors.gray[500]})`
       default:
-        return `linear-gradient(135deg, ${theme.colors.purple[500]}, ${theme.colors.primary[500]})`;
+        return `linear-gradient(135deg, ${theme.colors.purple[500]}, ${theme.colors.primary[500]})`
     }
   }};
   box-shadow: ${theme.shadows.lg};
-`;
+`
 
 export const ContentContainer = styled.div`
   padding: ${theme.spacing.lg};
@@ -92,7 +94,7 @@ export const ContentContainer = styled.div`
   display: flex; // Added for internal flex management if needed for description lines
   flex-direction: column; // Added for internal flex management if needed for description lines
   // --- END: Added for consistent button position ---
-`;
+`
 
 export const CardTitle = styled.h3<{ $type: 'event' | 'course' | 'blog' }>`
   font-size: ${theme.fontSizes.xl};
@@ -110,17 +112,17 @@ export const CardTitle = styled.h3<{ $type: 'event' | 'course' | 'blog' }>`
     color: ${({ $type }) => {
       switch ($type) {
         case 'event':
-          return theme.colors.primary[600];
+          return theme.colors.primary[600]
         case 'course':
-          return theme.colors.green[600];
+          return theme.colors.green[600]
         case 'blog':
-          return '#ea580c';
+          return '#ea580c'
         default:
-          return theme.colors.primary[600];
+          return theme.colors.primary[600]
       }
     }};
   }
-`;
+`
 
 export const CardDescription = styled.p`
   color: ${theme.colors.gray[600]};
@@ -131,15 +133,18 @@ export const CardDescription = styled.p`
   -webkit-line-clamp: 3; // Already present for truncation
   -webkit-box-orient: vertical;
   overflow: hidden;
-`;
+`
 
-export const ActionButton = styled.button<{ $type: 'event' | 'course' | 'blog'; $disabled: boolean }>`
+export const ActionButton = styled.button<{
+  $type: 'event' | 'course' | 'blog'
+  $disabled: boolean
+}>`
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: ${theme.spacing.sm};
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  padding: '8px 16px';
   border-radius: ${theme.borderRadius.xl};
   font-weight: ${theme.fontWeights.semibold};
   font-size: ${theme.fontSizes.sm};
@@ -153,22 +158,22 @@ export const ActionButton = styled.button<{ $type: 'event' | 'course' | 'blog'; 
       return `
         background: ${theme.colors.gray[100]};
         color: ${theme.colors.gray[400]};
-      `;
+      `
     }
-    
+
     const gradient = (() => {
       switch ($type) {
         case 'event':
-          return `linear-gradient(135deg, ${theme.colors.purple[500]}, ${theme.colors.primary[500]})`;
+          return `linear-gradient(135deg, ${theme.colors.purple[500]}, ${theme.colors.primary[500]})`
         case 'course':
-          return `linear-gradient(135deg, ${theme.colors.green[500]}, #0d9488)`;
+          return `linear-gradient(135deg, ${theme.colors.green[500]}, #0d9488)`
         case 'blog':
-          return `linear-gradient(135deg, #ea580c, ${theme.colors.red[500]})`;
+          return `linear-gradient(135deg, #ea580c, ${theme.colors.red[500]})`
         default:
-          return `linear-gradient(135deg, ${theme.colors.purple[500]}, ${theme.colors.primary[500]})`;
+          return `linear-gradient(135deg, ${theme.colors.purple[500]}, ${theme.colors.primary[500]})`
       }
-    })();
-    
+    })()
+
     return `
       background: ${gradient};
       color: white;
@@ -181,11 +186,11 @@ export const ActionButton = styled.button<{ $type: 'event' | 'course' | 'blog'; 
       &:active {
         transform: scale(0.95);
       }
-    `;
+    `
   }}
 
   svg {
     width: 1rem;
     height: 1rem;
   }
-`;
+`

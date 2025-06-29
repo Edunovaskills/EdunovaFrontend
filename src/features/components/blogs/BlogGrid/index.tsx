@@ -29,15 +29,6 @@ interface BlogGridProps {
   onPostSelect: (postId: string) => void // New prop for selecting a post
 }
 
-// Helper function to truncate text
-const truncateText = (text: string, maxLength: number): string => {
-  if (text.length <= maxLength) {
-    return text
-  }
-  return text.substring(0, text.lastIndexOf(' ', maxLength)) + '...'
-}
-
-// --- START: BlogGrid Component (Updated) ---
 export const BlogGrid: React.FC<BlogGridProps> = ({ onPostSelect }) => {
   const { data: posts, isLoading } = useAllBlogsQuery()
 
@@ -101,7 +92,7 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ onPostSelect }) => {
           const isExpanded = expanded[post._id]
           const truncated = post.description.length > 150 && !isExpanded
           const description = truncated
-            ? post.description.substring(0, 150) + '...'
+            ? post.description.substring(0, 80) + '...'
             : post.description
           return (
             <Card
@@ -111,7 +102,7 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ onPostSelect }) => {
                 <div
                   style={{
                     maxHeight: isExpanded ? 180 : 60,
-                    overflowY: isExpanded ? 'auto' : 'hidden',
+                    overflowY: 'auto',
                     transition: 'max-height 0.3s',
                     position: 'relative',
                   }}

@@ -64,3 +64,12 @@ export const BlogPage = lazy(async () => {
   return { default: BlogPage }
 })
 
+export const ForgotPasswordPage = lazy(async () => {
+  const { ForgotPasswordPage } = await import('./user/forgetpassword')
+  return { default: ForgotPasswordPage }
+})
+
+export const ResetPasswordPage = lazy(async () => {
+  const { ResetPasswordPage } = await import('./user/ResetPassword')
+  return { default: ResetPasswordPage }
+})

@@ -10,8 +10,13 @@ import {
 import { RouteGuard } from '../RouteGuard'
 import { AdminRouteGuard } from '../AdminRouteGuard'
 import { LoadingComponent } from 'shared/components'
-import { CoursesPage, EventDetails } from 'pages/components'
-import {BlogPage} from 'pages/components'
+import { BlogPage } from 'pages/components'
+import {
+  CoursesPage,
+  EventDetails,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+} from 'pages/components'
 
 // Lazy load all page components for better code splitting
 const AboutUsPage = lazy(() =>
@@ -326,6 +331,22 @@ const Router = createBrowserRouter(
           element={
             <Suspense fallback={<PageLoader />}>
               <VerifyEmailPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path={appPaths.forgotPassword}
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ForgotPasswordPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path={appPaths.resetPassword}
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ResetPasswordPage />
             </Suspense>
           }
         />

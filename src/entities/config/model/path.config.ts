@@ -1,6 +1,5 @@
 export const appPathParams = {
   eventId: 'eventId',
-  blogId: 'blogId',
 } as const
 export type AppRouteStateValue = {
   anyState: boolean // REMARKS: Update this for state key
@@ -45,7 +44,7 @@ export const appPaths = {
   forgotPassword: '/forgot-password',
   course: '/course',
   blog: '/blog',
-  blogDetails: `/blog/:${appPathParams.blogId}`,
+  resetPassword: '/reset-password',
 } as const
 
 export const appSearchParams = {

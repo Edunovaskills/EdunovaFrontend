@@ -1,5 +1,11 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  type PropsWithChildren,
+} from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import {
   CarouselContainer,
   NavigationButton,
@@ -7,58 +13,60 @@ import {
   CarouselTrack,
   CarouselSlide,
   PaginationContainer,
-  PaginationDot
-} from './Carousel.styles';
+  PaginationDot,
+} from './Carousel.styles'
 
 interface CarouselProps {
-  children: React.ReactNode[];
-  slidesToShow?: number;
-  autoPlay?: boolean;
-  autoPlayInterval?: number;
-  showNavigation?: boolean;
-  showPagination?: boolean;
-  className?: string;
+  slidesToShow?: number
+  autoPlay?: boolean
+  autoPlayInterval?: number
+  showNavigation?: boolean
+  showPagination?: boolean
+  className?: string
 }
 
-export const Carousel: React.FC<CarouselProps> = ({
+export const Carousel: React.FC<PropsWithChildren<CarouselProps>> = ({
   children,
   slidesToShow = 3,
   autoPlay = true,
   autoPlayInterval = 4000,
   showNavigation = true,
   showPagination = true,
-  className = ""
+  className = '',
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [slidesToShowResponsive, setSlidesToShowResponsive] = useState(slidesToShow);
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [slidesToShowResponsive, setSlidesToShowResponsive] =
+    useState(slidesToShow)
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
-        setSlidesToShowResponsive(1);
+        setSlidesToShowResponsive(1)
       } else if (window.innerWidth < 1024) {
-        setSlidesToShowResponsive(Math.min(2, slidesToShow));
+        setSlidesToShowResponsive(Math.min(2, slidesToShow))
       } else {
-        setSlidesToShowResponsive(slidesToShow);
+        setSlidesToShowResponsive(slidesToShow)
       }
-    };
+    }
 
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [slidesToShow]);
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [slidesToShow])
 
-  const totalSlides = children.length;
+  const totalSlides = Array.isArray(children) ? children.length : 0
 
   // Calculate the width of each slide as a percentage of the CarouselTrack's total width.
   // The CarouselTrack's total width will be `totalSlides * slideWidth`
   // So, each slide's width relative to the track is `100 / totalSlides`
-  const slideWidthOnTrack = useMemo(() => 100 / totalSlides, [totalSlides]);
+  const slideWidthOnTrack = useMemo(() => 100 / totalSlides, [totalSlides])
 
   // Calculate the total width of the CarouselTrack based on how many "viewports" it needs to cover.
   // If showing X slides, and total slides is Y, then the track needs to be (Y / X) * 100% wide.
-  const carouselTrackTotalWidth = useMemo(() => (totalSlides / slidesToShowResponsive) * 100, [totalSlides, slidesToShowResponsive]);
-
+  const carouselTrackTotalWidth = useMemo(
+    () => (totalSlides / slidesToShowResponsive) * 100,
+    [totalSlides, slidesToShowResponsive]
+  )
 
   // Calculate the translateX value. This is the core fix.
   // Each 'step' or 'page' in the carousel represents moving by `100% / carouselTrackTotalWidth`
@@ -69,11 +77,11 @@ export const Carousel: React.FC<CarouselProps> = ({
     // The current index tells us which slide is at the beginning of the viewport.
     // We want to shift the track by 'currentIndex' times the effective width of one slide in the viewport.
     // The effective width of one slide in the viewport is 100% / slidesToShowResponsive.
-    return (currentIndex * 100) / slidesToShowResponsive;
-  }, [currentIndex, slidesToShowResponsive]);
+    return (currentIndex * 100) / slidesToShowResponsive
+  }, [currentIndex, slidesToShowResponsive])
 
   useEffect(() => {
-    if (!autoPlay) return;
+    if (!autoPlay) return
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) =>
@@ -81,34 +89,40 @@ export const Carousel: React.FC<CarouselProps> = ({
         // (i.e., we can no longer fill a full 'slidesToShowResponsive' viewport), then loop to 0.
         // Otherwise, move to the next slide.
         prev + slidesToShowResponsive >= totalSlides ? 0 : prev + 1
-      );
-    }, autoPlayInterval);
+      )
+    }, autoPlayInterval)
 
-    return () => clearInterval(interval);
-  }, [autoPlay, autoPlayInterval, totalSlides, slidesToShowResponsive]);
+    return () => clearInterval(interval)
+  }, [autoPlay, autoPlayInterval, totalSlides, slidesToShowResponsive])
 
   const goToPrevious = useCallback(() => {
     setCurrentIndex((prev) =>
       // If at the beginning (index 0), jump to the last possible starting index
       // which is `totalSlides - slidesToShowResponsive`. Use Math.max(0, ...) to prevent negative index.
       prev === 0 ? Math.max(0, totalSlides - slidesToShowResponsive) : prev - 1
-    );
-  }, [totalSlides, slidesToShowResponsive]);
+    )
+  }, [totalSlides, slidesToShowResponsive])
 
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) =>
       // If advancing by one slide means the current 'page' would go beyond the total slides,
       // loop back to the beginning (index 0).
       prev + slidesToShowResponsive >= totalSlides ? 0 : prev + 1
-    );
-  }, [totalSlides, slidesToShowResponsive]);
+    )
+  }, [totalSlides, slidesToShowResponsive])
 
-  const goToSlide = useCallback((pageIndex: number) => {
-    // Each page starts at an index that is a multiple of slidesToShowResponsive
-    setCurrentIndex(pageIndex * slidesToShowResponsive);
-  }, [slidesToShowResponsive]);
+  const goToSlide = useCallback(
+    (pageIndex: number) => {
+      // Each page starts at an index that is a multiple of slidesToShowResponsive
+      setCurrentIndex(pageIndex * slidesToShowResponsive)
+    },
+    [slidesToShowResponsive]
+  )
 
-  const totalPages = useMemo(() => Math.ceil(totalSlides / slidesToShowResponsive), [totalSlides, slidesToShowResponsive]);
+  const totalPages = useMemo(
+    () => Math.ceil(totalSlides / slidesToShowResponsive),
+    [totalSlides, slidesToShowResponsive]
+  )
 
   return (
     <CarouselContainer className={className}>
@@ -127,12 +141,16 @@ export const Carousel: React.FC<CarouselProps> = ({
         {/* Pass the calculated translateXPercentage directly.
             The track's width needs to be wide enough to contain all children where
             each child has a width relative to slidesToShowResponsive. */}
-        <CarouselTrack $translateX={translateXPercentage} $itemWidth={carouselTrackTotalWidth}>
-          {children.map((child, index) => (
-            <CarouselSlide key={index} $width={slideWidthOnTrack}>
-              {child}
-            </CarouselSlide>
-          ))}
+        <CarouselTrack
+          $translateX={translateXPercentage}
+          $itemWidth={carouselTrackTotalWidth}
+        >
+          {Array.isArray(children) &&
+            children.map((child, index) => (
+              <CarouselSlide key={index} $width={slideWidthOnTrack}>
+                {child}
+              </CarouselSlide>
+            ))}
         </CarouselTrack>
       </CarouselWrapper>
 
@@ -142,12 +160,14 @@ export const Carousel: React.FC<CarouselProps> = ({
             <PaginationDot
               key={pageIndex}
               // The active dot is determined by which 'page' the currentIndex falls into.
-              $active={Math.floor(currentIndex / slidesToShowResponsive) === pageIndex}
+              $active={
+                Math.floor(currentIndex / slidesToShowResponsive) === pageIndex
+              }
               onClick={() => goToSlide(pageIndex)}
             />
           ))}
         </PaginationContainer>
       )}
     </CarouselContainer>
-  );
-};
+  )
+}

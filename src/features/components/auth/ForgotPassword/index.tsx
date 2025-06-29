@@ -1,62 +1,97 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link } from 'react-router-dom'
-import { Typography, TextField, IconButton, Button } from '@mui/material'
+import { Typography, Button } from '@mui/material'
 import { appPaths } from 'entities/config'
-import { useForm } from 'react-hook-form'
-import { loginSchema, type LoginSchema } from 'features/schema/login.schema'
-import { useLoginMutation } from 'entities/mutation'
+import { Controller, useForm } from 'react-hook-form'
 
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormCard, FormContainer, StyledTextField } from '../styles.component'
-
-const RenderEndIcon = ({ toggleEye }: { toggleEye: boolean }) => {
-  return toggleEye ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />
-}
+import {
+  forgotPasswordSchema,
+  type ForgotPasswordSchema,
+} from 'features/schema'
+import { useForgotPasswordMutation } from 'entities/mutation/auth/forgot-password.mutation'
+import { useAppNavigate } from 'entities/state'
+import { useVerifyOtpMutation } from 'entities/mutation/auth/verify-otp.mutation'
+import { useResendOtpMutation } from 'entities/mutation'
+import { MuiOtpInputStyled } from '../VerifyEmailForm/styled.component'
 
 export const ForgotPassword = () => {
-  const form = useForm<LoginSchema>({
-    resolver: yupResolver(loginSchema),
+  const form = useForm<ForgotPasswordSchema>({
+    resolver: yupResolver(forgotPasswordSchema),
     defaultValues: {
       email: '',
-      password: '',
+      isEmailSent: false,
     },
     mode: 'onTouched',
   })
-
-  const { mutate, isPending } = useLoginMutation()
 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    setError,
-    clearErrors,
+    setValue,
+    watch,
+    getValues,
+    control,
   } = form
 
-  const onSubmit = (data: LoginSchema) => {
-    mutate(data, {
-      onError: (error: any) => {
-        const message =
-          error?.response?.data?.error || 'An unexpected error occurred.'
-        setError('email', { type: 'custom' })
-        setError('password', {
-          type: 'custom',
-          message,
-        })
-      },
+  const [timer, setTimer] = useState(30)
+  const [isTimerActive, setIsTimerActive] = useState(true)
+  const email = watch('email')
+
+  const { mutateAsync: resendVerificationEmail, isPending: isResendPending } =
+    useResendOtpMutation()
+
+  const handleResend = () => {
+    if (timer) return
+    resendVerificationEmail({ email })
+    restartTimer()
+  }
+  const isEmailSent = watch('isEmailSent')
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isTimerActive && timer > 0 && isEmailSent) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1)
+      }, 1000)
+    } else if (timer === 0) {
+      setIsTimerActive(false)
+    }
+    return () => clearInterval(interval)
+  }, [isEmailSent, isTimerActive, timer])
+
+  const restartTimer = () => {
+    setTimer(30)
+    setIsTimerActive(true)
+  }
+
+  const { mutateAsync, isPending } = useForgotPasswordMutation()
+
+  const { mutateAsync: verifyMutation, isPending: verifyMutationPending } =
+    useVerifyOtpMutation()
+
+  const { appNavigate } = useAppNavigate()
+
+  const onSubmit = async (data: ForgotPasswordSchema) => {
+    await verifyMutation(data)
+    appNavigate('resetPassword', {
+      state: { email: data.email },
     })
   }
 
-  const [toggleEye, setToggleEye] = useState(false)
+  const handleEmailSent = async () => {
+    const email = getValues('email')
+    await mutateAsync({ email })
+    setValue('isEmailSent', true)
+  }
+
+  const matchIsNumeric = (text: string) => {
+    return text !== '' && !Number.isNaN(Number(text))
+  }
 
   // Clear custom password error when user starts typing
-  const handleFieldChange = () => {
-    if (errors.password?.type === 'custom') {
-      clearErrors(['email', 'password'])
-    }
-  }
 
   return (
     <FormContainer>
@@ -67,54 +102,73 @@ export const ForgotPassword = () => {
             placeholder="Email"
             fullWidth
             margin="normal"
-            {...register('email', {
-              onChange: () => handleFieldChange(),
-            })}
+            {...register('email')}
+            InputProps={{
+              readOnly: isEmailSent,
+            }}
             error={!!errors.email}
             helperText={errors.email?.message}
           />
-          <div>
-            <TextField
-              label="Password"
-              placeholder="Password"
-              fullWidth
-              margin="normal"
-              type={toggleEye ? 'text' : 'password'}
-              {...register('password', {
-                onChange: () => handleFieldChange(),
-              })}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={() => setToggleEye(!toggleEye)}>
-                    <RenderEndIcon toggleEye={toggleEye} />
-                  </IconButton>
-                ),
-              }}
-            />
-            <Typography
-              variant="body2.500"
-              component={Link}
-              to={appPaths.forgotPassword}
-              sx={{
-                color: 'primary.main',
-                textAlign: 'right',
-                display: 'block',
-              }}
-            >
-              Forgot Password?
-            </Typography>
-          </div>
+
+          {isEmailSent ? (
+            <>
+              <Controller
+                name="otp"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <div>
+                    <Typography variant="caption1.400" color="text.secondary">
+                      Enter the code sent to your email
+                    </Typography>
+                    <MuiOtpInputStyled
+                      error={!!fieldState.error}
+                      TextFieldsProps={{
+                        disabled: isPending,
+                        error: !!fieldState.error,
+                      }}
+                      autoFocus
+                      value={field.value}
+                      validateChar={matchIsNumeric}
+                      onChange={(value: string) =>
+                        field.onChange({ target: { value } })
+                      }
+                      length={6}
+                    />
+                    <Typography variant="caption1.400" color="error">
+                      {fieldState.error?.message}
+                    </Typography>
+                  </div>
+                )}
+              />
+              <Typography color="text.secondary" align="center" variant="body1">
+                Did not receive code?{' '}
+                <Typography
+                  display="inline"
+                  sx={{
+                    textDecoration: !timer ? 'underline' : 'none',
+                    fontWeight: 500,
+                    cursor: !timer ? 'pointer' : 'default',
+                  }}
+                  onClick={handleResend}
+                >
+                  {timer ? `Resend code in ${timer} seconds` : 'Resend code'}
+                </Typography>
+              </Typography>
+            </>
+          ) : null}
+
           <Button
             variant="contained"
             fullWidth
-            type="submit"
+            type={isEmailSent ? 'submit' : 'button'}
+            onClick={isEmailSent ? undefined : handleEmailSent}
             sx={{ mb: 2, mt: 3 }}
-            loading={isPending}
-            disabled={isPending || !isValid}
+            loading={isPending || verifyMutationPending || isResendPending}
+            disabled={
+              isPending || !isValid || verifyMutationPending || isResendPending
+            }
           >
-            Login
+            {!isEmailSent ? 'Send otp' : 'Verify Email'}
           </Button>
         </form>
 

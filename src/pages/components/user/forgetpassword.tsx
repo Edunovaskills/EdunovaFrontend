@@ -1,8 +1,10 @@
+import { ForgotPassword } from 'features/components'
+
 // pages/user/Login.tsx
-export const forgatePasswordPage = () => {
+export const ForgotPasswordPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center">
-      Forget Passwords
+      <ForgotPassword />
     </div>
   )
 }

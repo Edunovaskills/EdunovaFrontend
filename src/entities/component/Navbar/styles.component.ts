@@ -34,6 +34,6 @@ export const MenuItemsWrapperStyled = styled('div')({
   justifyContent: 'space-between',
   alignItems: 'center',
   gap: '16px',
-  marginLeft: '-200px',
+  marginLeft: '-50px',
   maxWidth: '600px',
 })
