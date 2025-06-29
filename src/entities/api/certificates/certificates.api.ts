@@ -14,9 +14,8 @@ export class CertificatesApi {
   }
 
   async downloadCertificate(key: string): Promise<Blob> {
-    // This endpoint should return a PDF blob
     const response = await this.client.get<Blob>(`${key}/download`, {
-      responseType: 'blob', // Important for downloading files
+      responseType: 'blob',
     })
     return response.data
   }

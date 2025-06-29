@@ -192,7 +192,7 @@ const Router = createBrowserRouter(
             }
           />
           <Route
-            path="/privacy-policy"
+            path={appPaths.privacyPolicy}
             element={
               <Suspense fallback={<PageLoader />}>
                 <PrivacyPolicyPage />
@@ -200,7 +200,7 @@ const Router = createBrowserRouter(
             }
           />
           <Route
-            path="/terms-and-conditions"
+            path={appPaths.termsAndConditions}
             element={
               <Suspense fallback={<PageLoader />}>
                 <TermsAndConditionsPage />

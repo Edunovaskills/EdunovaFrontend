@@ -110,9 +110,15 @@ export const Navbar = () => {
                   variant="body1"
                   sx={{
                     fontWeight: isSelected ? 700 : 500,
-                    color: isSelected ? 'primary.main' : 'neutral.main',
+                    color:
+                      isSelected && value !== 'about'
+                        ? 'primary.main'
+                        : 'neutral.main',
                     '&:hover': {
-                      color: isSelected ? 'primary.dark' : 'primary.light',
+                      color:
+                        isSelected && value !== 'about'
+                          ? 'primary.dark'
+                          : 'primary.light',
                     },
                     transition: 'color 0.3s ease',
                   }}
@@ -229,7 +235,7 @@ export const Navbar = () => {
                           borderRadius: '8px',
                           marginBottom: '8px',
                           '&:hover': { backgroundColor: 'action.hover' },
-                          backgroundColor: isSelected
+                          backgroundColor: isSelected && value !== 'about'
                             ? 'action.selected'
                             : 'transparent',
                         }}
@@ -246,8 +252,12 @@ export const Navbar = () => {
                         <Typography
                           variant="body1"
                           sx={{
-                            fontWeight: isSelected ? 700 : 500,
-                            color: isSelected ? 'primary.main' : 'text.primary',
+                            fontWeight:
+                              isSelected && value !== 'about' ? 700 : 500,
+                            color:
+                              isSelected && value !== 'about'
+                                ? 'primary.main'
+                                : 'text.primary',
                           }}
                         >
                           {label}

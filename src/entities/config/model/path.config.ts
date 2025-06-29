@@ -45,6 +45,8 @@ export const appPaths = {
   course: '/course',
   blog: '/blog',
   resetPassword: '/reset-password',
+  privacyPolicy: '/privacy-policy',
+  termsAndConditions: '/terms-and-conditions',
 } as const
 
 export const appSearchParams = {
