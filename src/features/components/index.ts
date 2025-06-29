@@ -11,3 +11,4 @@ export { VerifyEmailForm } from './auth/VerifyEmailForm' // Add this line
 export { BlogGrid } from './blogs/BlogGrid'
 export { ForgotPassword } from './auth/ForgotPassword'
 export { ResetPassword } from './auth/ResetPasswrod/reset-password'
+export{ContactForm,ContactHero} from './contactUs/index'

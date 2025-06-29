@@ -13,7 +13,9 @@ const baseMenuItems: MenuItem[] = [
   { label: 'Events', value: 'events' },
   { label: 'Courses', value: 'course' },
   { label: 'Blogs', value: 'blog' },
-  { label: 'Contact Us', value: 'about' },
+  {label:'Course',value:'course'},
+  {label:'Contact',value:'contactus'}
+  
 ]
 
 const adminMenuItems: MenuItem[] = [

@@ -54,6 +54,15 @@ export const CoursesPage = lazy(async () => {
   const { Courses } = await import('./courses/CoursesPage')
   return { default: Courses }
 })
+
+export const ContactUsPage = lazy(async () => {
+  const { ContactUsPage } = await import('./ContactUs/index')
+  return { default: ContactUsPage }
+})
+
+
+
+
 export const EventDetailsPage = lazy(async () => {
   const { EventDetailsPage } = await import('./event-details/EventDetailsPage')
   return { default: EventDetailsPage }

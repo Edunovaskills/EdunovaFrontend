@@ -44,6 +44,7 @@ export const appPaths = {
   forgotPassword: '/forgot-password',
   course: '/course',
   blog: '/blog',
+  contactus:'/contactUs',
   resetPassword: '/reset-password',
   privacyPolicy: '/privacy-policy',
   termsAndConditions: '/terms-and-conditions',
