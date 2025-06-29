@@ -1,9 +1,8 @@
-import React from 'react';
-import { Calendar, MapPin, Users } from 'lucide-react';
-import { Card } from 'shared/components/card';
-import { Carousel } from 'shared/components/Carousel';
-import { LoadingSpinner } from 'shared/components/LoadingSpinner';
-import { useNavigate } from 'react-router-dom';
+import React from 'react'
+import { Calendar, MapPin, Users } from 'lucide-react'
+import { Card } from 'shared/components/card'
+import { Carousel } from 'shared/components/Carousel'
+import { LoadingSpinner } from 'shared/components/LoadingSpinner'
 import {
   ShowcaseContainer,
   ShowcaseWrapper,
@@ -16,35 +15,33 @@ import {
   StatItem,
   StatIconContainer,
   StatNumber,
-  StatLabel
-} from './EventsShowcase.styles';
-import { useAllEventsQuery } from 'entities/query';
-import { useAppNavigate } from 'entities/state';
+  StatLabel,
+} from './EventsShowcase.styles'
+import { useAllEventsQuery } from 'entities/query'
+import { useAppNavigate } from 'entities/state'
 
 interface EventsShowcaseProps {
-
-  onEventClick: (eventId: string) => void;
+  onEventClick?: (eventId: string) => void
 }
 
 const EventsShowcase: React.FC<EventsShowcaseProps> = () => {
-  const { data, isLoading, isError } = useAllEventsQuery();
-  const events = data?.data?.events || [];
-  const {appNavigate} = useAppNavigate()
-
+  const { data, isLoading, isError } = useAllEventsQuery()
+  const events = data?.data?.events || []
+  const { appNavigate } = useAppNavigate()
 
   const handleEventClick = (eventId: string) => {
-    appNavigate('eventDetail',{eventId}); // Update this line
-  };
+    appNavigate('eventDetail', { eventId }) // Update this line
+  }
 
   const handleEnrollClick = (e: React.MouseEvent, paymentUrl: string) => {
-    e.stopPropagation();
+    e.stopPropagation()
     if (paymentUrl) {
-      window.open(paymentUrl, '_blank');
+      window.open(paymentUrl, '_blank')
     }
-  };
+  }
 
   if (isLoading) {
-    return <LoadingSpinner message="Loading exciting events..." />;
+    return <LoadingSpinner message="Loading exciting events..." />
   }
 
   return (
@@ -58,8 +55,8 @@ const EventsShowcase: React.FC<EventsShowcaseProps> = () => {
           </IconContainer>
           <SectionTitle>Our Events</SectionTitle>
           <SectionDescription>
-            Join our community of learners in exciting workshops, seminars, and networking events 
-            designed to accelerate your professional growth.
+            Join our community of learners in exciting workshops, seminars, and
+            networking events designed to accelerate your professional growth.
           </SectionDescription>
         </SectionHeader>
 
@@ -132,7 +129,7 @@ const EventsShowcase: React.FC<EventsShowcaseProps> = () => {
         </StatsSection>
       </ShowcaseWrapper>
     </ShowcaseContainer>
-  );
-};
+  )
+}
 
-export default EventsShowcase;
+export default EventsShowcase

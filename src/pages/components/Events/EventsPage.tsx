@@ -1,7 +1,7 @@
-import React from 'react';
-import { HeroSection } from 'features/components/events/hero';
-import EventsShowcase from 'features/components/events/EventDetails';
-import {EventTestimonials} from 'features/components/events/EventTestimonials';
+import React from 'react'
+import EventsShowcase from 'features/components/events/EventDetails'
+import { EventTestimonials } from 'features/components/events/EventTestimonials'
+import { HeroSection } from 'shared/components'
 
 const EventsPage = () => {
   return (
@@ -15,7 +15,7 @@ const EventsPage = () => {
       <EventsShowcase />
       <EventTestimonials />
     </div>
-  );
-};
+  )
+}
 
-export default EventsPage;
+export default EventsPage

@@ -20,7 +20,7 @@ export const Home = () => {
       <HomeWrapperStyled>
         <BuzWorking />
         <Services />
-        <EventsShowcase />
+        <EventsShowcase onEventClick={() => {}} />
         <WhyChooseUs data={whyChooseUseCardData} />
       </HomeWrapperStyled>
       {/* <DownloadSection /> */}

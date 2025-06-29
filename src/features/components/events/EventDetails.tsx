@@ -1,6 +1,6 @@
-import React from 'react';
-import { ArrowLeft, Calendar, Clock, MapPin, Users, Star, ExternalLink, Share2 } from 'lucide-react';
-import { LoadingSpinner } from 'shared/components/LoadingSpinner';
+import React from 'react'
+import { ArrowLeft, Calendar, Clock, ExternalLink, Share2 } from 'lucide-react'
+import { LoadingSpinner } from 'shared/components/LoadingSpinner'
 import {
   DetailsContainer,
   Header,
@@ -20,20 +20,8 @@ import {
   InfoItem,
   InfoIcon,
   InfoDetails,
-  ProgressSection,
-  ProgressHeader,
-  ProgressBar,
-  ProgressFill,
   SectionTitle,
   DescriptionText,
-  ScheduleList,
-  ScheduleItem,
-  ScheduleIcon,
-  ScheduleContent,
-  InstructorSection,
-  InstructorAvatar,
-  InstructorInfo,
-  RatingContainer,
   SidebarCard,
   PriceSection,
   Price,
@@ -46,43 +34,45 @@ import {
   IncludedItem,
   StatsCard,
   StatsList,
-  StatItem
-} from './EventDetails.styles';
-import { useEventByIdQuery } from 'entities/query';
+  StatItem,
+} from './EventDetails.styles'
+import { useEventByIdQuery } from 'entities/query'
 
 interface EventDetailsProps {
-  eventId: string;
-  onBackToEvents: () => void;
+  eventId?: string
+  onBackToEvents?: () => void
 }
 
-const EventDetails: React.FC<EventDetailsProps> = ({ 
-  eventId, 
-  onBackToEvents 
+const EventDetails: React.FC<EventDetailsProps> = ({
+  eventId,
+  onBackToEvents,
 }) => {
-  const { data, isLoading, isError } = useEventByIdQuery(eventId);
-  const event = data?.data?.event;
+  const { data, isLoading, isError } = useEventByIdQuery(eventId || '')
+  const event = data?.data?.event
 
   const handleEnroll = () => {
     if (event?.paymentUrl) {
-      window.open(event.paymentUrl, '_blank');
+      window.open(event.paymentUrl, '_blank')
     }
-  };
+  }
 
   const handleShare = () => {
     if (navigator.share && event) {
-      navigator.share({
-        title: event.title,
-        text: event.description.substring(0, 100) + '...',
-        url: window.location.href,
-      }).catch((error) => console.error('Error sharing:', error));
+      navigator
+        .share({
+          title: event.title,
+          text: event.description.substring(0, 100) + '...',
+          url: window.location.href,
+        })
+        .catch((error) => console.error('Error sharing:', error))
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+      navigator.clipboard.writeText(window.location.href)
+      alert('Link copied to clipboard!')
     }
-  };
+  }
 
   if (isLoading) {
-    return <LoadingSpinner message="Loading event details..." />;
+    return <LoadingSpinner message="Loading event details..." />
   }
 
   if (isError || !event) {
@@ -97,15 +87,17 @@ const EventDetails: React.FC<EventDetailsProps> = ({
           </HeaderContent>
         </Header>
         <MainContent>
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            minHeight: '60vh', 
-            flexDirection: 'column', 
-            gap: '1rem', 
-            textAlign: 'center' 
-          }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              minHeight: '60vh',
+              flexDirection: 'column',
+              gap: '1rem',
+              textAlign: 'center',
+            }}
+          >
             <InfoCard style={{ maxWidth: '32rem', padding: '2rem' }}>
               <SectionTitle style={{ color: '#dc2626', marginBottom: '1rem' }}>
                 Event Not Found
@@ -113,8 +105,8 @@ const EventDetails: React.FC<EventDetailsProps> = ({
               <p style={{ color: '#6b7280', marginBottom: '1.5rem' }}>
                 The event you're looking for doesn't exist or has been removed.
               </p>
-              <EnrollButton 
-                $disabled={false} 
+              <EnrollButton
+                $disabled={false}
                 onClick={onBackToEvents}
                 style={{ background: '#2563eb' }}
               >
@@ -124,7 +116,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({
           </div>
         </MainContent>
       </DetailsContainer>
-    );
+    )
   }
 
   return (
@@ -142,12 +134,16 @@ const EventDetails: React.FC<EventDetailsProps> = ({
         <ContentGrid>
           <LeftColumn>
             <HeroImageContainer>
-              <img 
-                src={event.image || 'https://placehold.co/600x400/F0F0F0/333333?text=Event+Image'} 
+              <img
+                src={
+                  event.image ||
+                  'https://placehold.co/600x400/F0F0F0/333333?text=Event+Image'
+                }
                 alt={event.title}
                 onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'https://placehold.co/600x400/F0F0F0/333333?text=Event+Image';
+                  const target = e.target as HTMLImageElement
+                  target.src =
+                    'https://placehold.co/600x400/F0F0F0/333333?text=Event+Image'
                 }}
               />
               <HeroContent>
@@ -189,9 +185,11 @@ const EventDetails: React.FC<EventDetailsProps> = ({
               <div>
                 <SectionTitle>About This Event</SectionTitle>
                 <DescriptionText>
-                  {event.description.split('\n').map((paragraph: string, index: number) => (
-                    <p key={index}>{paragraph}</p>
-                  ))}
+                  {event.description
+                    .split('\n')
+                    .map((paragraph: string, index: number) => (
+                      <p key={index}>{paragraph}</p>
+                    ))}
                 </DescriptionText>
               </div>
             </InfoCard>
@@ -202,9 +200,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({
           <RightColumn>
             <SidebarCard>
               <PriceSection>
-                <Price>
-                  {event.price === 0 ? 'Free' : `₹${event.price}`}
-                </Price>
+                <Price>{event.price === 0 ? 'Free' : `₹${event.price}`}</Price>
                 <PriceLabel>One-time payment</PriceLabel>
               </PriceSection>
 
@@ -257,7 +253,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({
         </ContentGrid>
       </MainContent>
     </DetailsContainer>
-  );
-};
+  )
+}
 
-export default EventDetails;
+export default EventDetails
