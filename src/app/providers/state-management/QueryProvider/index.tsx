@@ -23,7 +23,6 @@ export function QueryProvider({ children }: Props) {
     setQueryClient(
       initQueryClient({
         onError: (err) => {
-          const defaultMessage = err?.message || tEntities('default.label')
           if (err?.code && noErrorMessageCodeList.includes(err.code)) return
           console.error('global query err', err)
         },

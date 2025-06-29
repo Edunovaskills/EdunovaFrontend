@@ -40,7 +40,7 @@ const EventTestimonials = () => (
         <TestimonialCard key={i}>
           <AvatarNameStack>
             <AvatarStyled src={t.avatar}>{t.name[0]}</AvatarStyled>
-            <Typography variant="subtitle1">{t.name}</Typography>
+            <Typography variant="body2.700">{t.name}</Typography>
           </AvatarNameStack>
           <Typography variant="body2" color="text.secondary">
             "{t.feedback}"

@@ -3,7 +3,6 @@ import { Divider, Stack, TextField, styled } from '@mui/material'
 export const StackStyled = styled(Stack)<{ issmall: boolean }>(
   ({ theme: { palette }, issmall }) => ({
     backgroundColor: palette.neutral.black,
-    marginTop: '100px ',
     gap: '50px',
     padding: issmall ? '2rem' : '50px 70px 70px 70px',
   })
@@ -52,6 +51,7 @@ export const StackWrapperStyled = styled('div')<{ issmall: boolean }>(
     minWidth: '350px',
     justifyContent: 'space-between',
     flexDirection: issmall ? 'column' : 'row',
+    width: '100%',
   })
 )
 

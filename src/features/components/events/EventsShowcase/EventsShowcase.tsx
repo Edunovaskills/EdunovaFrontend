@@ -19,6 +19,7 @@ import {
   EnrollButtonStyled,
 } from './styles.component'
 import { useAllEventsQuery } from 'entities/query'
+import { useAppNavigate } from 'entities/state'
 
 // Placeholder image URL for events
 const PLACEHOLDER_EVENT_IMAGE_URL =
@@ -44,8 +45,10 @@ const EventsShowcase = () => {
     return 3
   }
 
+  const { appNavigate } = useAppNavigate()
+
   const handleEventClick = (eventId: string) => {
-    // Implement event click logic
+    appNavigate('eventDetail', { eventId })
   }
 
   const handleEnrollClick = (e: React.MouseEvent, paymentUrl: string) => {

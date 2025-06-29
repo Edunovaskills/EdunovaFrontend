@@ -27,7 +27,7 @@ export const CardStyled = styled(Card)(({ theme }) => ({
     maxHeight: '380px',
   },
   [theme.breakpoints.down('sm')]: {
-    width: '90%',
+    width: '100%',
     margin: '0 auto',
     height: '360px',
     maxHeight: '360px',

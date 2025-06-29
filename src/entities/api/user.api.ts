@@ -1,5 +1,6 @@
 import { getClient, type IClient } from 'shared/data-providers/model/fetcher'
 import { EnquirySchema } from 'features/schema'
+import type { TestimonialResponse } from 'entities/model'
 
 export class UserApi {
   client: IClient
@@ -9,6 +10,12 @@ export class UserApi {
 
   async createEnquiry(enquiry: EnquirySchema) {
     const response = await this.client.post('create-enquiry', enquiry)
+    return response
+  }
+
+  async getTestimonials() {
+    const response =
+      await this.client.get<TestimonialResponse>('get-testimonials')
     return response
   }
 }

@@ -10,7 +10,7 @@ export const BuzCard = ({
   cardBasis = '32%',
   minMaxWidth,
 }: {
-  iconUrl: string
+  iconUrl?: string
   cardTitle: string
   cardDescription: string
   iconBackgroundColor?: string
@@ -25,13 +25,16 @@ export const BuzCard = ({
         flexBasis: cardBasis,
         minWidth: minMaxWidth ? `${minMaxWidth}%` : 'unset',
         maxWidth: minMaxWidth ? `${minMaxWidth}%` : 'unset',
+        flexGrow: 1,
       }}
     >
-      <RoundedIcon
-        iconBackgroundColor={iconBackgroundColor}
-        content={<img src={iconUrl} alt="logo" />}
-      />
-      <Stack alignItems={'center'} gap={'4px'}>
+      {iconUrl && (
+        <RoundedIcon
+          iconBackgroundColor={iconBackgroundColor}
+          content={<img src={iconUrl} alt="logo" width={240} height={150} />}
+        />
+      )}
+      <Stack alignItems={'center'} gap={'4px'} mt={'32px'}>
         <Typography variant="body3.600" color="text.secondary">
           {cardTitle}
         </Typography>

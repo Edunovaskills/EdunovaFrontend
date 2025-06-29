@@ -10,6 +10,7 @@ import {
 import { RouteGuard } from '../RouteGuard'
 import { AdminRouteGuard } from '../AdminRouteGuard'
 import { LoadingComponent } from 'shared/components'
+import { EventDetailsPage } from 'pages/components'
 
 // Lazy load all page components for better code splitting
 const AboutUsPage = lazy(() =>
@@ -57,11 +58,7 @@ const SignupPage = lazy(() =>
     default: module.SignupPage,
   }))
 )
-const EventDetailsPage = lazy(() =>
-  import('pages/components').then((module) => ({
-    default: module.EventDetailsPage,
-  }))
-)
+
 const AdminEventsPage = lazy(
   () => import('pages/components/admin/AdminEventsPage')
 )
@@ -91,6 +88,16 @@ const AdminDashboardPage = lazy(
 const AdminCertificatePage = lazy(() =>
   import('pages/components/admin/AdminCertificatePage').then((module) => ({
     default: module.AdminCertificatePage,
+  }))
+)
+const PrivacyPolicyPage = lazy(() =>
+  import('pages/components/privacy-policy').then((module) => ({
+    default: module.default,
+  }))
+)
+const TermsAndConditionsPage = lazy(() =>
+  import('pages/components/terms-and-conditions').then((module) => ({
+    default: module.default,
   }))
 )
 
@@ -158,6 +165,22 @@ const Router = createBrowserRouter(
             element={
               <Suspense fallback={<PageLoader />}>
                 <TicketBookingServicesPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/privacy-policy"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <PrivacyPolicyPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/terms-and-conditions"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <TermsAndConditionsPage />
               </Suspense>
             }
           />

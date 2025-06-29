@@ -14,4 +14,5 @@ export const WrapperStyled = styled('div')<{
   justifyContent: 'center',
   alignItems: 'center',
   color: palette.common.white,
+  marginTop: '16px',
 }))

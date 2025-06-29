@@ -1,6 +1,5 @@
 import React from 'react'
 import { HeroSection } from './hero'
-//import { HelpFAQ } from './FAQ'
 import { HelpAndSupportWrapperStyled } from './styles.component'
 import EventsShowcase from './EventsShowcase/EventsShowcase'
 import EventDetails from './EventDetails'

@@ -1,5 +1,5 @@
 export const appPathParams = {
-  eventId: 'event-id',
+  eventId: 'eventId',
 } as const
 export type AppRouteStateValue = {
   anyState: boolean // REMARKS: Update this for state key

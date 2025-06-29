@@ -1,10 +1,9 @@
 import { HeroSection, WhyChooseUs } from 'entities/component'
 import { Services } from './course'
-import { BuzWorking } from './BuzWorking'
 import { HomeWrapperStyled } from './styles.component'
 import { OurPeopleSection } from './OurPeople'
-import { whyChooseUseCardData } from 'features/model'
 import EventsShowcase from '../events/EventsShowcase/EventsShowcase'
+import { OurOffering } from './OurOffering'
 
 export const Home = () => {
   return (
@@ -18,16 +17,13 @@ export const Home = () => {
     >
       <HeroSection />
       <HomeWrapperStyled>
-        <BuzWorking />
+        <OurOffering />
         <Services />
         <EventsShowcase />
-        <WhyChooseUs data={whyChooseUseCardData} />
+        <WhyChooseUs />
       </HomeWrapperStyled>
-      {/* <DownloadSection /> */}
       <HomeWrapperStyled>
         <OurPeopleSection />
-        {/* <ReferAndEarn />
-        <ComingSoon /> */}
       </HomeWrapperStyled>
     </div>
   )

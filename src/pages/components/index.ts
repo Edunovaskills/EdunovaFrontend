@@ -46,8 +46,6 @@ export const AdminPage = lazy(async () => {
 })
 
 export const EventDetailsPage = lazy(async () => {
-  const { default: EventDetailsPage } = await import(
-    './event-details/EventDetailsPage'
-  )
+  const { EventDetailsPage } = await import('./event-details/EventDetailsPage')
   return { default: EventDetailsPage }
 })

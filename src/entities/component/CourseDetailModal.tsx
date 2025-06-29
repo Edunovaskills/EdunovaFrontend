@@ -1,17 +1,23 @@
 // src/entities/component/CourseDetailModal.tsx
-import React from 'react';
-import { Box, Typography, Modal, IconButton, CircularProgress } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import type { Course } from 'entities/model/courses.model';
+import React from 'react'
+import {
+  Box,
+  Typography,
+  Modal,
+  IconButton,
+  CircularProgress,
+} from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import type { Course } from 'entities/model/courses.model'
 
 const PLACEHOLDER_IMAGE_URL =
-  'https://digitallearning.eletsonline.com/wp-content/uploads/2019/03/Online-courses.jpg';
+  'https://digitallearning.eletsonline.com/wp-content/uploads/2019/03/Online-courses.jpg'
 
 interface CourseDetailModalProps {
-  open: boolean;
-  onClose: () => void;
-  course: Course | null; // Allow null for initial state or loading
-  loading?: boolean;
+  open: boolean
+  onClose: () => void
+  course: Course | null // Allow null for initial state or loading
+  loading?: boolean
 }
 
 export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
@@ -53,7 +59,11 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
             mb: 2, // Added margin bottom for spacing
           }}
         >
-          <Typography id="course-details-modal-title" variant="h6" component="h2">
+          <Typography
+            id="course-details-modal-title"
+            variant="h6"
+            component="h2"
+          >
             Course Detail
           </Typography>
           <IconButton onClick={onClose} aria-label="close">
@@ -118,20 +128,21 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               >
                 {course.description}
               </Typography>
-              {course.price !== undefined && ( // Display price if available
-                <Typography variant="h6" color="primary.main">
-                  Price: ₹{course.price.toFixed(2)}
-                </Typography>
-              )}
-              {course.createdBy && typeof course.createdBy !== 'string' && ( // Display createdBy if populated
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                  Created by: {course.createdBy.name} ({course.createdBy.email})
-                </Typography>
-              )}
+              {course.createdBy &&
+                typeof course.createdBy !== 'string' && ( // Display createdBy if populated
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mt: 1 }}
+                  >
+                    Created by: {course.createdBy.name} (
+                    {course.createdBy.email})
+                  </Typography>
+                )}
             </Box>
           </>
         )}
       </Box>
     </Modal>
-  );
-};
+  )
+}

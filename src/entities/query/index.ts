@@ -89,3 +89,8 @@ export {
   useTestimonialsForAdminQuery,
   AllTestimonialForAdminQueryKey,
 } from './testimonial/get-testimonial-admin.query'
+
+export {
+  useTestimonialsQuery,
+  TestimonialQueryKey,
+} from './testimonial/get-testimonial-admin.query'
