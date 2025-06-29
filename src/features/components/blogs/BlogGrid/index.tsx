@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react'; // Import ArrowLeft for BlogDetail's back button
-import { Card } from 'shared/components/card';
-import { Typography } from '@mui/material'; // Assuming this is from your setup
+import React, { useState } from 'react'
+import { ChevronDown } from 'lucide-react' // Import ArrowLeft for BlogDetail's back button
+import { Card } from 'shared/components/card'
+import { Typography } from '@mui/material' // Assuming this is from your setup
 
 import {
   GridContainer,
@@ -9,57 +9,65 @@ import {
   SectionSubtitle,
   Grid,
   LoadMoreContainer,
-  LoadMoreButton
-} from './BlogGrid.styles'; 
+  LoadMoreButton,
+} from './BlogGrid.styles'
 
-import { BlogDetail } from '../BlogDetail/index';
+import { useAllBlogsQuery } from 'entities/query'
+import type { Blog } from 'entities/model/blog.model'
 
 // Define the BlogPost interface - updated to only include fields from backend
 interface BlogPost {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
+  id: number
+  title: string
+  description: string
+  image: string
 }
 
 interface BlogGridProps {
-  posts: BlogPost[];
-  loading?: boolean;
-  onPostSelect: (postId: number) => void; // New prop for selecting a post
+  posts: BlogPost[]
+  loading?: boolean
+  onPostSelect: (postId: string) => void // New prop for selecting a post
 }
 
 // Helper function to truncate text
 const truncateText = (text: string, maxLength: number): string => {
   if (text.length <= maxLength) {
-    return text;
+    return text
   }
-  return text.substring(0, text.lastIndexOf(' ', maxLength)) + '...';
-};
+  return text.substring(0, text.lastIndexOf(' ', maxLength)) + '...'
+}
 
 // --- START: BlogGrid Component (Updated) ---
-export const BlogGrid: React.FC<BlogGridProps> = ({ posts, loading = false, onPostSelect }) => {
-  const [displayCount, setDisplayCount] = useState(6);
+export const BlogGrid: React.FC<BlogGridProps> = ({ onPostSelect }) => {
+  const { data: posts, isLoading } = useAllBlogsQuery()
 
-  const displayedPosts = posts.slice(0, displayCount);
-  const hasMorePosts = displayCount < posts.length;
+  const [displayCount, setDisplayCount] = useState(6)
+  const [expanded, setExpanded] = useState<{ [id: string]: boolean }>({})
 
-  const handleCardClick = (post: BlogPost) => {
-    console.log("Opening blog post:", post.title);
-    onPostSelect(post.id); // Call the new prop to select the post
-  };
+  const displayedPosts = posts?.data?.blogs?.slice(0, displayCount)
+  const hasMorePosts = displayCount < (posts?.data?.blogs?.length ?? 0) || false
+
+  const handleCardClick = (post: Blog) => {
+    onPostSelect(post._id) // Call the new prop to select the post
+  }
 
   const handleLoadMore = () => {
-    setDisplayCount(prev => prev + 6);
-  };
+    setDisplayCount((prev) => prev + 6)
+  }
+
+  const handleExpand = (id: string) => {
+    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }))
+  }
 
   // If loading is true, you might want to show a skeleton loader here
-  if (loading) {
+  if (isLoading) {
     return (
       <GridContainer>
         <SectionHeader>
-          <Typography variant='h4.600'>Latest Articles</Typography>
+          <Typography variant="h4.600">Latest Articles</Typography>
           <SectionSubtitle>
-            Discover insights, tutorials, and stories from our community of experts
+            Discover insights, tutorials, and stories from our community of
+            experts
           </SectionSubtitle>
         </SectionHeader>
         <Grid>
@@ -71,42 +79,68 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ posts, loading = false, onPo
               description="Fetching content..."
               image="https://placehold.co/400x250/e0e0e0/ffffff?text=Loading"
               type="blog"
-              actionText="Read Article"
-              onClick={() => {}}
-              onActionClick={() => {}}
-              loading={true} // Assuming your Card component can handle a loading state for visuals
             />
           ))}
         </Grid>
       </GridContainer>
-    );
+    )
   }
 
   return (
     <GridContainer>
       <SectionHeader>
-        <Typography variant='h4.600'>Latest Articles</Typography>
+        <Typography variant="h4.600">Latest Articles</Typography>
         <SectionSubtitle>
-          Discover insights, tutorials, and stories from our community of experts
+          Discover insights, tutorials, and stories from our community of
+          experts
         </SectionSubtitle>
       </SectionHeader>
 
       <Grid>
-        {displayedPosts.map(post => (
-          <Card
-            key={post.id}
-            title={post.title}
-            description={truncateText(post.description, 150)} 
-            image={post.image}
-            type="blog"
-            actionText="Read Article"
-            onClick={() => handleCardClick(post)}
-            onActionClick={(e) => {
-              e.stopPropagation();
-              handleCardClick(post);
-            }}
-          />
-        ))}
+        {displayedPosts?.map((post) => {
+          const isExpanded = expanded[post._id]
+          const truncated = post.description.length > 150 && !isExpanded
+          const description = truncated
+            ? post.description.substring(0, 150) + '...'
+            : post.description
+          return (
+            <Card
+              key={post._id}
+              title={post.title}
+              description={
+                <div
+                  style={{
+                    maxHeight: isExpanded ? 180 : 60,
+                    overflowY: isExpanded ? 'auto' : 'hidden',
+                    transition: 'max-height 0.3s',
+                    position: 'relative',
+                  }}
+                >
+                  {description}
+                  {truncated && (
+                    <span
+                      style={{
+                        color: '#ea580c',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        marginLeft: 4,
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleExpand(post._id)
+                      }}
+                    >
+                      Read More
+                    </span>
+                  )}
+                </div>
+              }
+              image={post.image}
+              type="blog"
+              onClick={() => handleCardClick(post)}
+            />
+          )
+        })}
       </Grid>
 
       {hasMorePosts && (
@@ -118,5 +152,5 @@ export const BlogGrid: React.FC<BlogGridProps> = ({ posts, loading = false, onPo
         </LoadMoreContainer>
       )}
     </GridContainer>
-  );
-};
+  )
+}
