@@ -43,6 +43,7 @@ export const appPaths = {
   verifyEmail: '/verify-email',
   forgotPassword: '/forgot-password',
   course: '/course',
+  blog: '/blog',
   resetPassword: '/reset-password',
 } as const
 

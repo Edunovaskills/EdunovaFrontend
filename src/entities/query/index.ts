@@ -94,3 +94,5 @@ export {
   useTestimonialsQuery,
   TestimonialQueryKey,
 } from './testimonial/get-testimonial-admin.query'
+
+export { useAllBlogsQuery, AllBlogsQueryKey } from './blog/blogs.query'

@@ -11,7 +11,7 @@ export const HeroContainer = styled.div<{ $type: 'events' | 'courses' | 'blogs' 
       case 'courses':
         return `linear-gradient(135deg, ${theme.colors.green[600]} 0%, #0d9488 50%, #0891b2 100%)`;
       case 'blogs':
-        return `linear-gradient(135deg, #ea580c 0%, ${theme.colors.red[600]} 50%, #be185d 100%)`;
+        return `linear-gradient(135deg, #0d9488 0%, ${theme.colors.gray[600]} 50%, #0891b2 100%)`;
       default:
         return `linear-gradient(135deg, ${theme.colors.purple[600]} 0%, ${theme.colors.primary[600]} 50%, #4338ca 100%)`;
     }

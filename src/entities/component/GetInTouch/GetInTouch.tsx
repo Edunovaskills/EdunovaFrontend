@@ -60,7 +60,7 @@ export const GetInTouch = () => {
     }
 
     return (
-      <PaperStyled issmall={smallscreen}>
+      <PaperStyled issmall={smallscreen} id="contact-us">
         <StackStyled
           component={'form'}
           issmall={smallscreen}

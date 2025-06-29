@@ -12,7 +12,7 @@ import {
 
 interface CardProps {
   title: string
-  description: string
+  description: React.ReactNode
   image?: string
   price?: number
   isFree?: boolean
