@@ -2,20 +2,16 @@
 import React, { useState } from 'react'
 import {
   Box,
-  CardContent,
-  Divider,
   Stack,
   Typography,
   useTheme,
   useMediaQuery,
   Modal,
 } from '@mui/material'
-import { BuzInfoSection, Carousel } from 'entities/component'
-import { SwiperSlide } from 'swiper/react'
+import { BuzInfoSection } from 'entities/component'
+import { Carousel } from 'shared/components/Carousel'
+import { Card } from 'shared/components/card'
 import {
-  CardStyled,
-  ImgWrapperStyled,
-  DescriptionContainer,
   ModalContentBox,
   ModalImageBox,
   ModalTextBox,
@@ -64,19 +60,10 @@ const decodeHTMLEntities = (text: string = '') => {
 
 const ServicesShowcase: React.FC = () => {
   const { data, isLoading, error } = useGetAllCoursesQuery()
-  const theme = useTheme()
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
-  const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'))
   const [clickedId, setClickedId] = useState<string | undefined>(undefined)
   const { data: courseDetails, isLoading: isCourseDetailsLoading } =
     useCourseByIdQuery(clickedId)
   const [open, setOpen] = useState(false)
-
-  const getSlidesPerView = () => {
-    if (isSmallScreen) return 1.2
-    if (isMediumScreen) return 2.2
-    return 3.5
-  }
 
   const handleCourseClick = (courseId: string) => {
     setClickedId(courseId)
@@ -113,79 +100,26 @@ const ServicesShowcase: React.FC = () => {
 
   return (
     <>
-      <Carousel
-        slidesPerView={getSlidesPerView()}
-        spaceBetween={isSmallScreen ? 15 : 30}
-        centeredSlides={isSmallScreen}
-        loop={(data?.data?.courses?.length ?? 0) > getSlidesPerView()}
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
-        pagination={{ clickable: true }}
-        navigation={!isSmallScreen}
-        freeMode
-      >
-        {data?.data?.courses.map((course) => {
-          const decodedImage = decodeHTMLEntities(course.image || '')
-          return (
-            <SwiperSlide key={course._id}>
-              <CardStyled onClick={() => handleCourseClick(course._id)}>
-                <ImgWrapperStyled>
-                  <img
-                    src={decodedImage || PLACEHOLDER_IMAGE_URL}
-                    alt={course.title || 'Course Image'}
-                    onError={(e) => {
-                      ;(e.target as HTMLImageElement).src =
-                        PLACEHOLDER_IMAGE_URL
-                    }}
-                  />
-                </ImgWrapperStyled>
-                <Divider sx={{ mt: 2 }} />
-                <CardContent
-                  component={Stack}
-                  spacing={1.5}
-                  sx={{ flexGrow: 1, p: 2 }}
-                >
-                  <Typography
-                    variant="h6.600"
-                    sx={{
-                      overflow: 'hidden',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                    }}
-                  >
-                    {course.title}
-                  </Typography>
-                  <DescriptionContainer variant="body2">
-                    {course.description.length > 100 ? (
-                      <>
-                        {`${course.description.substring(0, 100)}...`}
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          color="primary"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleCourseClick(course._id)
-                          }}
-                          sx={{
-                            cursor: 'pointer',
-                            fontWeight: 'bold',
-                            marginLeft: 1,
-                          }}
-                        >
-                          Read More
-                        </Typography>
-                      </>
-                    ) : (
-                      course.description
-                    )}
-                  </DescriptionContainer>
-                </CardContent>
-              </CardStyled>
-            </SwiperSlide>
-          )
-        })}
-      </Carousel>
+      <div style={{ width: '100%', overflow: 'hidden' }}>
+        <Carousel
+          slidesToShow={3}
+          autoPlay={true}
+          autoPlayInterval={5000}
+          showNavigation={true}
+          showPagination={true}
+        >
+          {data?.data?.courses.map((course) => (
+            <Card
+              key={course._id}
+              title={course.title}
+              description={course.description}
+              image={course.image}
+              onClick={() => handleCourseClick(course._id)}
+              type="course"
+            />
+          ))}
+        </Carousel>
+      </div>
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -195,9 +129,20 @@ const ServicesShowcase: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          zIndex: 1500,
         }}
       >
-        <ModalContentBox>
+        <ModalContentBox
+          sx={{
+            background: 'rgba(255,255,255,0.98)',
+            borderRadius: 4,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+            p: { xs: 2, sm: 4 },
+            minWidth: { xs: '90vw', sm: 450 },
+            maxWidth: 540,
+            position: 'relative',
+          }}
+        >
           {isCourseDetailsLoading ? (
             <Typography>Loading....</Typography>
           ) : (
@@ -208,16 +153,37 @@ const ServicesShowcase: React.FC = () => {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   width: '100%',
+                  mb: 2,
                 }}
               >
-                <Typography variant="h6.700" component="h2">
-                  Course Detail
-                </Typography>
-                <CloseButton onClick={() => setOpen(false)}>
-                  <CloseIcon />
+                <Typography variant="body1.600">Course Detail</Typography>
+                <CloseButton
+                  onClick={() => setOpen(false)}
+                  sx={{
+                    color: 'grey.700',
+                    background: 'rgba(0,0,0,0.04)',
+                    '&:hover': { background: 'rgba(0,0,0,0.12)' },
+                    borderRadius: 2,
+                  }}
+                >
+                  <CloseIcon fontSize="medium" />
                 </CloseButton>
               </Box>
-              <ModalImageBox sx={{ mt: 2 }}>
+              <ModalImageBox
+                sx={{
+                  mt: 1,
+                  mb: 2,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  height: 220,
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
+                  borderRadius: 3,
+                  overflow: 'hidden',
+                  background: '#f7f7f7',
+                }}
+              >
                 <img
                   src={
                     decodeHTMLEntities(
@@ -225,6 +191,12 @@ const ServicesShowcase: React.FC = () => {
                     ) || PLACEHOLDER_IMAGE_URL
                   }
                   alt={courseDetails?.data?.course.title || 'Course Image'}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    borderRadius: 12,
+                  }}
                   onError={(e) => {
                     ;(e.target as HTMLImageElement).src = PLACEHOLDER_IMAGE_URL
                   }}
@@ -232,11 +204,23 @@ const ServicesShowcase: React.FC = () => {
               </ModalImageBox>
               <ModalTextBox>
                 <Typography
-                  variant="h5"
+                  variant="h6.500"
                   component="h2"
                   sx={{
-                    whiteSpace: 'pre-wrap',
-                    wordWrap: 'break-word',
+                    mb: 1,
+                    textAlign: 'left',
+                    position: 'relative',
+                    display: 'inline-block',
+                    '&:after': {
+                      content: '""',
+                      display: 'block',
+                      width: 40,
+                      height: 3,
+                      background:
+                        'linear-gradient(90deg, #6C63FF 60%, #00C9A7 100%)',
+                      borderRadius: 2,
+                      marginTop: 2,
+                    },
                   }}
                   gutterBottom
                 >
@@ -244,16 +228,22 @@ const ServicesShowcase: React.FC = () => {
                 </Typography>
                 <Typography
                   variant="body1"
-                  color="text.secondary"
                   sx={{
                     mb: 2,
                     whiteSpace: 'pre-wrap',
                     wordWrap: 'break-word',
+                    textAlign: 'left',
                   }}
-                >
-                  {courseDetails?.data?.course.description +
-                    'jabsdkajsbdkjabsdjjabsdkbasdjbajsdbakjsbdaksdbkasbdkajsbdkasbdkabsdasbdaksdbaksbdkasbdkasbdkasbdasblabdlabdlabdlabdlablabdlabdlasbdlabdlabals'}
-                </Typography>
+                  component="div"
+                  dangerouslySetInnerHTML={{
+                    __html: (
+                      courseDetails?.data?.course.description || ''
+                    ).replace(
+                      /(Skills Learned:|Job Prospects:|Top Companies:|Average Salary:)/g,
+                      '<strong>$1</strong>'
+                    ),
+                  }}
+                />
               </ModalTextBox>
             </>
           )}

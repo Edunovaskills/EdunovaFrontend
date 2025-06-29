@@ -16,7 +16,9 @@ export class CoursesApi {
   }
 
   async getCourseById(coursesId: string) {
-    const response = await this.client.get<CourseDetails>(`${coursesId}`)
+    const response = await this.client.get<CourseDetails>(
+      `courses/${coursesId}`
+    )
     return response
   }
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { BuzInfoSection } from '../BuzzInfo-Section/BuzInfoSection'
-import { InputAdornment, Stack, TextField, Typography } from '@mui/material'
+import { Stack, TextField, Typography } from '@mui/material'
 import { RoundedIcon } from 'shared/components'
 import { publicImages } from 'shared/config'
 import { Link } from 'react-router-dom'
@@ -38,11 +38,12 @@ export const GetInTouch = () => {
 
   const BottomView = () => {
     const { smallScreen: smallscreen } = useScreenSize()
-    const { mutate: createEnquiry, isPending } = useCreateEnquiryMutation()
+    const { mutateAsync: createEnquiry, isPending } = useCreateEnquiryMutation()
     const {
       handleSubmit,
       register,
       formState: { errors, isValid },
+      reset,
     } = useForm<EnquirySchema>({
       resolver: yupResolver(enquirySchema),
       defaultValues: {
@@ -53,8 +54,9 @@ export const GetInTouch = () => {
       mode: 'onTouched',
     })
 
-    const onSubmit = (data: EnquirySchema) => {
-      createEnquiry({ ...data, phone: `+91 ${data.phone}` })
+    const onSubmit = async (data: EnquirySchema) => {
+      await createEnquiry({ ...data, phone: `+91 ${data.phone}` })
+      reset()
     }
 
     return (
@@ -63,7 +65,7 @@ export const GetInTouch = () => {
           component={'form'}
           issmall={smallscreen}
           onSubmit={(e) => {
-            handleSubmit(onSubmit)(e)
+            void handleSubmit(onSubmit)(e)
           }}
         >
           <TextField
@@ -92,7 +94,9 @@ export const GetInTouch = () => {
                   maxLength: 10,
                 },
                 startAdornment: (
-                  <InputAdornment position="start">+91</InputAdornment>
+                  <Typography variant="body1" sx={{ mr: 1 }}>
+                    +91
+                  </Typography>
                 ),
               }}
             />
@@ -113,7 +117,7 @@ export const GetInTouch = () => {
             disabled={!isValid || isPending}
             loading={isPending}
           >
-            Register Now
+            Send Enquiry
           </ButtonStyled>
         </StackStyled>
 

@@ -58,3 +58,13 @@ export const EventDetailsPage = lazy(async () => {
   const { EventDetailsPage } = await import('./event-details/EventDetailsPage')
   return { default: EventDetailsPage }
 })
+
+export const ForgotPasswordPage = lazy(async () => {
+  const { ForgotPasswordPage } = await import('./user/forgetpassword')
+  return { default: ForgotPasswordPage }
+})
+
+export const ResetPasswordPage = lazy(async () => {
+  const { ResetPasswordPage } = await import('./user/ResetPassword')
+  return { default: ResetPasswordPage }
+})

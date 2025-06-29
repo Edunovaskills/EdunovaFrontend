@@ -2,6 +2,7 @@ import type { LoginResponse, UserResponse } from 'entities/model'
 import type {
   ForgotPasswordSchema,
   LoginSchema,
+  ResetPasswordSchema,
   SignUpSchema,
   VerifyEmailSchema,
 } from 'features/schema'
@@ -49,7 +50,7 @@ export class AuthApi {
     return response
   }
 
-  async forgotPassword(forgotPasswordPayload: ForgotPasswordSchema['email']) {
+  async forgotPassword(forgotPasswordPayload: Partial<ForgotPasswordSchema>) {
     const response = await this.client.post(
       'forgot-password',
       forgotPasswordPayload
@@ -66,7 +67,7 @@ export class AuthApi {
     return response
   }
 
-  async resetPassword(resetPasswordPayload: ForgotPasswordSchema) {
+  async resetPassword(resetPasswordPayload: ResetPasswordSchema) {
     const response = await this.client.post(
       'reset-password',
       resetPasswordPayload
