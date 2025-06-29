@@ -8,3 +8,4 @@ export { Admin } from './admin/index'
 export { LoginForm } from './auth/LoginForm' // Add this line
 export { SignupForm } from './auth/SignupForm' // Add this line
 export { VerifyEmailForm } from './auth/VerifyEmailForm' // Add this line
+export {BlogGrid} from './blogs/BlogGrid'

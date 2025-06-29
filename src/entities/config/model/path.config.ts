@@ -42,7 +42,8 @@ export const appPaths = {
   userProfile: '/user/profile', // Added user profile path
   verifyEmail: '/verify-email',
   forgotPassword: '/forgot-password',
-  course:'/course'
+  course:'/course',
+  blog: '/blog'
 } as const
 
 export const appSearchParams = {

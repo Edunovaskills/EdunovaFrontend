@@ -11,7 +11,8 @@ const baseMenuItems: MenuItem[] = [
   { label: 'Home', value: '/' },
   { label: 'About', value: 'about' },
   { label: 'Events', value: 'events' },
-  {label:'Course',value:'course'}
+  {label:'Courses',value:'course'},
+  {label:'Blogs',value:'blog'}
 ]
 
 const adminMenuItems: MenuItem[] = [

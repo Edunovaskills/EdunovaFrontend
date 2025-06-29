@@ -58,3 +58,9 @@ export const EventDetailsPage = lazy(async () => {
   const { EventDetailsPage } = await import('./event-details/EventDetailsPage')
   return { default: EventDetailsPage }
 })
+
+export const BlogPage = lazy(async () => {
+  const { BlogPage } = await import('./blogs/index')
+  return { default: BlogPage }
+})
+
