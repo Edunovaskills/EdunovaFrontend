@@ -1,54 +1,79 @@
-import {  CardContent, Stack, Typography, useTheme } from '@mui/material'
+import {
+  CardContent,
+  Skeleton,
+  Stack,
+  Typography,
+  useTheme,
+} from '@mui/material'
 import { Carousel } from 'entities/component'
-import { testimonials } from 'entities/model'
 import ReactStars from 'react-stars'
 import { publicImages } from 'shared/config'
 import { SwiperSlide } from 'swiper/react'
-import { CardContentWrapper, CardStyled, TypographyStyled } from './styles.component'
+import {
+  CardContentWrapper,
+  CardStyled,
+  TypographyStyled,
+} from './styles.component'
+import { useTestimonialsQuery } from 'entities/query'
 
 export const TestimonialSection = () => {
   const { palette } = useTheme()
+  const { data, isLoading } = useTestimonialsQuery()
+  const testimonailDaata = data?.data?.testimonials || []
   return (
     <Carousel>
-      {testimonials.map(({ joined, name, rating, text }, ind) => (
-        <SwiperSlide key={`${ind}-${name}`}>
-          {({ isNext }) => {
-            return (
-              <CardStyled isNext={isNext}>
-                <CardContent>
-                  <CardContentWrapper
-                    
-                  >
-                    <img src={publicImages.avatar} alt="Avatar" />
-
-                    <Stack>
-                      <Typography variant="h6" fontWeight="bold">
-                        {name}
-                      </Typography>
-                      <ReactStars
-                        count={5}
-                        size={15}
-                        value={rating}
-                        color2={palette.primary.main}
-                        edit={false}
+      {testimonailDaata.map(
+        ({ createdAt, designation, message, name }, ind) => (
+          <SwiperSlide key={`${ind}-${name}`}>
+            {({ isNext }) => {
+              return (
+                <CardStyled isNext={isNext}>
+                  <CardContent>
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rectangular"
+                        width={100}
+                        height={100}
                       />
-                    </Stack>
-                  </CardContentWrapper>
+                    ) : (
+                      <>
+                        <CardContentWrapper>
+                          <img src={publicImages.avatar} alt="Avatar" />
+                          <Stack>
+                            <Typography variant="h6" fontWeight="bold">
+                              {name}
+                            </Typography>
+                            <TypographyStyled
+                              variant="caption2.500"
+                              color="text.secondary"
+                            >
+                              {designation}
+                            </TypographyStyled>
+                            <ReactStars
+                              count={5}
+                              size={15}
+                              value={5}
+                              color2={palette.primary.main}
+                              edit={false}
+                            />
+                          </Stack>
+                        </CardContentWrapper>
 
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    {text}
-                  </Typography>
-                  <TypographyStyled
-                    variant="body2"
-                  >
-                    ~ Joined Since {joined}
-                  </TypographyStyled>
-                </CardContent>
-              </CardStyled>
-            )
-          }}
-        </SwiperSlide>
-      ))}
+                        <Typography variant="body2" sx={{ mt: 1 }}>
+                          {message}
+                        </Typography>
+                        <TypographyStyled variant="body2">
+                          ~ Joined Since {createdAt.split('T')[0]}
+                        </TypographyStyled>
+                      </>
+                    )}
+                  </CardContent>
+                </CardStyled>
+              )
+            }}
+          </SwiperSlide>
+        )
+      )}
     </Carousel>
   )
 }

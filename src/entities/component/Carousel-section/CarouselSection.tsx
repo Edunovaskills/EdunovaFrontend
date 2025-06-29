@@ -36,6 +36,11 @@ export const Carousel = ({ children, ...rest }: CarouselProps) => {
         ['& .swiper-pagination-bullet-active']: {
           background: palette.primary.main + '!important',
         },
+        ['& .swiper-pagination'] : {
+          position: 'relative',
+          marginTop: '32px',
+          bottom: 'unset',
+        },
       }}
     >
       <Swiper

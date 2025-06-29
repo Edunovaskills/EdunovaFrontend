@@ -215,13 +215,9 @@ export const AddEvent: React.FC = () => {
 
   const handleConfirmDelete = async () => {
     if (eventToDeleteId) {
-      try {
-        await deleteEventAsync(eventToDeleteId)
-        setDeleteConfirmOpen(false)
-        setEventToDeleteId(null)
-      } catch (error) {
-        // Error handling is done in the mutation
-      }
+      await deleteEventAsync(eventToDeleteId)
+      setDeleteConfirmOpen(false)
+      setEventToDeleteId(null)
     }
   }
 
@@ -603,7 +599,6 @@ export const AddEvent: React.FC = () => {
                               color="error"
                               size="small"
                               onClick={() => handleDeleteEventClick(event._id)}
-                              loading={isDeletingEvent}
                               disabled={
                                 !event.isActive || isDeletingEvent || isEditMode
                               }

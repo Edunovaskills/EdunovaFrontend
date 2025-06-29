@@ -11,4 +11,3 @@ export const EventDetailsPage = () => {
 
   return <EventDetails eventId={eventId} />
 }
-

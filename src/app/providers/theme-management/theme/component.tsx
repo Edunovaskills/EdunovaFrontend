@@ -4,6 +4,7 @@ import { CSSProperties } from 'react'
 import {
   buttonBaseClasses,
   buttonClasses,
+  CircularProgress,
   circularProgressClasses,
   formHelperTextClasses,
   formLabelClasses,
@@ -309,6 +310,7 @@ export const components: ThemeOptions['components'] = {
       variant: 'contained',
       disableElevation: true,
       disableRipple: true,
+      startIcon: <CircularProgress id="loader" size={20} />,
     },
 
     styleOverrides: {

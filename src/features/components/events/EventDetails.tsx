@@ -80,7 +80,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({
       <DetailsContainer>
         <Header>
           <HeaderContent>
-            <BackButton onClick={onBackToEvents}>
+            <BackButton onClick={() => window.history.back()}>
               <ArrowLeft />
               Back to Events
             </BackButton>
@@ -123,7 +123,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({
     <DetailsContainer>
       <Header>
         <HeaderContent>
-          <BackButton onClick={onBackToEvents}>
+          <BackButton onClick={() => window.history.back()}>
             <ArrowLeft />
             Back to Events
           </BackButton>

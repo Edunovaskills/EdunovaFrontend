@@ -113,7 +113,7 @@ export const GetInTouch = () => {
             disabled={!isValid || isPending}
             loading={isPending}
           >
-            SEND US AN ENQUIRY
+            Register Now
           </ButtonStyled>
         </StackStyled>
 

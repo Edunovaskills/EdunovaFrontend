@@ -91,6 +91,16 @@ const AdminCertificatePage = lazy(() =>
     default: module.AdminCertificatePage,
   }))
 )
+const PrivacyPolicyPage = lazy(() =>
+  import('pages/components/privacy-policy').then((module) => ({
+    default: module.default,
+  }))
+)
+const TermsAndConditionsPage = lazy(() =>
+  import('pages/components/terms-and-conditions').then((module) => ({
+    default: module.default,
+  }))
+)
 
 // Loading fallback component
 const PageLoader = () => (
@@ -164,6 +174,22 @@ const Router = createBrowserRouter(
             element={
               <Suspense fallback={<PageLoader />}>
                 <TicketBookingServicesPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/privacy-policy"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <PrivacyPolicyPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/terms-and-conditions"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <TermsAndConditionsPage />
               </Suspense>
             }
           />

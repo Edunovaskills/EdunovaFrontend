@@ -10,10 +10,9 @@ import {
   ListItem,
   Stack,
 } from '@mui/material'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close'
-import { publicImages } from 'shared/config'
 import {
   MenuItemsWrapperStyled,
   NavbarWrapperStyled,
@@ -24,6 +23,7 @@ import { appPaths, type AppPathsName } from 'entities/config'
 import { getUserId } from 'shared/data-providers'
 import { UserProfile } from './UserProfile'
 import { useMenuItems } from 'entities/hooks'
+import { Logo } from 'shared/components'
 
 const useScreenSize = () => {
   const [smallScreen, setSmallScreen] = useState(window.innerWidth < 960)
@@ -80,51 +80,7 @@ export const Navbar = () => {
   return (
     <NavbarWrapperStyled smallScreen={smallScreen}>
       <StartViewWrapperStyled>
-        <Link
-          to={appPaths['/']}
-          style={{
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <img
-            src={publicImages.EdunovaLog}
-            alt="brand-logo"
-            style={{
-              width: 'auto',
-              height: '48px',
-              objectFit: 'contain',
-              marginRight: '8px',
-            }}
-            onError={(e) => {
-              console.error('Logo failed to load:', publicImages.EdunovaLog)
-              e.currentTarget.src =
-                'https://placehold.co/48x48/eeeeee/000000?text=Error'
-            }}
-          />
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography
-              variant="h6"
-              sx={{
-                fontFamily: '"Georgia", "Times New Roman", serif',
-                fontWeight: 'bold',
-                color: '#000',
-                lineHeight: 1.2,
-              }}
-            >
-              Edunova
-            </Typography>
-            <Typography
-              variant="caption2"
-              sx={{
-                textDecoration: 'none',
-              }}
-            >
-              UPGRADE YOUR SKILLS, UPGRADE YOUR FUTURE
-            </Typography>
-          </div>
-        </Link>
+        <Logo />
       </StartViewWrapperStyled>
 
       {!smallScreen && (
