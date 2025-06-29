@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, Typography, useTheme, useMediaQuery } from '@mui/material';
-import { StackStyled, WrapperStyled } from './styles.component';
+import { StackStyled, WrapperStyled } from './herostyles';
 
 export const HeroSection = () => {
   const theme = useTheme();

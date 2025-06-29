@@ -4,13 +4,14 @@ import { type AppPathsName } from 'entities/config'
 
 export type MenuItem = {
   label: string
-  value: AppPathsName | string
+  value: AppPathsName 
 }
 
 const baseMenuItems: MenuItem[] = [
   { label: 'Home', value: '/' },
   { label: 'About', value: 'about' },
   { label: 'Events', value: 'events' },
+  {label:'Course',value:'course'}
 ]
 
 const adminMenuItems: MenuItem[] = [

@@ -1,10 +1,10 @@
 import React from 'react'
-import { HeroSection } from './hero'
+import { HeroSection } from './HeroSection'
 //import { HelpFAQ } from './FAQ'
 import { HelpAndSupportWrapperStyled } from './styles.component'
-import EventsShowcase from './EventsShowcase/EventsShowcase'
+import EventsShowcase from './EventsShowcase'
 import EventDetails from './EventDetails'
-import EventTestimonials from './EventTestimonials/EventTestimonials'
+import EventTestimonials from './EventTestimonials'
 
 export const HelpAndSupport = () => {
   return (

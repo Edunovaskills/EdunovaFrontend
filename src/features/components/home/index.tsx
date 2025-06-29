@@ -4,7 +4,7 @@ import { BuzWorking } from './BuzWorking'
 import { HomeWrapperStyled } from './styles.component'
 import { OurPeopleSection } from './OurPeople'
 import { whyChooseUseCardData } from 'features/model'
-import EventsShowcase from '../events/EventsShowcase/EventsShowcase'
+import EventsShowcase from '../events/EventsShowcase'
 
 export const Home = () => {
   return (

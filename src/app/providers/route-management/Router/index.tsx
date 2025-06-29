@@ -10,6 +10,7 @@ import {
 import { RouteGuard } from '../RouteGuard'
 import { AdminRouteGuard } from '../AdminRouteGuard'
 import { LoadingComponent } from 'shared/components'
+import { CoursesPage, EventDetails } from 'pages/components'
 
 // Lazy load all page components for better code splitting
 const AboutUsPage = lazy(() =>
@@ -17,6 +18,7 @@ const AboutUsPage = lazy(() =>
     default: module.AboutUsPage,
   }))
 )
+
 const CabServicesPage = lazy(() =>
   import('pages/components/cab-services/CabServices').then((module) => ({
     default: module.CabServicesPage,
@@ -57,11 +59,7 @@ const SignupPage = lazy(() =>
     default: module.SignupPage,
   }))
 )
-const EventDetailsPage = lazy(() =>
-  import('pages/components').then((module) => ({
-    default: module.EventDetailsPage,
-  }))
-)
+
 const AdminEventsPage = lazy(
   () => import('pages/components/admin/AdminEventsPage')
 )
@@ -133,7 +131,15 @@ const Router = createBrowserRouter(
             path={appPaths.eventDetail}
             element={
               <Suspense fallback={<PageLoader />}>
-                <EventDetailsPage />
+                <EventDetails />
+              </Suspense>
+            }
+          />
+          <Route
+            path={appPaths.course}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <CoursesPage />
               </Suspense>
             }
           />
