@@ -10,3 +10,4 @@ export { SignupForm } from './auth/SignupForm' // Add this line
 export { VerifyEmailForm } from './auth/VerifyEmailForm' // Add this line
 export { ForgotPassword } from './auth/ForgotPassword'
 export { ResetPassword } from './auth/ResetPasswrod/reset-password'
+export{ContactForm,ContactHero} from './contactUs/index'

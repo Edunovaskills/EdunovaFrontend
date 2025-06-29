@@ -9,9 +9,11 @@ export type MenuItem = {
 
 const baseMenuItems: MenuItem[] = [
   { label: 'Home', value: '/' },
-  { label: 'About', value: 'about' },
+  { label: 'About-Us', value: 'about' },
   { label: 'Events', value: 'events' },
-  {label:'Course',value:'course'}
+  {label:'Course',value:'course'},
+  {label:'Contact-Us',value:'contactus'}
+  
 ]
 
 const adminMenuItems: MenuItem[] = [
