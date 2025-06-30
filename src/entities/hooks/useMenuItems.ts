@@ -9,12 +9,11 @@ export type MenuItem = {
 
 const baseMenuItems: MenuItem[] = [
   { label: 'Home', value: '/' },
-  { label: 'About', value: 'about' },
+  { label: 'AboutUs', value: 'about' },
   { label: 'Events', value: 'events' },
   { label: 'Courses', value: 'course' },
   { label: 'Blogs', value: 'blog' },
-  {label:'Course',value:'course'},
-  {label:'Contact',value:'contactus'}
+  {label:'ContactUs',value:'contactus'}
   
 ]
 
