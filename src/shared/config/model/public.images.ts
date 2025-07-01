@@ -45,4 +45,5 @@ export const publicImages = {
   uiImages: '/assets/images/uiCousers.jpg',
   whyChooseUs: 'assets/images/whyChooseUs.jpg',
   ourImpact: '/assets/images/ourImpact.jpg',
+  whatsapp: '/assets/images/whatsapp.png',
 }

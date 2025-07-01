@@ -36,7 +36,7 @@ const sections = [
   },
   {
     title: '9. Contact Us',
-    content: `If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us.`,
+    content: `If you have any questions, concerns, or requests regarding this Privacy Policy, pleasex contact us.`,
   },
 ]
 

@@ -24,6 +24,8 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import YouTubeIcon from '@mui/icons-material/YouTube'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { Logo } from 'shared/components'
+import { publicImages } from 'shared/config'
+import { whatsAppNumber } from 'shared/environment/model/environment.model'
 
 export const Footer = () => {
   const location = useLocation()
@@ -217,6 +219,33 @@ export const Footer = () => {
         </Stack>
       </StackStyled>
       {/* Back to Top Floating Button */}
+      {/* WhatsApp Floating Button */}
+      <a
+        href={`https://wa.me/${whatsAppNumber}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          position: 'fixed',
+          bottom: 100, // 32 (arrow) + 56 (button height) + 12 (gap)
+          right: 32,
+          zIndex: 1200,
+          width: 56,
+          height: 56,
+          borderRadius: '50%',
+          background: '#fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: theme.shadows[4],
+        }}
+        aria-label="WhatsApp Chat"
+      >
+        <img
+          src={publicImages.whatsapp}
+          alt="WhatsApp"
+          style={{ width: 32, height: 32 }}
+        />
+      </a>
       <Fab
         color="primary"
         size="medium"
