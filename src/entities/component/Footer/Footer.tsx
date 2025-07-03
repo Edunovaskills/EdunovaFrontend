@@ -180,11 +180,19 @@ export const Footer = () => {
           {/* Bottom bar */}
           <Stack
             direction={smallscreen ? 'column-reverse' : 'row'}
-            alignItems={smallscreen ? 'flex-start' : 'center'}
+            alignItems={smallscreen ? 'center' : 'center'}
             justifyContent="space-between"
-            spacing={2}
+            spacing={smallscreen ? 3 : 2}
+            sx={smallscreen ? { textAlign: 'center', width: '100%' } : {}}
           >
-            <Stack direction="row" alignItems="center" spacing={1}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={1}
+              sx={
+                smallscreen ? { justifyContent: 'center', width: '100%' } : {}
+              }
+            >
               <Logo noText />
               <Typography
                 variant="caption1"
@@ -194,52 +202,58 @@ export const Footer = () => {
                 &copy; 2024 Edunova. All Rights Reserved.
               </Typography>
             </Stack>
+            {/* Policy Links: stack vertically on mobile, row on desktop */}
             <Stack
-      direction="row"
-      spacing={{ xs: 1, sm: 2 }} // Adjust spacing for small screens
-      flexWrap="wrap" // Allow items to wrap to the next line
-      justifyContent={{ xs: 'center', sm: 'flex-start' }} // Center on extra small, align start on small and up
-    >
-      <MuiLink
-        component={NavLink}
-        to={appPaths.privacyPolicy}
-        color="neutral.white"
-        underline="hover"
-        sx={{ cursor: 'pointer', fontSize: 14 }}
-      >
-        Privacy Policy
-      </MuiLink>
-      <Typography color="neutral.white">|</Typography>
-      <MuiLink
-        component={NavLink}
-        to={appPaths.termsAndConditions}
-        color="neutral.white"
-        underline="hover"
-        sx={{ cursor: 'pointer', fontSize: 14 }}
-      >
-        Terms & Conditions
-      </MuiLink>
-      <Typography color="neutral.white">|</Typography>
-      <MuiLink
-        component={NavLink}
-        to={appPaths.RefundCancellationPolicy}
-        color="neutral.white"
-        underline="hover"
-        sx={{ cursor: 'pointer', fontSize: 14 }}
-      >
-        Refund & Cancellation Policy
-      </MuiLink>
-      <Typography color="neutral.white">|</Typography>
-      <MuiLink
-        component={NavLink}
-        to={appPaths.ShippingDeliveryPolicy}
-        color="neutral.white"
-        underline="hover"
-        sx={{ cursor: 'pointer', fontSize: 14 }}
-      >
-        Shipping & Delivery Policy
-      </MuiLink>
-    </Stack>
+              direction={smallscreen ? 'column' : 'row'}
+              spacing={smallscreen ? 1 : 2}
+              flexWrap={smallscreen ? undefined : 'wrap'}
+              justifyContent={smallscreen ? 'center' : 'flex-start'}
+              alignItems={'flex-start'}
+              sx={{
+                width: smallscreen ? '100%' : 'auto',
+                mt: smallscreen ? 2 : 0,
+              }}
+            >
+              <MuiLink
+                component={NavLink}
+                to={appPaths.privacyPolicy}
+                color="neutral.white"
+                underline="hover"
+                sx={{ cursor: 'pointer', fontSize: 16, py: 0.5 }}
+              >
+                Privacy Policy
+              </MuiLink>
+              {!smallscreen && <Typography color="neutral.white">|</Typography>}
+              <MuiLink
+                component={NavLink}
+                to={appPaths.termsAndConditions}
+                color="neutral.white"
+                underline="hover"
+                sx={{ cursor: 'pointer', fontSize: 16, py: 0.5 }}
+              >
+                Terms & Conditions
+              </MuiLink>
+              {!smallscreen && <Typography color="neutral.white">|</Typography>}
+              <MuiLink
+                component={NavLink}
+                to={appPaths.RefundCancellationPolicy}
+                color="neutral.white"
+                underline="hover"
+                sx={{ cursor: 'pointer', fontSize: 16, py: 0.5 }}
+              >
+                Refund & Cancellation Policy
+              </MuiLink>
+              {!smallscreen && <Typography color="neutral.white">|</Typography>}
+              <MuiLink
+                component={NavLink}
+                to={appPaths.ShippingDeliveryPolicy}
+                color="neutral.white"
+                underline="hover"
+                sx={{ cursor: 'pointer', fontSize: 16, py: 0.5 }}
+              >
+                Shipping & Delivery Policy
+              </MuiLink>
+            </Stack>
           </Stack>
         </Stack>
       </StackStyled>
@@ -247,22 +261,22 @@ export const Footer = () => {
       {/* WhatsApp Floating Button */}
       <a
         href={whatsAppLink}
-  target="_blank"
-  rel="noopener noreferrer"
-  style={{
-    position: 'fixed',
-    bottom: 100,
-    right: 32,
-    zIndex: 1200,
-    width: 56,
-    height: 56,
-    borderRadius: '50%',
-    background: '#fff',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: theme.shadows[4],
-  }}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          position: 'fixed',
+          bottom: smallscreen ? 80 : 100,
+          right: smallscreen ? 16 : 32,
+          zIndex: 1200,
+          width: 56,
+          height: 56,
+          borderRadius: '50%',
+          background: '#fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: theme.shadows[4],
+        }}
         aria-label="WhatsApp Chat"
       >
         <img
@@ -278,8 +292,8 @@ export const Footer = () => {
         onClick={handleScrollTop}
         sx={{
           position: 'fixed',
-          bottom: 32,
-          right: 32,
+          bottom: smallscreen ? 16 : 32,
+          right: smallscreen ? 16 : 32,
           zIndex: 1200,
           boxShadow: theme.shadows[4],
         }}
