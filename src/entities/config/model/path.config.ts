@@ -48,6 +48,8 @@ export const appPaths = {
   resetPassword: '/reset-password',
   privacyPolicy: '/privacy-policy',
   termsAndConditions: '/terms-and-conditions',
+  ShippingDeliveryPolicy: '/shipping-and-delivery',
+  RefundCancellationPolicy: '/refund-and-cancellation'
 } as const
 
 export const appSearchParams = {

@@ -109,6 +109,20 @@ const TermsAndConditionsPage = lazy(() =>
   }))
 )
 
+const ShippingDeliveryPolicyPage = lazy(() =>
+  import('pages/components/ShippingDeliveryPolicy').then((module) => ({
+    default: module.default,
+  }))
+)
+
+const RefundCancellationPolicyPage = lazy(() =>
+  import('pages/components/refund-policy').then((module) => ({
+    default: module.default,
+  }))
+)
+
+
+
 // Loading fallback component
 const PageLoader = () => (
   <LoadingComponent loading={true} message="Loading page..." />
@@ -205,6 +219,22 @@ const Router = createBrowserRouter(
             element={
               <Suspense fallback={<PageLoader />}>
                 <PrivacyPolicyPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path={appPaths.ShippingDeliveryPolicy}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ShippingDeliveryPolicyPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path={appPaths.RefundCancellationPolicy}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <RefundCancellationPolicyPage />
               </Suspense>
             }
           />

@@ -214,6 +214,27 @@ export const Footer = () => {
               >
                 Terms & Conditions
               </MuiLink>
+              <Typography color="neutral.white">|</Typography> {/* New separator */}
+      
+  <MuiLink
+    component={NavLink}
+    to={appPaths.RefundCancellationPolicy} // Corrected to use appPaths
+    color="neutral.white"
+    underline="hover"
+    sx={{ cursor: 'pointer', fontSize: 14 }}
+  >
+    Refund & Cancellation Policy
+  </MuiLink>
+  <Typography color="neutral.white">|</Typography>
+  <MuiLink
+    component={NavLink}
+    to={appPaths.ShippingDeliveryPolicy} // Corrected to use appPaths
+    color="neutral.white"
+    underline="hover"
+    sx={{ cursor: 'pointer', fontSize: 14 }}
+  >
+    Shipping & Delivery Policy
+  </MuiLink>
             </Stack>
           </Stack>
         </Stack>
