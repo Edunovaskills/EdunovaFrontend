@@ -19,6 +19,7 @@ import { enquirySchema, type EnquirySchema } from 'features/schema'; // Assuming
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateEnquiryMutation } from 'entities/mutation'; // Assuming this path
 
+
 export const ContactForm: React.FC = () => {
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
@@ -50,23 +51,42 @@ export const ContactForm: React.FC = () => {
   };
 
   const contactInfo = [
-    {
-      icon: <Phone size={24} />,
-      title: 'Phone Support',
-      primary: '+91 12345 67890',
-      secondary: 'Available 24/7 for urgent queries',
-      badge: '24/7',
-      color: '#4CAF50'
-    },
-    {
-      icon: <Mail size={24} />,
-      title: 'Email Support',
-      primary: 'contact@edunova.com',
-      secondary: 'Response within 2 hours',
-      badge: '< 2hrs',
-      color: '#2196F3'
-    }
-  ];
+  {
+    icon: (
+      <a href="tel:+919891279370" target="_blank" rel="noopener noreferrer">
+        <Phone size={24} />
+      </a>
+    ),
+    title: 'Phone Support',
+    primary: (
+      <a href="tel:+919891279370" style={{ color: 'white', fontWeight: 'bold' }}>
+        +91 9891 279370
+      </a>
+    ),
+    secondary: 'Available 24/7 for urgent queries',
+    badge: '24/7',
+    color: '#4CAF50',
+  },
+  {
+    icon: (
+      <a href="mailto:support@edunova.com" target="_blank" rel="noopener noreferrer">
+        <Mail size={24} />
+      </a>
+    ),
+    title: 'Email Support',
+    primary: (
+      <a
+        href="mailto:support@edunova.com"
+        style={{ color: 'white', fontWeight: 'bold' }}
+      >
+        support@edunova.com
+      </a>
+    ),
+    secondary: 'Response within 2 hours',
+    badge: '< 2hrs',
+    color: '#2196F3',
+  },
+];
 
   const features = [
     { icon: <Zap size={14} />, text: 'Quick Response' },
@@ -385,7 +405,7 @@ export const ContactForm: React.FC = () => {
                   // This button likely navigates or triggers another action, not directly submits the form
                   // If it's meant to trigger the form submission, you'd need to adjust its logic
                 >
-                  Submit Enquiry
+                  Connect Now
                 </Button>
               </Box>
             </ContactInfoWrapperStyled>

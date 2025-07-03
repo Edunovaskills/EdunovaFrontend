@@ -17,6 +17,7 @@ import { useCreateEnquiryMutation } from 'entities/mutation'
 import { useForm } from 'react-hook-form'
 import { enquirySchema, type EnquirySchema } from 'features/schema'
 import { yupResolver } from '@hookform/resolvers/yup'
+import {number} from 'shared/environment/model/environment.model'
 
 export const GetInTouch = () => {
   const TopView = () => {
@@ -130,9 +131,9 @@ export const GetInTouch = () => {
             <Stack spacing={'10px'}>
               <Typography variant="body1.600" color="secondary.main">
                 Email Us:{' '}
-                <Link to="mailto:contact@buzzcabs.com" color="secondary.main">
+                <Link to="mailto:support@edunova.com" color="secondary.main">
                   <Typography variant="body1.600" color="secondary.main">
-                    contact@edunova.com
+                    support@edunova.com
                   </Typography>
                 </Link>
               </Typography>
@@ -140,7 +141,7 @@ export const GetInTouch = () => {
                 For enquiries, academic collaboration proposals, or detailed
                 specifications, please reach out to us at{' '}
                 <Link to="mailto:contact@edunova.com" color="secondary.main">
-                  contact@edunova.com
+                  support@edunova.com
                 </Link>
               </Typography>
             </Stack>
@@ -154,9 +155,9 @@ export const GetInTouch = () => {
             <Stack spacing={'10px'}>
               <Typography variant="body1.600" color="secondary.main">
                 Call Us:{' '}
-                <Link to="tel:+919876543210" color="secondary.main">
+                <Link to="tel:+{number}" color="secondary.main">
                   <Typography variant="body1.600" color="secondary.main">
-                    +91 12345 67890
+                    +{number}
                   </Typography>
                 </Link>
               </Typography>
