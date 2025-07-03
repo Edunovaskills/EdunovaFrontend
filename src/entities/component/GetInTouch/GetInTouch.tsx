@@ -131,9 +131,9 @@ export const GetInTouch = () => {
             <Stack spacing={'10px'}>
               <Typography variant="body1.600" color="secondary.main">
                 Email Us:{' '}
-                <Link to="mailto:support@edunova.com" color="secondary.main">
+                <Link to="mailto:info@edunovaskill.com" color="secondary.main">
                   <Typography variant="body1.600" color="secondary.main">
-                    support@edunova.com
+                    info@edunovaskill.com
                   </Typography>
                 </Link>
               </Typography>
@@ -141,7 +141,7 @@ export const GetInTouch = () => {
                 For enquiries, academic collaboration proposals, or detailed
                 specifications, please reach out to us at{' '}
                 <Link to="mailto:contact@edunova.com" color="secondary.main">
-                  support@edunova.com
+                  info@edunovaskill.com
                 </Link>
               </Typography>
             </Stack>

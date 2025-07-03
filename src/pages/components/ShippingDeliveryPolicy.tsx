@@ -55,7 +55,7 @@ const ShippingDeliveryPolicy: React.FC = () => {
 
       <h2 style={{ color: '#007bff', marginTop: '30px', marginBottom: '15px' }}>6. Contact Us</h2>
       <p>If you have any questions or concerns regarding your order, shipping, or delivery, please contact our support team:</p>
-      <p><strong>Email:</strong> <a href="mailto:Support@edunova.com" style={{ color: '#007bff', textDecoration: 'none' }}>Support@edunova.com</a></p>
+      <p><strong>Email:</strong> <a href="mailto:info@edunovaskill.com" style={{ color: '#007bff', textDecoration: 'none' }}>info@edunovaskill.com</a></p>
       <p><strong>Phone:</strong> +91 9891279370</p>
       <p><strong>Support Hours:</strong> Monday to Friday, 9:00 AM to 6:00 PM IST</p>
     </div>

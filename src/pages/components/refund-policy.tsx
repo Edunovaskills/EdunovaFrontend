@@ -17,7 +17,7 @@ const RefundCancellationPolicy: React.FC = () => {
       <h2 style={{ color: '#007bff', marginTop: '30px', marginBottom: '15px' }}>2. Refund Policy</h2>
       <p>Refunds are generally not provided for digital products, online courses, or training services once access has been granted or the course has commenced.</p>
       <p>Refund requests will be considered only under exceptional circumstances, such as technical issues preventing course access, provided that the issue has been reported to Edunova’s support team within <strong>48 hours of purchase</strong>.</p>
-      <p>Refund requests must be submitted in writing to our support team at <a href="mailto:support@edunova.com" style={{ color: '#007bff', textDecoration: 'none' }}>support@edunova.com</a> along with detailed reasons and any relevant evidence.</p>
+      <p>Refund requests must be submitted in writing to our support team at <a href="mailto:info@edunovaskill.com" style={{ color: '#007bff', textDecoration: 'none' }}>info@edunovaskill.com</a> along with detailed reasons and any relevant evidence.</p>
       <p>If approved, refunds will be processed within <strong>30 business days</strong>. Please note, refund approval is at the sole discretion of Edunova management.</p>
       <p>No refunds will be given for dissatisfaction due to course content, learning pace, or personal circumstances.</p>
 
@@ -31,7 +31,7 @@ const RefundCancellationPolicy: React.FC = () => {
       <p>Rescheduling of live sessions may be considered only with prior approval and under exceptional circumstances, communicated at least <strong>48 hours in advance</strong>.</p>
 
       <h2 style={{ color: '#007bff', marginTop: '30px', marginBottom: '15px' }}>5. How to Cancel or Request a Refund</h2>
-      <p>To cancel or request a refund, please contact our Customer Support team promptly at <a href="mailto:support@edunova.com" style={{ color: '#007bff', textDecoration: 'none' }}><strong>support@edunova.com</strong></a> or call <strong>+91 9891279370</strong>.</p>
+      <p>To cancel or request a refund, please contact our Customer Support team promptly at <a href="mailto:info@edunovaskill.com" style={{ color: '#007bff', textDecoration: 'none' }}><strong>info@edunovaskill.com</strong></a> or call <strong>+91 9891279370</strong>.</p>
       <p>Include your full name, order ID/enrollment number, date of purchase, and reason for cancellation or refund request.</p>
       <p>Our team will acknowledge your request within <strong>2 business days</strong> and inform you about the status.</p>
 
@@ -42,7 +42,7 @@ const RefundCancellationPolicy: React.FC = () => {
       <h2 style={{ color: '#007bff', marginTop: '30px', marginBottom: '15px' }}>7. Final Note</h2>
       <p>By purchasing or enrolling in any courses or services with Edunova, you acknowledge and agree to this Refund and Cancellation Policy. We encourage all users to read this policy carefully before making a purchase.</p>
       <p>For any questions or clarifications, please reach out to us at:<br />
-      <strong>Email:</strong> <a href="mailto:Support@edunova.com" style={{ color: '#007bff', textDecoration: 'none' }}>Support@edunova.com</a><br />
+      <strong>Email:</strong> <a href="mailto:info@edunovaskill.com" style={{ color: '#007bff', textDecoration: 'none' }}>info@edunovaskill.com</a><br />
       <strong>Phone:</strong> +91 9891279370</p>
     </div>
   );

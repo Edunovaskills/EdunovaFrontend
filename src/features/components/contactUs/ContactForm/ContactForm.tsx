@@ -69,17 +69,17 @@ export const ContactForm: React.FC = () => {
   },
   {
     icon: (
-      <a href="mailto:support@edunova.com" target="_blank" rel="noopener noreferrer">
+      <a href="mailto:info@edunovaskill.com" target="_blank" rel="noopener noreferrer">
         <Mail size={24} />
       </a>
     ),
     title: 'Email Support',
     primary: (
       <a
-        href="mailto:support@edunova.com"
+        href="mailto:info@edunovaskill.com"
         style={{ color: 'white', fontWeight: 'bold' }}
       >
-        support@edunova.com
+        info@edunovaskill.com
       </a>
     ),
     secondary: 'Response within 2 hours',

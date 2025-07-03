@@ -194,48 +194,52 @@ export const Footer = () => {
                 &copy; 2024 Edunova. All Rights Reserved.
               </Typography>
             </Stack>
-            <Stack direction="row" spacing={2}>
-              <MuiLink
-                component={NavLink}
-                to="/privacy-policy"
-                color="neutral.white"
-                underline="hover"
-                sx={{ cursor: 'pointer', fontSize: 14 }}
-              >
-                Privacy Policy
-              </MuiLink>
-              <Typography color="neutral.white">|</Typography>
-              <MuiLink
-                component={NavLink}
-                to="/terms-and-conditions"
-                color="neutral.white"
-                underline="hover"
-                sx={{ cursor: 'pointer', fontSize: 14 }}
-              >
-                Terms & Conditions
-              </MuiLink>
-              <Typography color="neutral.white">|</Typography> {/* New separator */}
-      
-  <MuiLink
-    component={NavLink}
-    to={appPaths.RefundCancellationPolicy} // Corrected to use appPaths
-    color="neutral.white"
-    underline="hover"
-    sx={{ cursor: 'pointer', fontSize: 14 }}
-  >
-    Refund & Cancellation Policy
-  </MuiLink>
-  <Typography color="neutral.white">|</Typography>
-  <MuiLink
-    component={NavLink}
-    to={appPaths.ShippingDeliveryPolicy} // Corrected to use appPaths
-    color="neutral.white"
-    underline="hover"
-    sx={{ cursor: 'pointer', fontSize: 14 }}
-  >
-    Shipping & Delivery Policy
-  </MuiLink>
-            </Stack>
+            <Stack
+      direction="row"
+      spacing={{ xs: 1, sm: 2 }} // Adjust spacing for small screens
+      flexWrap="wrap" // Allow items to wrap to the next line
+      justifyContent={{ xs: 'center', sm: 'flex-start' }} // Center on extra small, align start on small and up
+    >
+      <MuiLink
+        component={NavLink}
+        to={appPaths.privacyPolicy}
+        color="neutral.white"
+        underline="hover"
+        sx={{ cursor: 'pointer', fontSize: 14 }}
+      >
+        Privacy Policy
+      </MuiLink>
+      <Typography color="neutral.white">|</Typography>
+      <MuiLink
+        component={NavLink}
+        to={appPaths.termsAndConditions}
+        color="neutral.white"
+        underline="hover"
+        sx={{ cursor: 'pointer', fontSize: 14 }}
+      >
+        Terms & Conditions
+      </MuiLink>
+      <Typography color="neutral.white">|</Typography>
+      <MuiLink
+        component={NavLink}
+        to={appPaths.RefundCancellationPolicy}
+        color="neutral.white"
+        underline="hover"
+        sx={{ cursor: 'pointer', fontSize: 14 }}
+      >
+        Refund & Cancellation Policy
+      </MuiLink>
+      <Typography color="neutral.white">|</Typography>
+      <MuiLink
+        component={NavLink}
+        to={appPaths.ShippingDeliveryPolicy}
+        color="neutral.white"
+        underline="hover"
+        sx={{ cursor: 'pointer', fontSize: 14 }}
+      >
+        Shipping & Delivery Policy
+      </MuiLink>
+    </Stack>
           </Stack>
         </Stack>
       </StackStyled>
