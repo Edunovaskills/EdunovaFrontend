@@ -20,8 +20,7 @@ import { useScreenSize } from 'shared/hooks'
 import { useMenuItems } from 'entities/hooks'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import InstagramIcon from '@mui/icons-material/Instagram'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
-import YouTubeIcon from '@mui/icons-material/YouTube'
+
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { Logo } from 'shared/components'
 import { publicImages } from 'shared/config'
@@ -145,18 +144,19 @@ export const Footer = () => {
                 <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
                   <IconButton
                     color="inherit"
-                    href="https://facebook.com"
+                    href="https://www.facebook.com/profile.php?id=61576689656706"
                     target="_blank"
                   >
                     <FacebookIcon />
                   </IconButton>
                   <IconButton
                     color="inherit"
-                    href="https://instagram.com"
+                    href="https://www.instagram.com/edunovaindia/"
                     target="_blank"
                   >
                     <InstagramIcon />
                   </IconButton>
+                  {/* 
                   <IconButton
                     color="inherit"
                     href="https://linkedin.com"
@@ -171,6 +171,7 @@ export const Footer = () => {
                   >
                     <YouTubeIcon />
                   </IconButton>
+                  */}
                 </Stack>
               </Box>
             </StackWrapperStyled>
