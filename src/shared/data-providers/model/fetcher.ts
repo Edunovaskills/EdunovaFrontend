@@ -27,9 +27,11 @@ export function getClient<BaseSegment extends string>(
   const instance = axiosInstance[axiosInstanceType]
 
   const getRequestConfig = ({ url, ...restConfig }: AxiosRequestConfig) => {
+    const segments = [type, version, baseSegment, url].filter(Boolean)
+    const finalUrl = segments.join('/')
     return {
       // www.example.com/api/v1/...
-      url: `${type}/${version}/${baseSegment}${url ? `/${url}` : ''}`,
+      url: finalUrl,
       ...restConfig,
     }
   }

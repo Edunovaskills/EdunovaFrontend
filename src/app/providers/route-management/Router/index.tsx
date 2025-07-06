@@ -121,7 +121,13 @@ const RefundCancellationPolicyPage = lazy(() =>
   }))
 )
 
-
+const CreateTestimonialPage = lazy(() =>
+  import('pages/components/testimonial/CreateTestimonialPage').then(
+    (module) => ({
+      default: module.CreateTestimonialPage,
+    })
+  )
+)
 
 // Loading fallback component
 const PageLoader = () => (
@@ -243,6 +249,14 @@ const Router = createBrowserRouter(
             element={
               <Suspense fallback={<PageLoader />}>
                 <TermsAndConditionsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path={appPaths.testimonialCreate}
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <CreateTestimonialPage />
               </Suspense>
             }
           />

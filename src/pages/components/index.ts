@@ -60,8 +60,7 @@ export const ContactUsPage = lazy(async () => {
   return { default: ContactUsPage }
 })
 
-
-
+export { CreateTestimonialPage } from './testimonial/CreateTestimonialPage'
 
 export const EventDetailsPage = lazy(async () => {
   const { EventDetailsPage } = await import('./event-details/EventDetailsPage')

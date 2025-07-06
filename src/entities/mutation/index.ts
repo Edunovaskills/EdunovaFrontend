@@ -18,3 +18,4 @@ export { useUpdateTestimonialMutation } from './testimonial/update-testimonail.m
 export { useDeleteTestimonialMutation } from './testimonial/delete-tatimonial.mutation'
 export { useForgotPasswordMutation } from './auth/forgot-password.mutation'
 export { useResetPasswordMutation } from './auth/reset-user.mutation'
+export { useCreateTestimonialMutation } from './testimonial/create-testimonail.mutation'

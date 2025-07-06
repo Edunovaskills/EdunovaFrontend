@@ -200,7 +200,7 @@ export const Footer = () => {
                 color="neutral.white"
                 alignSelf="end"
               >
-                &copy; 2024 Edunova. All Rights Reserved.
+                &copy; 2025 Edunova. All Rights Reserved.
               </Typography>
             </Stack>
             {/* Policy Links: stack vertically on mobile, row on desktop */}

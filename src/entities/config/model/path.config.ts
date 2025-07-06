@@ -44,12 +44,13 @@ export const appPaths = {
   forgotPassword: '/forgot-password',
   course: '/course',
   blog: '/blog',
-  contactus:'/contactUs',
+  contactus: '/contactUs',
   resetPassword: '/reset-password',
   privacyPolicy: '/privacy-policy',
   termsAndConditions: '/terms-and-conditions',
   ShippingDeliveryPolicy: '/shipping-and-delivery',
-  RefundCancellationPolicy: '/refund-and-cancellation'
+  RefundCancellationPolicy: '/refund-and-cancellation',
+  testimonialCreate: '/testimonial/create',
 } as const
 
 export const appSearchParams = {

@@ -4,7 +4,6 @@ import EventsShowcase from './EventsShowcase'
 import EventDetails from './EventDetails'
 import { EventTestimonials } from './EventTestimonials'
 import { HeroSection } from './HeroSection'
-import {CertificateViewer} from './CertificateViewer'
 
 export const HelpAndSupport = () => {
   return (
@@ -12,7 +11,8 @@ export const HelpAndSupport = () => {
       <HeroSection />
       <HelpAndSupportWrapperStyled>
         <EventsShowcase />
-        <CertificateViewer/>
+        {/* FIXME: uncomment it when it is required @Aditya  */}
+        {/* <CertificateViewer/> */}
         <EventTestimonials />
       </HelpAndSupportWrapperStyled>
     </div>
